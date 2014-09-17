@@ -570,8 +570,19 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 				<div class="gfield_description">This may include PPTs, Word Docs and PDFs, links to videos, and photos. </div>
 			</li>
+			
+			<li id="cafnr_activity_upload" class="gfield">
+				<label class="gfield_label" for="input_22_39">Do you have any supplemental material you would like to UPLOAD?</label>
+			
+
+					<p><span id="plupload-browse-button">Select files to upload...</span></p>
+					<div id="plupload-upload-ui">
+					<?php //echo get_the_post_thumbnail( $p->ID ) //get attachemtns here??>
+					</div>
 		
-		
+			
+			
+			</li>
 			
 		
 		<input type="submit" name="SubmitButton" value="SUBMIT ACTIVITY" />

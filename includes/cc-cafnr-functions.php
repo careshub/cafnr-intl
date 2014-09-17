@@ -135,3 +135,18 @@ function cc_cafnr_populate_group_members(){
 }
 
 //groups_is_user_admin( $user_id, $group_id )
+
+//ajax for plupload on the activity form
+function cc_cafnr_activity_upload() {
+	
+	$new_file = wp_handle_upload( $_FILES['activity_uploads'], array( 'test_form' => false ) );
+	
+	if ( $new_file ) {
+		$new_file['fileBaseName'] = basename( $new_file['file'] );
+		echo json_encode( $new_file );
+	} else {
+		echo "There seems to be an error.";
+	}
+		die();
+	}
+add_action( 'wp_ajax_activity_upload', 'cc_cafnr_activity_upload' );

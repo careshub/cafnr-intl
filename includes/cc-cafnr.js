@@ -1,5 +1,12 @@
 
-
+var pluploadVars = {
+	dirty: true,
+	lastSave: 0,
+	ajaxBusy: false,
+	infobarDefault: "somthing defaulty",
+	imageUpload: null,
+	activityUploads: new Array()
+};
 // .research-only; hide if #activity_radio_research is !checked
 // pi-only; hide if pi_yes is !checked
 
@@ -145,13 +152,83 @@ function cafnrIntakeFormLoad(){
 	if( !jQuery('#activity_radio_research').is(":checked") ){
 		jQuery('.research-only').addClass('hidden-on-init');
 	}
+	
+	//plupload init stuff
+	if (jQuery('#cafnr_activity_form').length) {
+		
+		//cafnr_countries();  //TODO: this
+		
+		//init plupolader 
+		activityUploader('plupload-browse-button', 'plupload-upload-ui');
+		
+	} else {
+		activityFormUnload();
+	}
+	
+	
 }
 
+var activityFormUnload = function() {
+	//plupload: uploader.destroy();
+	for (var i = 0; i < pluploadVars.activityUploadVars.length; i++) {
+		pluploadVars.activityUploads[i].destroy();
+	}
+	
+}
 
+function activityUploader( browseButton, uiContainer ){
+	var uploader = new plupload.Uploader({
+		runtimes:'html5,silverlight,flash,html4',
+		/*flash_swf_url: cafnr_ajax.pluploadSWF,
+		silverlight_xap_url: cafnr_ajax.pluploadXAP, */
+		browse_button: browseButton,
+		multi_selection: true,
+		file_data_name: 'activity_uploads',
+		max_file_size: '2mb',
+		url: cafnr_ajax.adminAjax,
+		filters: [{title:'Activity Uploads', extensions:'pdf,mp3,jpg,jpeg,gif,png'}],  //TODO: add more extensions
+		multipart_params: { action: 'activity_upload' }
+	});
 
+	//store reference to this object for later removal
+	pluploadVars.activityUploads.push(uploader);
 
+	uploader.init();
 
+	uploader.bind('FilesAdded', function(up, files){
+		up.start();
+	});
 
+	uploader.bind('UploadProgress', function(up, file) {
+		jQuery('#' + uiContainer).html('<p class="ie9hide">' + file.percent + '% complete...</p><p class="red">Please wait to save your progress until your file has finished uploading</p>');
+	});
+
+	uploader.bind('Error', function(up, err) {
+		if (err.code == -600) { //file size
+			jQuery('#' + uiContainer).html("<p class='red'>I'm sorry, this file is too large.  2MB or less, please.</p>");
+		} else if (err.code == -601) { //file type
+			jQuery('#' + uiContainer).html("<p class='red'>I'm sorry, we accept only PDFs or MP3s.</p>");
+		} else {
+			jQuery('#' + uiContainer).html("<p class='red'>Sorry, there was an error. Please try again.</p>");
+		}
+	});
+
+	uploader.bind('FileUploaded', function(up, file, response){
+		if (response.response) {
+			var activityFile = eval('(' + response.response + ')');
+			
+			var activityFileHtml = "<p>File uploaded: " + activityFile.fileBaseName + "</p>" + 
+				"<input type='hidden' name='activity_file' value='" + activityFile.file + "' />" +
+				"<input type='hidden' name='activity_file_type' value='" + activityFile.type + "' />";
+			jQuery('#' + uiContainer).hide().html(activityFileHtml).show('slow', function(){
+				
+			});
+			jQuery('#' + browseButton).html('Select a different file to upload...');
+		} else {
+			jQuery('#' + uiContainer).html('<p>Sorry, there was an error. Please try again.</p>');
+		}
+	});
+}
 
 
 

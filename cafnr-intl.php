@@ -32,11 +32,20 @@ function cc_cafnr_intl_class_init(){
 		wp_enqueue_script( 'cc-cafnr', plugins_url( 'cc-cafnr-intl2/includes/cc-cafnr.js', ''), array(), '1.0.0', true );
 		wp_enqueue_style( 'datepicker-style', plugins_url( 'cc-cafnr-intl2/includes/css/datepicker.css') );
 		wp_enqueue_style( 'gf-style',  plugins_url( 'cc-cafnr-intl2/includes/css/g_forms_styles.css') );
-		wp_enqueue_style( 'cafnr-style', plugins_url( 'cc-cafnr-intl2/includes/css/cafnr-intl.css') );
+		wp_enqueue_style( 'cafnr-style', plugins_url( 'cc-cafnr-intl2/includes/css/cafnr-intl.css') );	
+		
+		//so we can use vars in js functions
+		wp_localize_script(
+			'cc-cafnr',
+			'cafnr_ajax',
+				array(
+				'adminAjax' => admin_url( 'admin-ajax.php' )
+				)
+		);
 	}
 
 	add_action( 'wp_enqueue_scripts', 'cafnr_intl_scripts' );
-	
+
 	
 //	add_action( 'bp_include', array( 'CC_AHA_Extras', 'get_instance' ), 21 );
 

@@ -1,0 +1,17 @@
+/*
+ *
+ * CAFNR INTL plugin styles
+ *
+ *
+*/
+
+.no-title, #newfacultydiv, .write-in-pi {
+	display:none;
+}
+.delete_supplemental_link, .delete_collaborating {
+	visibility:visible;
+	cursor:pointer;
+}
+.hidden-on-init {
+	display:none;
+}

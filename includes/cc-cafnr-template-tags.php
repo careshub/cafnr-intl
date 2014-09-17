@@ -570,7 +570,6 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 				<div class="gfield_description">This may include PPTs, Word Docs and PDFs, links to videos, and photos. </div>
 			</li>
-			
 			<li id="cafnr_activity_upload" class="gfield">
 				<label class="gfield_label" for="input_22_39">Do you have any supplemental material you would like to UPLOAD?</label>
 			
@@ -580,9 +579,11 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 					<?php //echo get_the_post_thumbnail( $p->ID ) //get attachemtns here??>
 					</div>
 		
+		
 			
 			
-			</li>
+			</li>		
+		
 			
 		
 		<input type="submit" name="SubmitButton" value="SUBMIT ACTIVITY" />
@@ -846,7 +847,7 @@ function cc_cafnr_get_countries() {
  * @params int Group_ID
  * @return array Array of Member ID => name
  */
-function cc_cafnr_get_member_array( $group_id = 596 ){
+function cc_cafnr_get_member_array( $group_id = 595 ){
 
 	global $bp;
 	
@@ -874,11 +875,59 @@ function cc_cafnr_render_add_member_form(){
 	$group_members = cc_cafnr_get_member_array();
 	
 	if( isset( $_POST['SubmitFaculty'] ) ){
-		echo 'Faculty Found!'; //mel's checks
+		//echo 'Faculty Found!'; //mel's checks
 		
-		$activities = cc_cafnr_get_faculty_activity_url_list( $_POST['faculty_select'] );
-		
+		$activities = cc_cafnr_get_faculty_activity_url_list( $_POST['faculty_select'] );		
 		cc_cafnr_render_faculty_activity_table( $activities );
+		
+		//If user selects --Select-- show nothing
+		if ( $_POST['faculty_select'] == "-1" ) {
+?>
+			<script type="text/javascript">
+				jQuery( document ).ready(function($) {
+					$("#userinfo").hide();
+					$("#newfacultydiv").hide();
+				});
+			</script>
+<?php		
+		} else {
+			//if user selects adds new faculty, show newfacultydiv and hide other divs
+			if ( $_POST['faculty_select'] == "add_new_faculty" ) {
+?>
+				<script type="text/javascript">
+					jQuery( document ).ready(function($) {
+						$("#activities").hide();
+						$("#userinfo").hide();
+						$("#newfacultydiv").show();
+					});
+				</script>
+<?php	
+		} else {
+		//If user selects a faculty name, show userinfo form
+		$user_info = get_userdata( $_POST['faculty_select'] );
+?>
+				<script type="text/javascript">
+					jQuery( document ).ready(function($) {
+						$("#activities").show();
+						$("#userinfo").show();
+						$("#newfacultydiv").hide();
+						$("#cafnr_faculty_form").hide();
+						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a href='/cafnr-intl-dashboard/'>change</a>)");
+					});
+				</script>
+<?php
+			}
+		}
+	} else {
+?>
+			<script type="text/javascript">
+				jQuery( document ).ready(function($) {
+					$("#userinfo").hide();
+					$("#newfacultydiv").hide();
+				});
+			</script>
+<?php	
+	
 	}
 	
 ?>
@@ -897,14 +946,48 @@ function cc_cafnr_render_add_member_form(){
 				
 			} ?>
 		</select>
-		<br />
+		
 
-		<input type="submit" id="SubmitFaculty" name="SubmitFaculty" value="GET FACULTY INFO" />
+		<input type="submit" id="SubmitFaculty" name="SubmitFaculty" value="Go" />
 		
 		<div id="newfacultydiv" style="margin-top:20px;"><strong>Add new Faculty Member:</strong><br /><br />
 			<input type="text" id="newfaculty" size="50" />&nbsp;&nbsp;<input type="button" id="submitnewfaculty" value="SubmitFaculty" />
 		</div>
 	</form>
+	<div id="userinfo">
+		<form>
+			<br /><br />
+		
+			<strong>Would you like to LINK to or UPLOAD your CV?</strong><br/>
+			<input type="radio" id="CVmethod1" name="CVmethod" value="link" />&nbsp;Link to my CV<br />
+			<input type="radio" id="CVmethod2" name="CVmethod" value="upload" />&nbsp;Upload my CV
+			<br /><br />
+			<div id="linkDiv" style="display:none;">
+				<strong>Add link to CV here:</strong><br/>	
+				<input type="text" id="CVlink" name="CVlink" size="85" />
+			</div>
+			<div id="uploadDiv" style="display:none;">
+				<strong>Upload CV here:</strong><br/>			
+			</div>		
+			<br /><br />
+			<strong>Beyond the last five years, have you been involved in any international activities?</strong><br/>
+			<input type="text" id="beyond5" name="beyond5" size="100" />
+			<br /><br />
+			<strong>Are you planning on engaging in any international activity in the future?</strong><br/>
+			<input type="text" id="futureactivity" name="future" size="100" />
+			<br /><br />
+			<strong>Would you be interested in leading or assisting with a project in your academic field or research focus?</strong><br/>
+			<input type="text" id="leadassist" name="leadassist" size="100" />
+			<br /><br />	
+			<strong>In the future, would you prefer an online form or in-person interview?</strong><br/>
+			<input type="radio" id="futurecontact1" name="futurecontact" value="online" />&nbsp;Online form<br />
+			<input type="radio" id="futurecontact2" name="futurecontact" value="interview" />&nbsp;Interview
+			<br /><br />		
+			<input type="submit" value="Submit" />
+		</form>
+	</div>	
+	
+
 <?php
 
 }
@@ -920,7 +1003,7 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 	$intl_args = array(
 		'post_type' => 'cafnr-activity',
 		'post_status' => 'publish',
-		'post_author' => $user_id
+		'author' => $user_id
 		);
 	
 	$user_activity_posts = get_posts( $intl_args );
@@ -954,7 +1037,7 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 function cc_cafnr_render_faculty_activity_table( $activities ) {
 ?>
 
-	<div id="activities-list">
+	<div id="activities">
 		
 		<table id="box-table-a">
 			<thead>

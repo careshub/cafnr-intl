@@ -56,6 +56,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 					);
 				wp_update_post( $updating_post );
 				
+				$activity_name = get_the_title( $activity_id );
+				
 			} else if ( ( $_POST['cafnr_activity_name'] != '-1' ) && ( $_POST['cafnr_activity_name'] != 'add_new_activity' ) ){
 					
 				//new activity
@@ -146,7 +148,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				}
 			}
 			
-			//TODO: account for write-in PI if we're doing that
+			//TODO: account for write-in PI in drop down! (get all meta of 'who_is_pi' for all cafnr-activity post types
 			if ( isset ( $_POST['who_is_pi'] ) ){
 				update_post_meta( $activity_id, 'who_is_pi', "" );
 			}
@@ -180,6 +182,18 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 					add_post_meta( $activity_id, 'activity_checkbox', $activity_checkbox, true );
 				}
 			}
+			
+			if ( isset( $_POST['activity_file'] ) ) {
+				$attachment = array(
+					'post_title' => $activity_name . ' - ' . $activity_id . ' (Attachment)',
+					'post_content' => '',
+					'post_status' => 'publish',
+					'post_mime_type' => $_POST['activity_file_type']
+				);
+				
+				$attachment_id = wp_insert_attachment( $attachment, $_POST['activity_file'], $activity_id );	
+
+			}
 		
 		//	
 			//if successful, redirect to dashboard
@@ -210,14 +224,25 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			); */
 			
 		$this_activity = get_post($post_id);
-		//$this_activity = current( $this_activity );
 		
+		//get parent of post
 		$this_activity_parent_holder = get_post_ancestors( $post_id ); //returns all parents
 		$this_activity_parent = $this_activity_parent_holder[0]; //direct parent is [0] in returned array
 		
+		//get post meta and post taxonomy associated with this activity
 		$this_activity_types = wp_get_post_terms( $this_activity->ID, 'cafnr-activity-type', array("fields" => "slugs") );
 		$this_activity_fields = get_post_custom( $this_activity->ID );
 		
+		//fetch attachments of post
+		$attach_args = array( 
+			'post_type' => 'attachment', 
+			'posts_per_page' => -1, 
+			'post_status' =>'any', 
+			'post_parent' => $this_activity->ID 
+			);
+			
+		$this_activity_attachments = get_posts( $attach_args );
+
 		var_dump ($this_activity_types);
 		
 		//var_dump( ($this_activity_fields) );  //post_id int
@@ -574,14 +599,18 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_activity_upload" class="gfield">
 				<label class="gfield_label" for="input_22_39">Do you have any supplemental material you would like to UPLOAD?</label>
 			
-
 					<p><span id="plupload-browse-button">Select files to upload...</span></p>
 					<div id="plupload-upload-ui">
 					<?php //echo get_the_post_thumbnail( $p->ID ) //get attachemtns here??>
 					</div>
-		
-			
-			
+					<?php
+					if ( $this_activity_attachments ) {
+						foreach ( $this_activity_attachments as $attachment ) {
+							echo apply_filters( 'the_title' , $attachment->post_title );
+							the_attachment_link( $attachment->ID , false );
+						}
+					}
+					?>
 			</li>
 			
 		

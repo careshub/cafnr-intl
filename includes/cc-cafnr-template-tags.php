@@ -907,6 +907,8 @@ function cc_cafnr_render_add_member_form(){
 			//If user selects a faculty name, show userinfo form
 			$user_info = get_userdata( $_POST['faculty_select'] );
 			$uid = $_POST['faculty_select'];
+			
+			$all_meta_for_user = get_user_meta( $uid );
 ?>
 				<script type="text/javascript">
 					jQuery( document ).ready(function($) {
@@ -933,11 +935,14 @@ function cc_cafnr_render_add_member_form(){
 <?php	
 	
 	}
-	//echo "UID=" . $uid . "<br/><br/>";
-	if (isset( $_POST['submitshortform'] )) {
 
-				
+	
+	$all_meta_for_user = get_user_meta( $uid );
+
+	
+	if (isset( $_POST['submitshortform'] )) {				
 				if( isset( $_POST['userID'] ) ){
+				
 					$uid=$_POST['userID'];
 					if ( isset ( $_POST['CVmethod'] ) ){
 						update_user_meta( $uid, 'CVmethod', $_POST['CVmethod'] );
@@ -992,36 +997,53 @@ function cc_cafnr_render_add_member_form(){
 			<br /><br />
 			<input type="hidden" id="userID" name="userID" />
 			<strong>Would you like to LINK to or UPLOAD your CV?</strong><br/>
-			<input type="radio" id="CVmethod1" name="CVmethod" value="link" />&nbsp;Link to my CV<br />
-			<input type="radio" id="CVmethod2" name="CVmethod" value="upload" />&nbsp;Upload my CV
-			<br /><br />
+			<input type="radio" id="CVmethod1" name="CVmethod" value="link" <?php if( $all_meta_for_user['CVmethod'][0] == "link") echo 'checked="checked"'; ?> />&nbsp;Link to my CV<br />
+			<input type="radio" id="CVmethod2" name="CVmethod" value="upload" <?php if( $all_meta_for_user['CVmethod'][0] == "upload") echo 'checked="checked"'; ?> />&nbsp;Upload my CV
+			
 			<div id="linkDiv" style="display:none;">
+				<br /><br />
 				<strong>Add link to CV here:</strong><br/>	
-				<input type="text" id="CVlink" name="CVlink" size="85" />
+				<input type="text" id="CVlink" name="CVlink" size="85" value="<?php echo $all_meta_for_user['CVlink'][0]; ?>" />
 			</div>
 			<div id="uploadDiv" style="display:none;">
+				<br /><br />
 				<strong>Upload CV here:</strong><br/>			
 			</div>		
 			<br /><br />
 			<strong>Beyond the last five years, have you been involved in any international activities?</strong><br/>
-			<input type="text" id="beyond5" name="beyond5" size="100" />
+			<input type="text" id="beyond5" name="beyond5" size="100" value="<?php echo $all_meta_for_user['beyond5'][0]; ?>" />
 			<br /><br />
 			<strong>Are you planning on engaging in any international activity in the future?</strong><br/>
-			<input type="text" id="futureactivity" name="future" size="100" />
+			<input type="text" id="futureactivity" name="futureactivity" size="100" value="<?php echo $all_meta_for_user['futureactivity'][0]; ?>" />
 			<br /><br />
 			<strong>Would you be interested in leading or assisting with a project in your academic field or research focus?</strong><br/>
-			<input type="text" id="leadassist" name="leadassist" size="100" />
+			<input type="text" id="leadassist" name="leadassist" size="100" value="<?php echo $all_meta_for_user['leadassist'][0]; ?>" />
 			<br /><br />	
 			<strong>In the future, would you prefer an online form or in-person interview?</strong><br/>
-			<input type="radio" id="futurecontact1" name="futurecontact" value="online" />&nbsp;Online form<br />
-			<input type="radio" id="futurecontact2" name="futurecontact" value="interview" />&nbsp;Interview
+			<input type="radio" id="futurecontact1" name="futurecontact" value="online" <?php if( $all_meta_for_user['futurecontact'][0] == "online") echo 'checked="checked"'; ?> />&nbsp;Online form<br />
+			<input type="radio" id="futurecontact2" name="futurecontact" value="interview" <?php if( $all_meta_for_user['futurecontact'][0] == "interview") echo 'checked="checked"'; ?> />&nbsp;Interview
 			<br /><br />		
 			<input type="submit" value="Submit" name="submitshortform" />
 		</form>
 	</div>	
-	
-
 <?php
+	if ($all_meta_for_user['CVmethod'][0] == "link") {
+?>
+		<script type="text/javascript">
+			jQuery( document ).ready(function($) {
+				$("#linkDiv").show();
+			});			
+		</script>
+<?php	
+	} else if ($all_meta_for_user['CVmethod'][0] == "upload") {
+?>
+		<script type="text/javascript">
+			jQuery( document ).ready(function($) {
+				$("#uploadDiv").show();
+			});			
+		</script>
+<?php
+	}
 
 }
 

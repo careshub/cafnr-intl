@@ -871,11 +871,12 @@ function cc_cafnr_get_member_array( $group_id = 595 ){
 }
 
 function cc_cafnr_render_add_member_form(){
-
-	$group_members = cc_cafnr_get_member_array();
 	
+	$group_members = cc_cafnr_get_member_array();
+	global $uid;
 	if( isset( $_POST['SubmitFaculty'] ) ){
 		//echo 'Faculty Found!'; //mel's checks
+		//echo "facultyid=" . $_POST['faculty_select'];
 		
 		$activities = cc_cafnr_get_faculty_activity_url_list( $_POST['faculty_select'] );		
 		cc_cafnr_render_faculty_activity_table( $activities );
@@ -903,16 +904,19 @@ function cc_cafnr_render_add_member_form(){
 				</script>
 <?php	
 		} else {
-		//If user selects a faculty name, show userinfo form
-		$user_info = get_userdata( $_POST['faculty_select'] );
+			//If user selects a faculty name, show userinfo form
+			$user_info = get_userdata( $_POST['faculty_select'] );
+			$uid = $_POST['faculty_select'];
 ?>
 				<script type="text/javascript">
 					jQuery( document ).ready(function($) {
+						$("#userID").val("<?php echo $_POST['faculty_select']; ?>");
 						$("#activities").show();
 						$("#userinfo").show();
 						$("#newfacultydiv").hide();
 						$("#cafnr_faculty_form").hide();
 						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a href='/cafnr-intl-dashboard/'>change</a>)");
+						
 					});
 				</script>
 <?php
@@ -929,7 +933,36 @@ function cc_cafnr_render_add_member_form(){
 <?php	
 	
 	}
-	
+	//echo "UID=" . $uid . "<br/><br/>";
+	if (isset( $_POST['submitshortform'] )) {
+
+				
+				if( isset( $_POST['userID'] ) ){
+					$uid=$_POST['userID'];
+					if ( isset ( $_POST['CVmethod'] ) ){
+						update_user_meta( $uid, 'CVmethod', $_POST['CVmethod'] );
+					}					
+					if ( isset ( $_POST['CVlink'] ) ){
+						update_user_meta( $uid, 'CVlink', $_POST['CVlink'] );
+					}
+					if ( isset ( $_POST['beyond5'] ) ){
+						update_user_meta( $uid, 'beyond5', $_POST['beyond5'] );
+					}
+					if ( isset ( $_POST['futureactivity'] ) ){
+						update_user_meta( $uid, 'futureactivity', $_POST['futureactivity'] );
+					}
+					if ( isset ( $_POST['leadassist'] ) ){
+						update_user_meta( $uid, 'leadassist', $_POST['leadassist'] );
+					}
+					if ( isset ( $_POST['futurecontact'] ) ){
+						update_user_meta( $uid, 'futurecontact', $_POST['futurecontact'] );
+					}
+					echo "Short Form Submitted!<br /><br />";
+
+				}
+	} else {
+		//echo "nope";
+	}
 ?>
 	<form id="cafnr_faculty_form" class="standard-form" method="post" action="">
 		<strong>Select a Faculty Member:</strong><br /><br />
@@ -955,9 +988,9 @@ function cc_cafnr_render_add_member_form(){
 		</div>
 	</form>
 	<div id="userinfo">
-		<form>
+		<form id="cafnr_facultyadd_form" class="standard-form" method="post" action="">
 			<br /><br />
-		
+			<input type="hidden" id="userID" name="userID" />
 			<strong>Would you like to LINK to or UPLOAD your CV?</strong><br/>
 			<input type="radio" id="CVmethod1" name="CVmethod" value="link" />&nbsp;Link to my CV<br />
 			<input type="radio" id="CVmethod2" name="CVmethod" value="upload" />&nbsp;Upload my CV
@@ -983,7 +1016,7 @@ function cc_cafnr_render_add_member_form(){
 			<input type="radio" id="futurecontact1" name="futurecontact" value="online" />&nbsp;Online form<br />
 			<input type="radio" id="futurecontact2" name="futurecontact" value="interview" />&nbsp;Interview
 			<br /><br />		
-			<input type="submit" value="Submit" />
+			<input type="submit" value="Submit" name="submitshortform" />
 		</form>
 	</div>	
 	

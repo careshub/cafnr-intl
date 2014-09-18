@@ -35,43 +35,7 @@ function cc_cafnr_intl_dashboard() {
 	
 	<br /><br />
 	
-	<div id="userinfo">
-		<form>
-			<br /><br />
-			<strong>First Name:</strong><br/>
-			<input type="text" id="firstname" name="firstname" size="45" />
-			<br /><br />
-			<strong>Last Name:</strong><br/>
-			<input type="text" id="lastname" name="lastname" size="45" />
-			<br /><br />		
-			<strong>Would you like to LINK to or UPLOAD your CV?</strong><br/>
-			<input type="radio" id="CVmethod1" name="CVmethod" value="link" />&nbsp;Link to my CV<br />
-			<input type="radio" id="CVmethod2" name="CVmethod" value="upload" />&nbsp;Upload my CV
-			<br /><br />
-			<div id="linkDiv" style="display:none;">
-				<strong>Add link to CV here:</strong><br/>	
-				<input type="text" id="CVlink" name="CVlink" size="85" />
-			</div>
-			<div id="uploadDiv" style="display:none;">
-				<strong>Upload CV here:</strong><br/>			
-			</div>		
-			<br /><br />
-			<strong>Beyond the last five years, have you been involved in any international activities?</strong><br/>
-			<input type="text" id="beyond5" name="beyond5" size="100" />
-			<br /><br />
-			<strong>Are you planning on engaging in any international activity in the future?</strong><br/>
-			<input type="text" id="futureactivity" name="future" size="100" />
-			<br /><br />
-			<strong>Would you be interested in leading or assisting with a project in your academic field or research focus?</strong><br/>
-			<input type="text" id="leadassist" name="leadassist" size="100" />
-			<br /><br />	
-			<strong>In the future, would you prefer an online form or in-person interview?</strong><br/>
-			<input type="radio" id="futurecontact1" name="futurecontact" value="online" />&nbsp;Online form<br />
-			<input type="radio" id="futurecontact2" name="futurecontact" value="interview" />&nbsp;Interview
-			<br /><br />		
-			<input type="submit" value="Submit" />
-		</form>
-	</div>
+
 		<style type="text/css">
 		#box-table-a
 		{
@@ -108,9 +72,7 @@ function cc_cafnr_intl_dashboard() {
 		</style>	
 	<script type="text/javascript">
 		jQuery( document ).ready(function($) {
-			$("#activities").hide();
-			$("#userinfo").hide();
-			$("#newfacultydiv").hide();
+
 			
 			$('#CVmethod1').click(function () {
 				$("#linkDiv").show();
@@ -121,25 +83,25 @@ function cc_cafnr_intl_dashboard() {
 				$("#uploadDiv").show();
 			});
 			
-			$( "#faculty" ).change(function() {
-				$("#nameactivity").html($("#faculty option:selected").text() + "'s Activities");				
-				$("#activities").show();
-				$("#userinfo").show();
-			});
+			// $( "#faculty" ).change(function() {
+				// $("#nameactivity").html($("#faculty option:selected").text() + "'s Activities");				
+				// $("#activities").show();
+				// $("#userinfo").show();
+			// });
 			$( "#btnAddNewActivity" ).click(function() {
 				window.location = "http://dev.communitycommons.org/cafnr-intl/?email=" + $( "#faculty" ).val();
 			});			
-			$( "#faculty" ).click(function() {
-				if ($( "#faculty" ).val() == "ADD") {
-					$("#newfacultydiv").show();
-					$("#activities").hide();
-					$("#userinfo").hide();
-				} else {
-					$("#newfacultydiv").hide();
-					$("#activities").show();
-					$("#userinfo").show();					
-				}
-			});
+			// $( "#faculty" ).click(function() {
+				// if ($( "#faculty" ).val() == "ADD") {
+					// $("#newfacultydiv").show();
+					// $("#activities").hide();
+					// $("#userinfo").hide();
+				// } else {
+					// $("#newfacultydiv").hide();
+					// $("#activities").show();
+					// $("#userinfo").show();					
+				// }
+			// });
 			$("#submitnewfaculty").click(function() {
 					$("#newfacultydiv").hide();
 					$("#activities").show();

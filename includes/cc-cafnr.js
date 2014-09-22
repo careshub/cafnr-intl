@@ -165,6 +165,10 @@ function cafnrIntakeFormLoad(){
 		activityFormUnload();
 	}
 	
+	jQuery('.remove-activity-file').on("click", function() {
+		removeActivityFile();
+	}
+	
 	
 }
 
@@ -223,14 +227,20 @@ function activityUploader( browseButton, uiContainer ){
 			jQuery('#' + uiContainer).hide().html(activityFileHtml).show('slow', function(){
 				
 			});
-			jQuery('#' + browseButton).html('Select a different file to upload...');
+			jQuery('#' + browseButton).html('Select a different file to upload...<br />');
+			jQuery( '<input class="remove-activity-file" type="button" value="Remove this sample" data-deletefile="' + activityFile.file + '" >' ).insertAfter( '#' + browseButton );
+			
 		} else {
 			jQuery('#' + uiContainer).html('<p>Sorry, there was an error. Please try again.</p>');
 		}
 	});
 }
 
-
+function removeActivityFile(){
+	var fileurl = jQuery(this).data('deletefile');
+	
+	
+}
 
 
 jQuery(document).ready(function($){

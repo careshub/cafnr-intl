@@ -99,6 +99,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 					'post_author'	=> $_POST['user_id']
 					);
 				wp_update_post( $updating_post );
+				
+				//Post author may not be activity owner (in the case of Ben filling out form for another faculty member) so we need post_meta field to capture true owner
+				update_post_meta($activity_id, 'activity_owner', $_GET['user']);
 			}
 			
 			//project-specific meta fields (the easy ones)
@@ -218,7 +221,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		$this_activity_types = wp_get_post_terms( $this_activity->ID, 'cafnr-activity-type', array("fields" => "slugs") );
 		$this_activity_fields = get_post_custom( $this_activity->ID );
 		
-		var_dump ($this_activity_types);
+		//var_dump ($this_activity_types);
 		
 		//var_dump( ($this_activity_fields) );  //post_id int
 		//var_dump( $this_activity_fields['activity_checkbox'] );  //post_id int
@@ -878,7 +881,8 @@ function cc_cafnr_render_add_member_form(){
 		//echo 'Faculty Found!'; //mel's checks
 		//echo "facultyid=" . $_POST['faculty_select'];
 		
-		$activities = cc_cafnr_get_faculty_activity_url_list( $_POST['faculty_select'] );		
+		$activities = cc_cafnr_get_faculty_activity_url_list( $_POST['faculty_select'] );
+		//var_dump($activities);		
 		cc_cafnr_render_faculty_activity_table( $activities );
 		
 		//If user selects --Select-- show nothing
@@ -986,10 +990,10 @@ function cc_cafnr_render_add_member_form(){
 		</select>
 		
 
-		<input type="submit" id="SubmitFaculty" name="SubmitFaculty" value="Go" />
+		<input type="submit" id="SubmitFaculty" name="SubmitFaculty" value="Go" style="font-size:12pt;" />
 		
 		<div id="newfacultydiv" style="margin-top:20px;"><strong>Add new Faculty Member:</strong><br /><br />
-			<input type="text" id="newfaculty" size="50" />&nbsp;&nbsp;<input type="button" id="submitnewfaculty" value="SubmitFaculty" />
+			<input type="text" id="newfaculty" size="50" />&nbsp;&nbsp;<input type="button" id="submitnewfaculty" value="Add New Faculty" />
 		</div>
 	</form>
 	<div id="userinfo">
@@ -1055,14 +1059,20 @@ function cc_cafnr_render_add_member_form(){
 function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 
 	//this is where the faculty prior forms and bio stuff will render
+	// $intl_args = array(
+		// 'post_type' => 'cafnr-activity',
+		// 'post_status' => 'publish',
+		// 'author' => $user_id
+		// );
+	
 	$intl_args = array(
 		'post_type' => 'cafnr-activity',
-		'post_status' => 'publish',
-		'author' => $user_id
-		);
-	
+		'post_status' => 'publish',	
+		'meta_key' => 'activity_owner',
+		'meta_value' => $user_id
+	);
 	$user_activity_posts = get_posts( $intl_args );
-	
+	//var_dump($user_activity_posts);
 	$activity_list = array();
 	$count = 1;
 	foreach ( $user_activity_posts as $post ){
@@ -1128,6 +1138,7 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 function cc_cafnr_add_member_save( $email, $group_id = 596 ){
 
 	$user_id = username_exists( $user_name );
+	
 	if ( !$user_id and email_exists($user_email) == false ) {
 		$random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
 		$user_id = wp_create_user( $user_name, $random_password, $user_email );

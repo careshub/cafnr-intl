@@ -89,7 +89,7 @@ function cc_cafnr_intl_dashboard() {
 				// $("#userinfo").show();
 			// });
 			$( "#btnAddNewActivity" ).click(function() {
-				window.location = "http://dev.communitycommons.org/cafnr-intl/?email=" + $( "#faculty" ).val();
+				window.location = "/wordpress/cafnr-add-activity/?user=" + $( "#userID" ).val();
 			});			
 			// $( "#faculty" ).click(function() {
 				// if ($( "#faculty" ).val() == "ADD") {

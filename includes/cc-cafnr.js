@@ -167,7 +167,7 @@ function cafnrIntakeFormLoad(){
 	
 	jQuery('.remove-activity-file').on("click", function() {
 		removeActivityFile();
-	}
+	});
 	
 	
 }

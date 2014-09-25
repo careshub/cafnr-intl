@@ -39,7 +39,8 @@ function cc_cafnr_intl_class_init(){
 			'cc-cafnr',
 			'cafnr_ajax',
 				array(
-				'adminAjax' => admin_url( 'admin-ajax.php' )
+				'adminAjax' => admin_url( 'admin-ajax.php' ),
+				'homeURL' => get_site_url()
 				)
 		);
 	}

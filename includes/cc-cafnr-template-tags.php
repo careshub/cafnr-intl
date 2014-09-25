@@ -876,7 +876,7 @@ function cc_cafnr_get_countries() {
  * @params int Group_ID
  * @return array Array of Member ID => name
  */
-function cc_cafnr_get_member_array( $group_id = 595 ){
+function cc_cafnr_get_member_array( $group_id = 596 ){ //Mike, you'll have to change this..
 
 	global $bp;
 	
@@ -1091,6 +1091,8 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 		// 'author' => $user_id
 		// );
 	
+	
+	//TODO: talk to Mike about how we want to do this, searching by author or by meta, same diff..
 	$intl_args = array(
 		'post_type' => 'cafnr-activity',
 		'post_status' => 'publish',	

@@ -89,8 +89,12 @@ function cc_cafnr_intl_dashboard() {
 				// $("#userinfo").show();
 			// });
 			$( "#btnAddNewActivity" ).click(function() {
-				window.location = "/wordpress/cafnr-add-activity/?user=" + $( "#userID" ).val();
-			});			
+				//window.location = "/wordpress/cafnr-add-activity/?user=" + $( "#userID" ).val();
+				//Mel changed to make more universal
+				window.location = cafnr_ajax.homeURL + "/cafnr-add-activity/?user=" + $( "#userID" ).val();
+			});
+
+			
 			// $( "#faculty" ).click(function() {
 				// if ($( "#faculty" ).val() == "ADD") {
 					// $("#newfacultydiv").show();

@@ -876,8 +876,9 @@ function cc_cafnr_get_countries() {
  * @params int Group_ID
  * @return array Array of Member ID => name
  */
-function cc_cafnr_get_member_array( $group_id = 596 ){ //Mike, you'll have to change this..
+function cc_cafnr_get_member_array( $group_id ){ 
 
+	$group_id = cc_cafnr_get_group_id();
 	global $bp;
 	
 	$group = groups_get_group( array( 'group_id' => $group_id ) );
@@ -901,7 +902,7 @@ function cc_cafnr_get_member_array( $group_id = 596 ){ //Mike, you'll have to ch
 
 function cc_cafnr_render_add_member_form(){
 	
-	$group_members = cc_cafnr_get_member_array();
+	$group_members = cc_cafnr_get_member_array( cc_cafnr_get_group_id() );
 	global $uid;
 	if( isset( $_POST['SubmitFaculty'] ) ){
 		//echo 'Faculty Found!'; //mel's checks
@@ -1163,8 +1164,9 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 <?php
 }
 
-function cc_cafnr_add_member_save( $email, $group_id = 596 ){
+function cc_cafnr_add_member_save( $email, $group_id ){
 
+	$group_id = cc_cafnr_get_group_id();
 	$user_id = username_exists( $user_name );
 	
 	if ( !$user_id and email_exists($user_email) == false ) {

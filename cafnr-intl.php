@@ -22,6 +22,7 @@ function cc_cafnr_intl_class_init(){
 	
 	require_once( dirname( __FILE__ ) . '/includes/cc-cafnr-functions.php' );
 	require_once( dirname( __FILE__ ) . '/includes/cc-cafnr-template-tags.php' );
+	require_once( dirname( __FILE__ ) . '/includes/cc-cafnr-dashboard-template-tags.php' );
 	//require_once( dirname( __FILE__ ) . '' );
 	// 	jquery-ui-datepicker
 	
@@ -60,7 +61,7 @@ add_action( 'bp_include', 'cc_cafnr_intl_class_init' );
 function startup_cafnr_extras_group_extension_class() {
 	require( dirname( __FILE__ ) . '/includes/cc-cafnr-bp-group-extension.php' );
 }
-//add_action( 'bp_include', 'startup_cafnr_extras_group_extension_class', 24 );
+add_action( 'bp_include', 'startup_cafnr_extras_group_extension_class', 24 );
 
 /*
  * Add page templates for form, dashboards

@@ -152,8 +152,14 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			}
 			
 			//TODO: account for write-in PI in drop down! (get all meta of 'who_is_pi' for all cafnr-activity post types
-			if ( isset ( $_POST['who_is_pi'] ) ){
-				update_post_meta( $activity_id, 'who_is_pi', "" );
+			if ( isset ( $_POST['who_is_pi'] ) ){ //,'write_in_pi'
+				if ( $_POST['who_is_pi'] == 'add_new_pi' ){
+					update_post_meta( $activity_id, 'who_is_pi', "add_new_pi" );
+					update_post_meta( $activity_id, 'write_in_pi', $_POST['write_in_pi'] );
+				} else {
+					update_post_meta( $activity_id, 'who_is_pi', $_POST['who_is_pi'] );
+					delete_post_meta( $activity_id, 'write_in_pi' );
+				}
 			}
 			//Activity type (the radio one)
 			wp_set_object_terms( $activity_id, $_POST['activity_radio'], 'cafnr-activity-type' );
@@ -248,7 +254,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			
 		$this_activity_attachments = get_posts( $attach_args );
 		
-		var_dump( ($this_activity_fields) );  //post_id int
+		//var_dump( ($this_activity_fields) );  //post_id int
 		//var_dump( $this_activity_fields['activity_checkbox'] );  //post_id int
 		
 		
@@ -430,7 +436,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 			
-			<li id="cafnr_who_is_pi" class="gfield non-pi-only research-only" style="">
+			<li id="cafnr_who_is_pi" class="gfield non-pi-only research-only hidden-on-init" style="">
 				<label class="gfield_label" for="cafnr_activity_pi">Who is the PI/leader of this activity?</label>
 				<div class="ginput_container">
 					<select id="who_is_pi" class="medium gfield_select" tabindex="10" name="who_is_pi">
@@ -439,7 +445,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 						<?php foreach ( $group_members as $key => $value ) {
 							$option_output = '<option value="';
 							$option_output .= $key;
-							$option_output .= '">';
+							$option_output .= '" ';
+							$option_output .= selected( current( $this_activity_fields['who_is_pi'] ), $key );
+							$option_output .= '>';
 							$option_output .= $value;
 							$option_output .= '</option>';
 							print $option_output;
@@ -457,10 +465,10 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 		
-			<li id="cafnr_write_in_pi" class="gfield write-in-pi">
+			<li id="cafnr_write_in_pi" class="gfield write-in-pi research-only hidden-on-init">
 				<label class="gfield_label" for="input_22_34">Write in the name of the PI</label>
 				<div class="ginput_container">
-					<input id="write_in_pi" class="medium" type="text" tabindex="11" value="" name="write_in_pi">
+					<input id="write_in_pi" class="medium" type="text" tabindex="11" value="<?php echo current( $this_activity_fields['write_in_pi'] ); ?>" name="write_in_pi">
 				</div>
 			</li>
 			
@@ -630,7 +638,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_activity_upload" class="gfield">
 				<label class="gfield_label" for="input_22_39">Do you have any supplemental material you would like to UPLOAD?</label>
 			
-					<p><span id="plupload-browse-button">Select files to upload...</span></p>
+					<p><span id="plupload-browse-button"><input type="button" value="Select files to upload..." /></span></p>
 					<div id="plupload-upload-ui">
 					<?php //echo get_the_post_thumbnail( $p->ID ) //get attachemtns here??>
 					</div>

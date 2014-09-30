@@ -163,6 +163,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				//clean sweep on every save
 				delete_post_meta( $activity_id, 'supplemental_links' );
 				foreach( $_POST['supplemental_links'] as $link ) {
+					if ( $link == "" ) continue;
 					add_post_meta( $activity_id, 'supplemental_links', $link, false );  //false since not unique
 				}
 			}
@@ -172,6 +173,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				//clean sweep on every save
 				delete_post_meta( $activity_id, 'collaborating' );
 				foreach( $_POST['collaborating'] as $link ) {
+					if ( $link == "" ) continue;
 					add_post_meta( $activity_id, 'collaborating', $link, false );  //false since not unique
 				}
 			}
@@ -246,7 +248,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			
 		$this_activity_attachments = get_posts( $attach_args );
 		
-		//var_dump( ($this_activity_fields) );  //post_id int
+		var_dump( ($this_activity_fields) );  //post_id int
 		//var_dump( $this_activity_fields['activity_checkbox'] );  //post_id int
 		
 		
@@ -286,7 +288,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		setup_postdata( $post ); 
 		//remove posts with parents from list
 		if( !empty( $post->post_parent ) ) continue; 
-		$activities_array[$post->ID] = $post->post_name;
+		$activities_array[$post->ID] = $post->post_title;
 	
 	}
 	
@@ -428,7 +430,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 			
-			<li id="cafnr_who_is_pi" class="gfield non-pi-only research-only hidden-on-init" style="">
+			<li id="cafnr_who_is_pi" class="gfield non-pi-only research-only" style="">
 				<label class="gfield_label" for="cafnr_activity_pi">Who is the PI/leader of this activity?</label>
 				<div class="ginput_container">
 					<select id="who_is_pi" class="medium gfield_select" tabindex="10" name="who_is_pi">
@@ -527,7 +529,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<col id="gfield_list_18_col1" class="gfield_list_col_odd">
 						</colgroup>
 						<tbody>
-							<?php if ( $this_activity_fields['collaborating'] ) { $count = 1; //make sure the first one doesn't have a delete button
+							<?php 
+							$count = 1; //make sure the first one doesn't have a delete button
+							if ( $this_activity_fields['collaborating'] ) { 
 								foreach(  $this_activity_fields['collaborating'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
@@ -542,6 +546,19 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									</tr>
 								<?php $count++; }
 							} ?>
+							<?php //make sure we have one empty input field ?>
+							<tr class="gfield_list_row_odd">
+								<td class="gfield_list_cell list_cell">
+									<input type="text" tabindex="26" value="" name="collaborating[]">
+								</td>
+								<td class="gfield_list_icons">
+									<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<?php if( $count!= 1 ) { ?>
+										<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+									<?php } ?>
+								</td>
+							</tr>
+							
 						</tbody>
 					</table>
 				</div>
@@ -576,7 +593,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<col id="gfield_list_39_col1" class="gfield_list_col_odd">
 						</colgroup>
 						<tbody>
-							<?php if ( $this_activity_fields['supplemental_links'] ) { $count = 1; //make sure the first one doesn't have a delete button
+							<?php 
+							$count = 1; //make sure the first one doesn't have a delete button
+							if ( $this_activity_fields['supplemental_links'] ) { 
 								foreach(  $this_activity_fields['supplemental_links'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
@@ -591,6 +610,18 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									</tr>
 								<?php $count++; }
 							} ?>
+							<?php //make sure we have one empty input field ?>
+							<tr class="gfield_list_row_odd">
+								<td class="gfield_list_cell list_cell">
+									<input type="text" tabindex="26" value="" name="supplemental_links[]">
+								</td>
+								<td class="gfield_list_icons">
+									<img class="add_list_item add_supplemental_link" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<?php if( $count!= 1 ) { ?>
+										<img class="delete_list_item delete_supplemental_link" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+									<?php } ?>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>

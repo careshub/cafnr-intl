@@ -141,11 +141,15 @@ function cafnrIntakeFormLoad(){
 	//on form load, let's make sure right fields are displaying
 	
 	//if( jQuery('#pi_yes').is(':selected') ){
-	if( jQuery('#pi_yes').val() == 'Yes' ){
+	if( jQuery('#pi_yes').is(":checked") ){
 	
 		jQuery('.pi-only').removeClass('hidden-on-init');
 		jQuery('.non-pi-only').addClass('hidden-on-init');
 		//jQuery('#cafnr_end_date').show();
+	} else {
+		//otherwise, do the opposite
+		jQuery('.pi-only').addClass('hidden-on-init');
+		jQuery('.non-pi-only').removeClass('hidden-on-init');
 	}
 
 	//if we're not doing a research program, hide .research-only

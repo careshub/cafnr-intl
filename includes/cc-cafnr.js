@@ -171,10 +171,11 @@ function cafnrIntakeFormLoad(){
 		jQuery('.research-only').addClass('hidden-on-init');
 	}
 	
-	//plupload init stuff
+	//activity form and plupload init stuff
 	if (jQuery('#cafnr_activity_form').length) {
 		
-		//cafnr_countries();  //TODO: this
+		//cafnr_countries(); getCountries(); //TODO: this
+		populateCountryDropdown();		
 		
 		//init plupolader 
 		activityUploader('plupload-browse-button', 'plupload-upload-ui');
@@ -187,7 +188,6 @@ function cafnrIntakeFormLoad(){
 		removeActivityFile();
 	});
 	
-	getCountries();
 	
 }
 
@@ -1006,6 +1006,20 @@ function getCountries(){
 
 	return countryCodes;
 }
+
+function populateCountryDropdown(){
+
+	var countryCodes = getCountries();
+	//set up options for select
+	var options = '';
+	for (var i = 0; i < countryCodes.length; i++) {
+		options += '<option value="' + countryCodes[i].code + '">' + countryCodes[i].name + '</option>';
+	}
+	
+	jQuery('#countrylist').html(options);
+}
+
+
 
 jQuery(document).ready(function($){
 	//TODO: datepicker;

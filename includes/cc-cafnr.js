@@ -80,7 +80,7 @@ function clickListen(){
 	
 	jQuery('.reload-page').click(function() {
 		//location.reload( true ); //true = reload from server, not from cache
-		window.location = window.location.href; //to avoid POST warning.. for now, until we make GET page..
+		window.location = window.location.href; //to avoid POST warning.. for now, until we make GET page.
 	});
 	
 }

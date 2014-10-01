@@ -152,14 +152,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			}
 			
 			//TODO: account for write-in PI in drop down! (get all meta of 'who_is_pi' for all cafnr-activity post types
-			if ( isset ( $_POST['who_is_pi'] ) ){ //,'write_in_pi'
-				if ( $_POST['who_is_pi'] == 'add_new_pi' ){
-					update_post_meta( $activity_id, 'who_is_pi', "add_new_pi" );
-					update_post_meta( $activity_id, 'write_in_pi', $_POST['write_in_pi'] );
-				} else {
-					update_post_meta( $activity_id, 'who_is_pi', $_POST['who_is_pi'] );
-					delete_post_meta( $activity_id, 'write_in_pi' );
-				}
+			if ( isset ( $_POST['who_is_pi'] ) ){
+				update_post_meta( $activity_id, 'who_is_pi', "" );
 			}
 			//Activity type (the radio one)
 			wp_set_object_terms( $activity_id, $_POST['activity_radio'], 'cafnr-activity-type' );
@@ -169,7 +163,6 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				//clean sweep on every save
 				delete_post_meta( $activity_id, 'supplemental_links' );
 				foreach( $_POST['supplemental_links'] as $link ) {
-					if ( $link == "" ) continue;
 					add_post_meta( $activity_id, 'supplemental_links', $link, false );  //false since not unique
 				}
 			}
@@ -179,7 +172,6 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				//clean sweep on every save
 				delete_post_meta( $activity_id, 'collaborating' );
 				foreach( $_POST['collaborating'] as $link ) {
-					if ( $link == "" ) continue;
 					add_post_meta( $activity_id, 'collaborating', $link, false );  //false since not unique
 				}
 			}
@@ -208,8 +200,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		
 		//	
 			//if successful, redirect to dashboard
-			//wp_redirect( $location, $status );
-			//exit;
+			wp_redirect( '/wordpress/cafnr-intl-dashboard?user=' . $_GET['user'] );
+			exit;
 		
 		
 		}
@@ -243,8 +235,10 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		//get post meta and post taxonomy associated with this activity
 		$this_activity_types = wp_get_post_terms( $this_activity->ID, 'cafnr-activity-type', array("fields" => "slugs") );
 		$this_activity_fields = get_post_custom( $this_activity->ID );
-
-
+		
+//<<<<<<< HEAD
+		//var_dump ($this_activity_types);
+//=======
 		//fetch attachments of post
 		$attach_args = array( 
 			'post_type' => 'attachment', 
@@ -255,6 +249,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			
 		$this_activity_attachments = get_posts( $attach_args );
 
+		var_dump ($this_activity_types);
+//>>>>>>> origin/master
 		
 		//var_dump( ($this_activity_fields) );  //post_id int
 		//var_dump( $this_activity_fields['activity_checkbox'] );  //post_id int
@@ -296,7 +292,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		setup_postdata( $post ); 
 		//remove posts with parents from list
 		if( !empty( $post->post_parent ) ) continue; 
-		$activities_array[$post->ID] = $post->post_title;
+		$activities_array[$post->ID] = $post->post_name;
 	
 	}
 	
@@ -357,17 +353,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				<tbody>
 					<tr class="gfield_list_row_odd">
 						<td class="gfield_list_cell gfield_list_8_cell1">
-							<select tabindex="4" name="input_8[]">
-								<?php
-								foreach ( $countries as $key => $value ){ 
-									$option_output = '<option value="';
-									$option_output .= $key;
-									$option_output .= '">';
-									$option_output .= $value;
-									$option_output .= '</option>';
-									print $option_output;
-									
-								} ?>
+							<select tabindex="4" name="input_8[]" id="countrylist">
+
 								
 							</select>
 						</td>
@@ -447,9 +434,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 						<?php foreach ( $group_members as $key => $value ) {
 							$option_output = '<option value="';
 							$option_output .= $key;
-							$option_output .= '" ';
-							$option_output .= selected( current( $this_activity_fields['who_is_pi'] ), $key );
-							$option_output .= '>';
+							$option_output .= '">';
 							$option_output .= $value;
 							$option_output .= '</option>';
 							print $option_output;
@@ -467,10 +452,10 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 		
-			<li id="cafnr_write_in_pi" class="gfield write-in-pi research-only hidden-on-init">
+			<li id="cafnr_write_in_pi" class="gfield write-in-pi">
 				<label class="gfield_label" for="input_22_34">Write in the name of the PI</label>
 				<div class="ginput_container">
-					<input id="write_in_pi" class="medium" type="text" tabindex="11" value="<?php echo current( $this_activity_fields['write_in_pi'] ); ?>" name="write_in_pi">
+					<input id="write_in_pi" class="medium" type="text" tabindex="11" value="" name="write_in_pi">
 				</div>
 			</li>
 			
@@ -539,9 +524,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<col id="gfield_list_18_col1" class="gfield_list_col_odd">
 						</colgroup>
 						<tbody>
-							<?php 
-							$count = 1; //make sure the first one doesn't have a delete button
-							if ( $this_activity_fields['collaborating'] ) { 
+							<?php if ( $this_activity_fields['collaborating'] ) { $count = 1; //make sure the first one doesn't have a delete button
 								foreach(  $this_activity_fields['collaborating'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
@@ -556,19 +539,6 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									</tr>
 								<?php $count++; }
 							} ?>
-							<?php //make sure we have one empty input field ?>
-							<tr class="gfield_list_row_odd">
-								<td class="gfield_list_cell list_cell">
-									<input type="text" tabindex="26" value="" name="collaborating[]">
-								</td>
-								<td class="gfield_list_icons">
-									<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
-									<?php if( $count!= 1 ) { ?>
-										<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
-									<?php } ?>
-								</td>
-							</tr>
-							
 						</tbody>
 					</table>
 				</div>
@@ -603,9 +573,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<col id="gfield_list_39_col1" class="gfield_list_col_odd">
 						</colgroup>
 						<tbody>
-							<?php 
-							$count = 1; //make sure the first one doesn't have a delete button
-							if ( $this_activity_fields['supplemental_links'] ) { 
+							<?php if ( $this_activity_fields['supplemental_links'] ) { $count = 1; //make sure the first one doesn't have a delete button
 								foreach(  $this_activity_fields['supplemental_links'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
@@ -620,18 +588,6 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									</tr>
 								<?php $count++; }
 							} ?>
-							<?php //make sure we have one empty input field ?>
-							<tr class="gfield_list_row_odd">
-								<td class="gfield_list_cell list_cell">
-									<input type="text" tabindex="26" value="" name="supplemental_links[]">
-								</td>
-								<td class="gfield_list_icons">
-									<img class="add_list_item add_supplemental_link" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
-									<?php if( $count!= 1 ) { ?>
-										<img class="delete_list_item delete_supplemental_link" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
-									<?php } ?>
-								</td>
-							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -640,7 +596,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_activity_upload" class="gfield">
 				<label class="gfield_label" for="input_22_39">Do you have any supplemental material you would like to UPLOAD?</label>
 			
-					<p><span id="plupload-browse-button"><input type="button" value="Select files to upload..." /></span></p>
+					<p><span id="plupload-browse-button">Select files to upload...</span></p>
 					<div id="plupload-upload-ui">
 					<?php //echo get_the_post_thumbnail( $p->ID ) //get attachemtns here??>
 					</div>
@@ -668,247 +624,1020 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 }
 
 function cc_cafnr_get_countries() {
-	return array(
-		'-1'=>'---Select---',
-		'AF'=>'Afghanistan',
-		'AL'=>'Albania',
-		'DZ'=>'Algeria',
-		'AS'=>'American Samoa',
-		'AD'=>'Andorra',
-		'AO'=>'Angola',
-		'AI'=>'Anguilla',
-		'AQ'=>'Antarctica',
-		'AG'=>'Antigua And Barbuda',
-		'AR'=>'Argentina',
-		'AM'=>'Armenia',
-		'AW'=>'Aruba',
-		'AU'=>'Australia',
-		'AT'=>'Austria',
-		'AZ'=>'Azerbaijan',
-		'BS'=>'Bahamas',
-		'BH'=>'Bahrain',
-		'BD'=>'Bangladesh',
-		'BB'=>'Barbados',
-		'BY'=>'Belarus',
-		'BE'=>'Belgium',
-		'BZ'=>'Belize',
-		'BJ'=>'Benin',
-		'BM'=>'Bermuda',
-		'BT'=>'Bhutan',
-		'BO'=>'Bolivia',
-		'BA'=>'Bosnia And Herzegovina',
-		'BW'=>'Botswana',
-		'BV'=>'Bouvet Island',
-		'BR'=>'Brazil',
-		'IO'=>'British Indian Ocean Territory',
-		'BN'=>'Brunei',
-		'BG'=>'Bulgaria',
-		'BF'=>'Burkina Faso',
-		'BI'=>'Burundi',
-		'KH'=>'Cambodia',
-		'CM'=>'Cameroon',
-		'CA'=>'Canada',
-		'CV'=>'Cape Verde',
-		'KY'=>'Cayman Islands',
-		'CF'=>'Central African Republic',
-		'TD'=>'Chad',
-		'CL'=>'Chile',
-		'CN'=>'China',
-		'CX'=>'Christmas Island',
-		'CC'=>'Cocos (Keeling) Islands',
-		'CO'=>'Columbia',
-		'KM'=>'Comoros',
-		'CG'=>'Congo',
-		'CK'=>'Cook Islands',
-		'CR'=>'Costa Rica',
-		'CI'=>'Cote D\'Ivorie (Ivory Coast)',
-		'HR'=>'Croatia (Hrvatska)',
-		'CU'=>'Cuba',
-		'CY'=>'Cyprus',
-		'CZ'=>'Czech Republic',
-		'CD'=>'Democratic Republic Of Congo (Zaire)',
-		'DK'=>'Denmark',
-		'DJ'=>'Djibouti',
-		'DM'=>'Dominica',
-		'DO'=>'Dominican Republic',
-		'TP'=>'East Timor',
-		'EC'=>'Ecuador',
-		'EG'=>'Egypt',
-		'SV'=>'El Salvador',
-		'GQ'=>'Equatorial Guinea',
-		'ER'=>'Eritrea',
-		'EE'=>'Estonia',
-		'ET'=>'Ethiopia',
-		'FK'=>'Falkland Islands (Malvinas)',
-		'FO'=>'Faroe Islands',
-		'FJ'=>'Fiji',
-		'FI'=>'Finland',
-		'FR'=>'France',
-		'FX'=>'France, Metropolitan',
-		'GF'=>'French Guinea',
-		'PF'=>'French Polynesia',
-		'TF'=>'French Southern Territories',
-		'GA'=>'Gabon',
-		'GM'=>'Gambia',
-		'GE'=>'Georgia',
-		'DE'=>'Germany',
-		'GH'=>'Ghana',
-		'GI'=>'Gibraltar',
-		'GR'=>'Greece',
-		'GL'=>'Greenland',
-		'GD'=>'Grenada',
-		'GP'=>'Guadeloupe',
-		'GU'=>'Guam',
-		'GT'=>'Guatemala',
-		'GN'=>'Guinea',
-		'GW'=>'Guinea-Bissau',
-		'GY'=>'Guyana',
-		'HT'=>'Haiti',
-		'HM'=>'Heard And McDonald Islands',
-		'HN'=>'Honduras',
-		'HK'=>'Hong Kong',
-		'HU'=>'Hungary',
-		'IS'=>'Iceland',
-		'IN'=>'India',
-		'ID'=>'Indonesia',
-		'IR'=>'Iran',
-		'IQ'=>'Iraq',
-		'IE'=>'Ireland',
-		'IL'=>'Israel',
-		'IT'=>'Italy',
-		'JM'=>'Jamaica',
-		'JP'=>'Japan',
-		'JO'=>'Jordan',
-		'KZ'=>'Kazakhstan',
-		'KE'=>'Kenya',
-		'KI'=>'Kiribati',
-		'KW'=>'Kuwait',
-		'KG'=>'Kyrgyzstan',
-		'LA'=>'Laos',
-		'LV'=>'Latvia',
-		'LB'=>'Lebanon',
-		'LS'=>'Lesotho',
-		'LR'=>'Liberia',
-		'LY'=>'Libya',
-		'LI'=>'Liechtenstein',
-		'LT'=>'Lithuania',
-		'LU'=>'Luxembourg',
-		'MO'=>'Macau',
-		'MK'=>'Macedonia',
-		'MG'=>'Madagascar',
-		'MW'=>'Malawi',
-		'MY'=>'Malaysia',
-		'MV'=>'Maldives',
-		'ML'=>'Mali',
-		'MT'=>'Malta',
-		'MH'=>'Marshall Islands',
-		'MQ'=>'Martinique',
-		'MR'=>'Mauritania',
-		'MU'=>'Mauritius',
-		'YT'=>'Mayotte',
-		'MX'=>'Mexico',
-		'FM'=>'Micronesia',
-		'MD'=>'Moldova',
-		'MC'=>'Monaco',
-		'MN'=>'Mongolia',
-		'MS'=>'Montserrat',
-		'MA'=>'Morocco',
-		'MZ'=>'Mozambique',
-		'MM'=>'Myanmar (Burma)',
-		'NA'=>'Namibia',
-		'NR'=>'Nauru',
-		'NP'=>'Nepal',
-		'NL'=>'Netherlands',
-		'AN'=>'Netherlands Antilles',
-		'NC'=>'New Caledonia',
-		'NZ'=>'New Zealand',
-		'NI'=>'Nicaragua',
-		'NE'=>'Niger',
-		'NG'=>'Nigeria',
-		'NU'=>'Niue',
-		'NF'=>'Norfolk Island',
-		'KP'=>'North Korea',
-		'MP'=>'Northern Mariana Islands',
-		'NO'=>'Norway',
-		'OM'=>'Oman',
-		'PK'=>'Pakistan',
-		'PW'=>'Palau',
-		'PA'=>'Panama',
-		'PG'=>'Papua New Guinea',
-		'PY'=>'Paraguay',
-		'PE'=>'Peru',
-		'PH'=>'Philippines',
-		'PN'=>'Pitcairn',
-		'PL'=>'Poland',
-		'PT'=>'Portugal',
-		'PR'=>'Puerto Rico',
-		'QA'=>'Qatar',
-		'RE'=>'Reunion',
-		'RO'=>'Romania',
-		'RU'=>'Russia',
-		'RW'=>'Rwanda',
-		'SH'=>'Saint Helena',
-		'KN'=>'Saint Kitts And Nevis',
-		'LC'=>'Saint Lucia',
-		'PM'=>'Saint Pierre And Miquelon',
-		'VC'=>'Saint Vincent And The Grenadines',
-		'SM'=>'San Marino',
-		'ST'=>'Sao Tome And Principe',
-		'SA'=>'Saudi Arabia',
-		'SN'=>'Senegal',
-		'SC'=>'Seychelles',
-		'SL'=>'Sierra Leone',
-		'SG'=>'Singapore',
-		'SK'=>'Slovak Republic',
-		'SI'=>'Slovenia',
-		'SB'=>'Solomon Islands',
-		'SO'=>'Somalia',
-		'ZA'=>'South Africa',
-		'GS'=>'South Georgia And South Sandwich Islands',
-		'KR'=>'South Korea',
-		'ES'=>'Spain',
-		'LK'=>'Sri Lanka',
-		'SD'=>'Sudan',
-		'SR'=>'Suriname',
-		'SJ'=>'Svalbard And Jan Mayen',
-		'SZ'=>'Swaziland',
-		'SE'=>'Sweden',
-		'CH'=>'Switzerland',
-		'SY'=>'Syria',
-		'TW'=>'Taiwan',
-		'TJ'=>'Tajikistan',
-		'TZ'=>'Tanzania',
-		'TH'=>'Thailand',
-		'TG'=>'Togo',
-		'TK'=>'Tokelau',
-		'TO'=>'Tonga',
-		'TT'=>'Trinidad And Tobago',
-		'TN'=>'Tunisia',
-		'TR'=>'Turkey',
-		'TM'=>'Turkmenistan',
-		'TC'=>'Turks And Caicos Islands',
-		'TV'=>'Tuvalu',
-		'UG'=>'Uganda',
-		'UA'=>'Ukraine',
-		'AE'=>'United Arab Emirates',
-		'UK'=>'United Kingdom',				
-		'UM'=>'United States Minor Outlying Islands',
-		'UY'=>'Uruguay',
-		'UZ'=>'Uzbekistan',
-		'VU'=>'Vanuatu',
-		'VA'=>'Vatican City (Holy See)',
-		'VE'=>'Venezuela',
-		'VN'=>'Vietnam',
-		'VG'=>'Virgin Islands (British)',
-		'VI'=>'Virgin Islands (US)',
-		'WF'=>'Wallis And Futuna Islands',
-		'EH'=>'Western Sahara',
-		'WS'=>'Western Samoa',
-		'YE'=>'Yemen',
-		'YU'=>'Yugoslavia',
-		'ZM'=>'Zambia',
-		'ZW'=>'Zimbabwe'
-    );
+?>
+	<script type="text/javascript">
+	jQuery( document ).ready(function($) {
+				countryCodes = [
+					{
+						code: "",
+						name: "---Select Country---"
+					},
+					{
+						code: "AF",
+						name: "Afghanistan"
+					},
+					{
+						code: "AX",
+						name: "Åland Islands"
+					},					
+					{
+						code: "AL",
+						name: "Albania"
+					},
+					{
+						code: "DZ",
+						name: "Algeria"
+					},
+					{
+						code: "AS",
+						name: "American Samoa"
+					},
+					{
+						code: "AD",
+						name: "Andorra"
+					},
+					{
+						code: "AO",
+						name: "Angola"
+					},
+					{
+						code: "AI",
+						name: "Anguilla"
+					},
+					{
+						code: "AQ",
+						name: "Antarctica"
+					},
+					{
+						code: "AG",
+						name: "Antigua and Barbuda"
+					},
+					{
+						code: "AR",
+						name: "Argentina"
+					},
+					{
+						code: "AM",
+						name: "Armenia"
+					},
+					{
+						code: "AW",
+						name: "Aruba"
+					},
+					{
+						code: "AU",
+						name: "Australia"
+					},
+					{
+						code: "AT",
+						name: "Austria"
+					},
+					{
+						code: "AZ",
+						name: "Azerbaijan"
+					},
+					{
+						code: "BS",
+						name: "Bahamas"
+					},
+					{
+						code: "BH",
+						name: "Bahrain"
+					},
+					{
+						code: "BD",
+						name: "Bangladesh"
+					},
+					{
+						code: "BB",
+						name: "Barbados"
+					},
+					{
+						code: "BY",
+						name: "Belarus"
+					},
+					{
+						code: "BE",
+						name: "Belgium"
+					},
+					{
+						code: "BZ",
+						name: "Belize"
+					},
+					{
+						code: "BJ",
+						name: "Benin"
+					},
+					{
+						code: "BM",
+						name: "Bermuda"
+					},
+					{
+						code: "BT",
+						name: "Bhutan"
+					},
+					{
+						code: "BO",
+						name: "Bolivia, Plurinational State Of"
+					},
+					{
+						code: "BQ",
+						name: "Bonaire, Sint Eustatius and Saba"
+					},
+					{
+						code: "BA",
+						name: "Bosnia and Herzegovina"
+					},
+					{
+						code: "BW",
+						name: "Botswana"
+					},
+					{
+						code: "BV",
+						name: "Bouvet Island"
+					},
+					{
+						code: "BR",
+						name: "Brazil"
+					},
+					{
+						code: "IO",
+						name: "British Indian Ocean Territory"
+					},
+					{
+						code: "BN",
+						name: "Brunei Darussalam"
+					},
+					{
+						code: "BG",
+						name: "Bulgaria"
+					},
+					{
+						code: "BF",
+						name: "Burkina Faso"
+					},
+					{
+						code: "BI",
+						name: "Burundi"
+					},
+					{
+						code: "KH",
+						name: "Cambodia"
+					},
+					{
+						code: "CM",
+						name: "Cameroon"
+					},
+					{
+						code: "CA",
+						name: "Canada"
+					},
+					{
+						code: "CV",
+						name: "Cape Verde"
+					},
+					{
+						code: "KY",
+						name: "Cayman Islands"
+					},
+					{
+						code: "CF",
+						name: "Central African Republic"
+					},
+					{
+						code: "TD",
+						name: "Chad"
+					},
+					{
+						code: "CL",
+						name: "Chile"
+					},
+					{
+						code: "CN",
+						name: "China"
+					},
+					{
+						code: "CX",
+						name: "Christmas Island"
+					},
+					{
+						code: "CC",
+						name: "Cocos (Keeling) Islands"
+					},
+					{
+						code: "CO",
+						name: "Colombia"
+					},
+					{
+						code: "KM",
+						name: "Comoros"
+					},
+					{
+						code: "CG",
+						name: "Congo"
+					},
+					{
+						code: "CD",
+						name: "Congo The Democratic Republic Of The"
+					},
+					{
+						code: "CK",
+						name: "Cook Islands"
+					},
+					{
+						code: "CR",
+						name: "Costa Rica"
+					},
+					{
+						code: "HR",
+						name: "Croatia"
+					},
+					{
+						code: "CU",
+						name: "Cuba"
+					},
+					{
+						code: "CW",
+						name: "Curaçao"
+					},
+					{
+						code: "CY",
+						name: "Cyprus"
+					},
+					{
+						code: "CZ",
+						name: "Czech Republic"
+					},
+					{
+						code: "CI",
+						name: "Côte D\'Ivoire"
+					},
+					{
+						code: "DK",
+						name: "Denmark"
+					},
+					{
+						code: "DJ",
+						name: "Djibouti"
+					},
+					{
+						code: "DM",
+						name: "Dominica"
+					},
+					{
+						code: "DO",
+						name: "Dominican Republic"
+					},
+					{
+						code: "EC",
+						name: "Ecuador"
+					},
+					{
+						code: "EG",
+						name: "Egypt"
+					},
+					{
+						code: "SV",
+						name: "El Salvador"
+					},
+					{
+						code: "GQ",
+						name: "Equatorial Guinea"
+					},
+					{
+						code: "ER",
+						name: "Eritrea"
+					},
+					{
+						code: "EE",
+						name: "Estonia"
+					},
+					{
+						code: "ET",
+						name: "Ethiopia"
+					},
+					{
+						code: "FK",
+						name: "Falkland Islands  (Malvinas)"
+					},
+					{
+						code: "FO",
+						name: "Faroe Islands"
+					},
+					{
+						code: "FJ",
+						name: "Fiji"
+					},
+					{
+						code: "FI",
+						name: "Finland"
+					},
+					{
+						code: "FR",
+						name: "France"
+					},
+					{
+						code: "GF",
+						name: "French Guiana"
+					},
+					{
+						code: "PF",
+						name: "French Polynesia"
+					},
+					{
+						code: "TF",
+						name: "French Southern Territories"
+					},
+					{
+						code: "GA",
+						name: "Gabon"
+					},
+					{
+						code: "GM",
+						name: "Gambia"
+					},
+					{
+						code: "GE",
+						name: "Georgia"
+					},
+					{
+						code: "DE",
+						name: "Germany"
+					},
+					{
+						code: "GH",
+						name: "Ghana"
+					},
+					{
+						code: "GI",
+						name: "Gibraltar"
+					},
+					{
+						code: "GR",
+						name: "Greece"
+					},
+					{
+						code: "GL",
+						name: "Greenland"
+					},
+					{
+						code: "GD",
+						name: "Grenada"
+					},
+					{
+						code: "GP",
+						name: "Guadeloupe"
+					},
+					{
+						code: "GU",
+						name: "Guam"
+					},
+					{
+						code: "GT",
+						name: "Guatemala"
+					},
+					{
+						code: "GG",
+						name: "Guernsey"
+					},
+					{
+						code: "GN",
+						name: "Guinea"
+					},
+					{
+						code: "GW",
+						name: "Guinea-Bissau"
+					},
+					{
+						code: "GY",
+						name: "Guyana"
+					},
+					{
+						code: "HT",
+						name: "Haiti"
+					},
+					{
+						code: "HM",
+						name: "Heard Island and McDonald Islands"
+					},
+					{
+						code: "VA",
+						name: "Holy See (Vatican City State)"
+					},
+					{
+						code: "HN",
+						name: "Honduras"
+					},
+					{
+						code: "HK",
+						name: "Hong Kong"
+					},
+					{
+						code: "HU",
+						name: "Hungary"
+					},
+					{
+						code: "IS",
+						name: "Iceland"
+					},
+					{
+						code: "IN",
+						name: "India"
+					},
+					{
+						code: "ID",
+						name: "Indonesia"
+					},
+					{
+						code: "IR",
+						name: "Iran, Islamic Republic Of"
+					},
+					{
+						code: "IQ",
+						name: "Iraq"
+					},
+					{
+						code: "IE",
+						name: "Ireland"
+					},
+					{
+						code: "IM",
+						name: "Isle of Man"
+					},
+					{
+						code: "IL",
+						name: "Israel"
+					},
+					{
+						code: "IT",
+						name: "Italy"
+					},
+					{
+						code: "JM",
+						name: "Jamaica"
+					},
+					{
+						code: "JP",
+						name: "Japan"
+					},
+					{
+						code: "JE",
+						name: "Jersey"
+					},
+					{
+						code: "JO",
+						name: "Jordan"
+					},
+					{
+						code: "KZ",
+						name: "Kazakhstan"
+					},
+					{
+						code: "KE",
+						name: "Kenya"
+					},
+					{
+						code: "KI",
+						name: "Kiribati"
+					},
+					{
+						code: "KP",
+						name: "Korea, Democratic People\'s Republic Of"
+					},
+					{
+						code: "KR",
+						name: "Korea, Republic of"
+					},
+					{
+						code: "KW",
+						name: "Kuwait"
+					},
+					{
+						code: "KG",
+						name: "Kyrgyzstan"
+					},
+					{
+						code: "LA",
+						name: "Lao People\'s Democratic Republic"
+					},
+					{
+						code: "LV",
+						name: "Latvia"
+					},
+					{
+						code: "LB",
+						name: "Lebanon"
+					},
+					{
+						code: "LS",
+						name: "Lesotho"
+					},
+					{
+						code: "LR",
+						name: "Liberia"
+					},
+					{
+						code: "LY",
+						name: "Libya"
+					},
+					{
+						code: "LI",
+						name: "Liechtenstein"
+					},
+					{
+						code: "LT",
+						name: "Lithuania"
+					},
+					{
+						code: "LU",
+						name: "Luxembourg"
+					},
+					{
+						code: "MO",
+						name: "Macao"
+					},
+					{
+						code: "MK",
+						name: "Macedonia, the Former Yugoslav Republic Of"
+					},
+					{
+						code: "MG",
+						name: "Madagascar"
+					},
+					{
+						code: "MW",
+						name: "Malawi"
+					},
+					{
+						code: "MY",
+						name: "Malaysia"
+					},
+					{
+						code: "MV",
+						name: "Maldives"
+					},
+					{
+						code: "ML",
+						name: "Mali"
+					},
+					{
+						code: "MT",
+						name: "Malta"
+					},
+					{
+						code: "MH",
+						name: "Marshall Islands"
+					},
+					{
+						code: "MQ",
+						name: "Martinique"
+					},
+					{
+						code: "MR",
+						name: "Mauritania"
+					},
+					{
+						code: "MU",
+						name: "Mauritius"
+					},
+					{
+						code: "YT",
+						name: "Mayotte"
+					},
+					{
+						code: "MX",
+						name: "Mexico"
+					},
+					{
+						code: "FM",
+						name: "Micronesia, Federated States Of"
+					},
+					{
+						code: "MD",
+						name: "Moldova, Republic of"
+					},
+					{
+						code: "MC",
+						name: "Monaco"
+					},
+					{
+						code: "MN",
+						name: "Mongolia"
+					},
+					{
+						code: "ME",
+						name: "Montenegro"
+					},
+					{
+						code: "MS",
+						name: "Montserrat"
+					},
+					{
+						code: "MA",
+						name: "Morocco"
+					},
+					{
+						code: "MZ",
+						name: "Mozambique"
+					},
+					{
+						code: "MM",
+						name: "Myanmar"
+					},
+					{
+						code: "NA",
+						name: "Namibia"
+					},
+					{
+						code: "NR",
+						name: "Nauru"
+					},
+					{
+						code: "NP",
+						name: "Nepal"
+					},
+					{
+						code: "NL",
+						name: "Netherlands"
+					},
+					{
+						code: "NC",
+						name: "New Caledonia"
+					},
+					{
+						code: "NZ",
+						name: "New Zealand"
+					},
+					{
+						code: "NI",
+						name: "Nicaragua"
+					},
+					{
+						code: "NE",
+						name: "Niger"
+					},
+					{
+						code: "NG",
+						name: "Nigeria"
+					},
+					{
+						code: "NU",
+						name: "Niue"
+					},
+					{
+						code: "NF",
+						name: "Norfolk Island"
+					},
+					{
+						code: "MP",
+						name: "Northern Mariana Islands"
+					},
+					{
+						code: "NO",
+						name: "Norway"
+					},
+					{
+						code: "OM",
+						name: "Oman"
+					},
+					{
+						code: "PK",
+						name: "Pakistan"
+					},
+					{
+						code: "PW",
+						name: "Palau"
+					},
+					{
+						code: "PS",
+						name: "Palestinian Territory, Occupied"
+					},
+					{
+						code: "PA",
+						name: "Panama"
+					},
+					{
+						code: "PG",
+						name: "Papua New Guinea"
+					},
+					{
+						code: "PY",
+						name: "Paraguay"
+					},
+					{
+						code: "PE",
+						name: "Peru"
+					},
+					{
+						code: "PH",
+						name: "Philippines"
+					},
+					{
+						code: "PN",
+						name: "Pitcairn"
+					},
+					{
+						code: "PL",
+						name: "Poland"
+					},
+					{
+						code: "PT",
+						name: "Portugal"
+					},
+					{
+						code: "PR",
+						name: "Puerto Rico"
+					},
+					{
+						code: "QA",
+						name: "Qatar"
+					},
+					{
+						code: "RO",
+						name: "Romania"
+					},
+					{
+						code: "RU",
+						name: "Russian Federation"
+					},
+					{
+						code: "RW",
+						name: "Rwanda"
+					},
+					{
+						code: "RE",
+						name: "Réunion"
+					},
+					{
+						code: "BL",
+						name: "Saint Barthélemy"
+					},
+					{
+						code: "SH",
+						name: "Saint Helena, Ascension and Tristan Da Cunha"
+					},
+					{
+						code: "KN",
+						name: "Saint Kitts And Nevis"
+					},
+					{
+						code: "LC",
+						name: "Saint Lucia"
+					},
+					{
+						code: "MF",
+						name: "Saint Martin (French Part)"
+					},
+					{
+						code: "PM",
+						name: "Saint Pierre And Miquelon"
+					},
+					{
+						code: "VC",
+						name: "Saint Vincent And The Grenadines"
+					},
+					{
+						code: "WS",
+						name: "Samoa"
+					},
+					{
+						code: "SM",
+						name: "San Marino"
+					},
+					{
+						code: "ST",
+						name: "Sao Tome and Principe"
+					},
+					{
+						code: "SA",
+						name: "Saudi Arabia"
+					},
+					{
+						code: "SN",
+						name: "Senegal"
+					},
+					{
+						code: "RS",
+						name: "Serbia"
+					},
+					{
+						code: "SC",
+						name: "Seychelles"
+					},
+					{
+						code: "SL",
+						name: "Sierra Leone"
+					},
+					{
+						code: "SG",
+						name: "Singapore"
+					},
+					{
+						code: "SX",
+						name: "Sint Maarten (Dutch part)"
+					},
+					{
+						code: "SK",
+						name: "Slovakia"
+					},
+					{
+						code: "SI",
+						name: "Slovenia"
+					},
+					{
+						code: "SB",
+						name: "Solomon Islands"
+					},
+					{
+						code: "SO",
+						name: "Somalia"
+					},
+					{
+						code: "ZA",
+						name: "South Africa"
+					},
+					{
+						code: "GS",
+						name: "South Georgia and the South Sandwich Islands"
+					},
+					{
+						code: "SS",
+						name: "South Sudan"
+					},
+					{
+						code: "ES",
+						name: "Spain"
+					},
+					{
+						code: "LK",
+						name: "Sri Lanka"
+					},
+					{
+						code: "SD",
+						name: "Sudan"
+					},
+					{
+						code: "SR",
+						name: "Suriname"
+					},
+					{
+						code: "SJ",
+						name: "Svalbard And Jan Mayen"
+					},
+					{
+						code: "SZ",
+						name: "Swaziland"
+					},
+					{
+						code: "SE",
+						name: "Sweden"
+					},
+					{
+						code: "CH",
+						name: "Switzerland"
+					},
+					{
+						code: "SY",
+						name: "Syrian Arab Republic"
+					},
+					{
+						code: "TW",
+						name: "Taiwan, Province Of China"
+					},
+					{
+						code: "TJ",
+						name: "Tajikistan"
+					},
+					{
+						code: "TZ",
+						name: "Tanzania, United Republic of"
+					},
+					{
+						code: "TH",
+						name: "Thailand"
+					},
+					{
+						code: "TL",
+						name: "Timor-Leste"
+					},
+					{
+						code: "TG",
+						name: "Togo"
+					},
+					{
+						code: "TK",
+						name: "Tokelau"
+					},
+					{
+						code: "TO",
+						name: "Tonga"
+					},
+					{
+						code: "TT",
+						name: "Trinidad and Tobago"
+					},
+					{
+						code: "TN",
+						name: "Tunisia"
+					},
+					{
+						code: "TR",
+						name: "Turkey"
+					},
+					{
+						code: "TM",
+						name: "Turkmenistan"
+					},
+					{
+						code: "TC",
+						name: "Turks and Caicos Islands"
+					},
+					{
+						code: "TV",
+						name: "Tuvalu"
+					},
+					{
+						code: "UG",
+						name: "Uganda"
+					},
+					{
+						code: "UA",
+						name: "Ukraine"
+					},
+					{
+						code: "AE",
+						name: "United Arab Emirates"
+					},
+					{
+						code: "GB",
+						name: "United Kingdom"
+					},
+					{
+						code: "US",
+						name: "United States"
+					},
+					{
+						code: "UM",
+						name: "United States Minor Outlying Islands"
+					},
+					{
+						code: "UY",
+						name: "Uruguay"
+					},
+					{
+						code: "UZ",
+						name: "Uzbekistan"
+					},
+					{
+						code: "VU",
+						name: "Vanuatu"
+					},
+					{
+						code: "VE",
+						name: "Venezuela, Bolivarian Republic of"
+					},
+					{
+						code: "VN",
+						name: "Viet Nam"
+					},
+					{
+						code: "VG",
+						name: "Virgin Islands, British"
+					},
+					{
+						code: "VI",
+						name: "Virgin Islands, U.S."
+					},
+					{
+						code: "WF",
+						name: "Wallis and Futuna"
+					},
+					{
+						code: "EH",
+						name: "Western Sahara"
+					},
+					{
+						code: "YE",
+						name: "Yemen"
+					},
+					{
+						code: "ZM",
+						name: "Zambia"
+					},
+					{
+						code: "ZW",
+						name: "Zimbabwe"
+					},
+				];
+
+        var options = '';
+        for (var i = 0; i < countryCodes.length; i++) {
+            options += '<option value="' + countryCodes[i].code + '">' + countryCodes[i].name + '</option>';
+        }
+        $('#countrylist').html(options);
+	});		
+	</script>
+<?php	
 }
 
 /*
@@ -917,9 +1646,8 @@ function cc_cafnr_get_countries() {
  * @params int Group_ID
  * @return array Array of Member ID => name
  */
-function cc_cafnr_get_member_array( $group_id ){ 
+function cc_cafnr_get_member_array( $group_id = 595 ){
 
-	$group_id = cc_cafnr_get_group_id();
 	global $bp;
 	
 	$group = groups_get_group( array( 'group_id' => $group_id ) );
@@ -943,7 +1671,7 @@ function cc_cafnr_get_member_array( $group_id ){
 
 function cc_cafnr_render_add_member_form(){
 	
-	$group_members = cc_cafnr_get_member_array( cc_cafnr_get_group_id() );
+	$group_members = cc_cafnr_get_member_array();
 	global $uid;
 	if( isset( $_POST['SubmitFaculty'] ) ){
 		//echo 'Faculty Found!'; //mel's checks
@@ -963,9 +1691,9 @@ function cc_cafnr_render_add_member_form(){
 				});
 			</script>
 <?php		
-		} else {
+		} else if ( $_POST['faculty_select'] == "add_new_faculty" ) {
 			//if user selects adds new faculty, show newfacultydiv and hide other divs
-			if ( $_POST['faculty_select'] == "add_new_faculty" ) {
+			
 ?>
 				<script type="text/javascript">
 					jQuery( document ).ready(function($) {
@@ -976,6 +1704,9 @@ function cc_cafnr_render_add_member_form(){
 				</script>
 <?php	
 		} else {
+
+			
+			
 			//If user selects a faculty name, show userinfo form
 			$user_info = get_userdata( $_POST['faculty_select'] );
 			$uid = $_POST['faculty_select'];
@@ -994,8 +1725,30 @@ function cc_cafnr_render_add_member_form(){
 					});
 				</script>
 <?php
-			}
+			
 		}
+	} else if (	!empty( $_GET['user'] )) {			
+			$activities = cc_cafnr_get_faculty_activity_url_list( $_GET['user'] );			
+			cc_cafnr_render_faculty_activity_table( $activities );			
+			$user_info = get_userdata( $_GET['user'] );
+			$uid = $_GET['user'];
+			
+			$all_meta_for_user = get_user_meta( $uid );
+?>
+				<script type="text/javascript">
+					jQuery( document ).ready(function($) {
+						$("#userID").val("<?php echo $_GET['user']; ?>");
+						$("#activities").show();
+						$("#userinfo").show();
+						$("#newfacultydiv").hide();
+						$("#cafnr_faculty_form").hide();
+						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a href='/cafnr-intl-dashboard/'>change</a>)");
+						
+					});
+				</script>
+<?php
+
+	
 	} else {
 ?>
 			<script type="text/javascript">
@@ -1119,6 +1872,7 @@ function cc_cafnr_render_add_member_form(){
 
 }
 
+
 /*
  * Returns array of activity names and links (to url form)
  *
@@ -1133,12 +1887,11 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 		// 'author' => $user_id
 		// );
 	
-	
-	//TODO: talk to Mike about how we want to do this, searching by author or by meta, same diff..
 	$intl_args = array(
 		'post_type' => 'cafnr-activity',
 		'post_status' => 'publish',	
 		'meta_key' => 'activity_owner',
+		'numberposts' => -1,
 		'meta_value' => $user_id
 	);
 	$user_activity_posts = get_posts( $intl_args );
@@ -1154,7 +1907,7 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 		$activity_list[$count]['title'] = $post->post_title;
 		$activity_list[$count]['form_url'] = $url;
 		$activity_list[$count]['url'] = get_site_url() . '/' . $post->post_name;
-		
+		$activity_list[$count]['activity_owner'] = $post->activity_owner;
 		$count++;
 	}
 
@@ -1182,32 +1935,48 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ( $activities as $key => $value ){ //TODO: add VIEW
+				<?php 
+				
+				foreach ( $activities as $key => $value ){ //TODO: add VIEW
 					
 					$id = $value["id"];
 					$title = $value["title"];
 					$url = $value["url"];
 					$form_url = $value["form_url"];
-					
-				
+					$activity_owner = $value["activity_owner"];				
 				
 					echo '<tr><td style="width:70%;">' . $title . '</td>';
 					echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
 					echo '<td style="width:10%;"><a href="' . $form_url . '" class="button">Edit</a></td>';
-					echo '<td style="width:10%;"><a href="#" class="button">Delete</a></td>';
+					echo '<td style="width:10%;"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $activity_owner . ')">Delete</a></td>';
 					echo '</tr>';
 				
 				} ?>
 			</tbody>
 		</table>
 	</div>
-	
+	<script type="text/javascript">		
+			function delActivity(activityid, activity_owner) {				
+				var answer = confirm("Are you sure you want to delete this activity?");
+				if (answer){
+						var data = {
+							'action': 'del_cafnr_activity',
+							'activityid': activityid
+						};						
+						jQuery.post(ajaxurl, data, function(response) {
+							alert('Activity Deleted!');
+							window.location = '/wordpress/cafnr-intl-dashboard/?user=' + activity_owner;
+						});					
+				} else {
+					return false;
+				}
+			}		
+	</script>
 <?php
 }
 
-function cc_cafnr_add_member_save( $email, $group_id ){
+function cc_cafnr_add_member_save( $email, $group_id = 596 ){
 
-	$group_id = cc_cafnr_get_group_id();
 	$user_id = username_exists( $user_name );
 	
 	if ( !$user_id and email_exists($user_email) == false ) {

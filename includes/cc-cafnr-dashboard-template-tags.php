@@ -56,39 +56,16 @@ function cc_cafnr_intl_dashboard() {
 			$('#CVmethod2').click(function () {
 				$("#linkDiv").hide();
 				$("#uploadDiv").show();
-			});
-			
-			// $( "#faculty" ).change(function() {
-				// $("#nameactivity").html($("#faculty option:selected").text() + "'s Activities");				
-				// $("#activities").show();
-				// $("#userinfo").show();
-			// });
-			$( "#btnAddNewActivity" ).click(function() {
-				//window.location = "/wordpress/cafnr-add-activity/?user=" + $( "#userID" ).val();
-				//Mel changed to make more universal
-				window.location = cafnr_ajax.homeURL + "/cafnr-add-activity/?user=" + $( "#userID" ).val();
-			});
+			});		
 
-			
-			// $( "#faculty" ).click(function() {
-				// if ($( "#faculty" ).val() == "ADD") {
-					// $("#newfacultydiv").show();
-					// $("#activities").hide();
-					// $("#userinfo").hide();
-				// } else {
-					// $("#newfacultydiv").hide();
-					// $("#activities").show();
-					// $("#userinfo").show();					
-				// }
-			// });
-			$("#submitnewfaculty").click(function() {
-					$("#newfacultydiv").hide();
-					$("#activities").show();
-					$("#userinfo").show();					
-			});
+			$( "#btnAddNewActivity" ).click(function() {
+				window.location = "/wordpress/cafnr-add-activity/?user=" + $( "#userID" ).val();
+			});			
+
 		});	
 	</script>
 	
-<?php
+<?php	
+	
 }
 ?>

@@ -236,9 +236,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		$this_activity_types = wp_get_post_terms( $this_activity->ID, 'cafnr-activity-type', array("fields" => "slugs") );
 		$this_activity_fields = get_post_custom( $this_activity->ID );
 		
-<<<<<<< HEAD
-		//var_dump ($this_activity_types);
-=======
+
 		//fetch attachments of post
 		$attach_args = array( 
 			'post_type' => 'attachment', 
@@ -250,7 +248,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		$this_activity_attachments = get_posts( $attach_args );
 
 		var_dump ($this_activity_types);
->>>>>>> origin/master
+
 		
 		//var_dump( ($this_activity_fields) );  //post_id int
 		//var_dump( $this_activity_fields['activity_checkbox'] );  //post_id int

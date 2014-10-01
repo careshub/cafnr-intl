@@ -66,7 +66,7 @@ function cc_cafnr_intl_dashboard() {
 			});		
 
 			$( "#btnAddNewActivity" ).click(function() {
-				window.location = "/wordpress/cafnr-add-activity/?user=" + $( "#userID" ).val();
+				window.location = cafnr_ajax.homeURL + "/cafnr-add-activity/?user=" + $( "#userID" ).val();
 			});			
 
 		});	

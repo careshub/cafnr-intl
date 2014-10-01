@@ -1707,8 +1707,6 @@ function cc_cafnr_render_mod_admin_form(){
 <?php	
 		} else {
 
-			
-			
 			//If user selects a faculty name, show userinfo form
 			$user_info = get_userdata( $_POST['faculty_select'] );
 			$uid = $_POST['faculty_select'];
@@ -2001,11 +1999,6 @@ function cc_cafnr_render_member_form(){
 function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 
 	//this is where the faculty prior forms and bio stuff will render
-	// $intl_args = array(
-		// 'post_type' => 'cafnr-activity',
-		// 'post_status' => 'publish',
-		// 'author' => $user_id
-		// );
 	
 	$intl_args = array(
 		'post_type' => 'cafnr-activity',
@@ -2057,7 +2050,6 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 			</thead>
 			<tbody>
 				<?php 
-				
 				foreach ( $activities as $key => $value ){ //TODO: add VIEW
 					
 					$id = $value["id"];

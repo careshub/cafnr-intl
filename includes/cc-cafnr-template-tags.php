@@ -152,8 +152,14 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			}
 			
 			//TODO: account for write-in PI in drop down! (get all meta of 'who_is_pi' for all cafnr-activity post types
-			if ( isset ( $_POST['who_is_pi'] ) ){
-				update_post_meta( $activity_id, 'who_is_pi', "" );
+			if ( isset ( $_POST['who_is_pi'] ) ){ //,'write_in_pi'
+				if ( $_POST['who_is_pi'] == 'add_new_pi' ){
+					update_post_meta( $activity_id, 'who_is_pi', "add_new_pi" );
+					update_post_meta( $activity_id, 'write_in_pi', $_POST['write_in_pi'] );
+				} else {
+					update_post_meta( $activity_id, 'who_is_pi', $_POST['who_is_pi'] );
+					delete_post_meta( $activity_id, 'write_in_pi' );
+				}
 			}
 			//Activity type (the radio one)
 			wp_set_object_terms( $activity_id, $_POST['activity_radio'], 'cafnr-activity-type' );
@@ -163,6 +169,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				//clean sweep on every save
 				delete_post_meta( $activity_id, 'supplemental_links' );
 				foreach( $_POST['supplemental_links'] as $link ) {
+					if ( $link == "" ) continue;
 					add_post_meta( $activity_id, 'supplemental_links', $link, false );  //false since not unique
 				}
 			}
@@ -172,6 +179,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				//clean sweep on every save
 				delete_post_meta( $activity_id, 'collaborating' );
 				foreach( $_POST['collaborating'] as $link ) {
+					if ( $link == "" ) continue;
 					add_post_meta( $activity_id, 'collaborating', $link, false );  //false since not unique
 				}
 			}
@@ -235,7 +243,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		//get post meta and post taxonomy associated with this activity
 		$this_activity_types = wp_get_post_terms( $this_activity->ID, 'cafnr-activity-type', array("fields" => "slugs") );
 		$this_activity_fields = get_post_custom( $this_activity->ID );
-		
+
 
 		//fetch attachments of post
 		$attach_args = array( 
@@ -246,8 +254,6 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			);
 			
 		$this_activity_attachments = get_posts( $attach_args );
-
-		var_dump ($this_activity_types);
 
 		
 		//var_dump( ($this_activity_fields) );  //post_id int
@@ -290,7 +296,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		setup_postdata( $post ); 
 		//remove posts with parents from list
 		if( !empty( $post->post_parent ) ) continue; 
-		$activities_array[$post->ID] = $post->post_name;
+		$activities_array[$post->ID] = $post->post_title;
 	
 	}
 	
@@ -441,7 +447,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 						<?php foreach ( $group_members as $key => $value ) {
 							$option_output = '<option value="';
 							$option_output .= $key;
-							$option_output .= '">';
+							$option_output .= '" ';
+							$option_output .= selected( current( $this_activity_fields['who_is_pi'] ), $key );
+							$option_output .= '>';
 							$option_output .= $value;
 							$option_output .= '</option>';
 							print $option_output;
@@ -459,10 +467,10 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 		
-			<li id="cafnr_write_in_pi" class="gfield write-in-pi">
+			<li id="cafnr_write_in_pi" class="gfield write-in-pi research-only hidden-on-init">
 				<label class="gfield_label" for="input_22_34">Write in the name of the PI</label>
 				<div class="ginput_container">
-					<input id="write_in_pi" class="medium" type="text" tabindex="11" value="" name="write_in_pi">
+					<input id="write_in_pi" class="medium" type="text" tabindex="11" value="<?php echo current( $this_activity_fields['write_in_pi'] ); ?>" name="write_in_pi">
 				</div>
 			</li>
 			
@@ -531,7 +539,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<col id="gfield_list_18_col1" class="gfield_list_col_odd">
 						</colgroup>
 						<tbody>
-							<?php if ( $this_activity_fields['collaborating'] ) { $count = 1; //make sure the first one doesn't have a delete button
+							<?php 
+							$count = 1; //make sure the first one doesn't have a delete button
+							if ( $this_activity_fields['collaborating'] ) { 
 								foreach(  $this_activity_fields['collaborating'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
@@ -546,6 +556,19 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									</tr>
 								<?php $count++; }
 							} ?>
+							<?php //make sure we have one empty input field ?>
+							<tr class="gfield_list_row_odd">
+								<td class="gfield_list_cell list_cell">
+									<input type="text" tabindex="26" value="" name="collaborating[]">
+								</td>
+								<td class="gfield_list_icons">
+									<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<?php if( $count!= 1 ) { ?>
+										<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+									<?php } ?>
+								</td>
+							</tr>
+							
 						</tbody>
 					</table>
 				</div>
@@ -580,7 +603,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<col id="gfield_list_39_col1" class="gfield_list_col_odd">
 						</colgroup>
 						<tbody>
-							<?php if ( $this_activity_fields['supplemental_links'] ) { $count = 1; //make sure the first one doesn't have a delete button
+							<?php 
+							$count = 1; //make sure the first one doesn't have a delete button
+							if ( $this_activity_fields['supplemental_links'] ) { 
 								foreach(  $this_activity_fields['supplemental_links'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
@@ -595,6 +620,18 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									</tr>
 								<?php $count++; }
 							} ?>
+							<?php //make sure we have one empty input field ?>
+							<tr class="gfield_list_row_odd">
+								<td class="gfield_list_cell list_cell">
+									<input type="text" tabindex="26" value="" name="supplemental_links[]">
+								</td>
+								<td class="gfield_list_icons">
+									<img class="add_list_item add_supplemental_link" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<?php if( $count!= 1 ) { ?>
+										<img class="delete_list_item delete_supplemental_link" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+									<?php } ?>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -603,7 +640,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_activity_upload" class="gfield">
 				<label class="gfield_label" for="input_22_39">Do you have any supplemental material you would like to UPLOAD?</label>
 			
-					<p><span id="plupload-browse-button">Select files to upload...</span></p>
+					<p><span id="plupload-browse-button"><input type="button" value="Select files to upload..." /></span></p>
 					<div id="plupload-upload-ui">
 					<?php //echo get_the_post_thumbnail( $p->ID ) //get attachemtns here??>
 					</div>
@@ -880,8 +917,9 @@ function cc_cafnr_get_countries() {
  * @params int Group_ID
  * @return array Array of Member ID => name
  */
-function cc_cafnr_get_member_array( $group_id = 595 ){
+function cc_cafnr_get_member_array( $group_id ){ 
 
+	$group_id = cc_cafnr_get_group_id();
 	global $bp;
 	
 	$group = groups_get_group( array( 'group_id' => $group_id ) );
@@ -905,7 +943,7 @@ function cc_cafnr_get_member_array( $group_id = 595 ){
 
 function cc_cafnr_render_add_member_form(){
 	
-	$group_members = cc_cafnr_get_member_array();
+	$group_members = cc_cafnr_get_member_array( cc_cafnr_get_group_id() );
 	global $uid;
 	if( isset( $_POST['SubmitFaculty'] ) ){
 		//echo 'Faculty Found!'; //mel's checks
@@ -1095,6 +1133,8 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 		// 'author' => $user_id
 		// );
 	
+	
+	//TODO: talk to Mike about how we want to do this, searching by author or by meta, same diff..
 	$intl_args = array(
 		'post_type' => 'cafnr-activity',
 		'post_status' => 'publish',	
@@ -1165,8 +1205,9 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 <?php
 }
 
-function cc_cafnr_add_member_save( $email, $group_id = 596 ){
+function cc_cafnr_add_member_save( $email, $group_id ){
 
+	$group_id = cc_cafnr_get_group_id();
 	$user_id = username_exists( $user_name );
 	
 	if ( !$user_id and email_exists($user_email) == false ) {

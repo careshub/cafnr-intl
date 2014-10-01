@@ -5,7 +5,7 @@
  *
 */
 
-.no-title, #newfacultydiv, .write-in-pi {
+.no-title, #newfacultydiv {
 	display:none;
 }
 .delete_supplemental_link, .delete_collaborating {
@@ -14,4 +14,10 @@
 }
 .hidden-on-init {
 	display:none;
+}
+
+#cafnr_activity_upload {
+	background-color: #eaeaea;
+	margin: 1em;
+    padding: 1px 1.5em;
 }

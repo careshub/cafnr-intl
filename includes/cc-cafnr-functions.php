@@ -98,7 +98,7 @@ function cc_cafnr_populate_group_members(){
 	return $field['choices'];
 
 	global $bp;
-	$group_id = 596;
+	$group_id = cc_cafnr_get_group_id();
 	$group = groups_get_group( array( ‘group_id’ => $group_id ) );
 	
 	
@@ -150,3 +150,87 @@ function cc_cafnr_activity_upload() {
 		die();
 	}
 add_action( 'wp_ajax_activity_upload', 'cc_cafnr_activity_upload' );
+
+/**
+ * Is this the CAFNR group?
+ *
+ * @since    1.0.0
+ * @return   boolean
+ */
+function cc_cafnr_is_cafnr_group(){
+    return ( bp_get_current_group_id() == cc_cafnr_get_group_id() );
+}
+
+/**
+ * Get the group id based on the context
+ *
+ * @since   1.0.0
+ * @return  integer
+ */
+function cc_cafnr_get_group_id(){
+    switch ( get_home_url() ) {
+        case 'http://commonsdev.local':
+            $group_id = 596;
+            break;
+		case 'http://localhost/cc_local':
+            $group_id = 596;
+            break;
+        case 'http://dev.communitycommons.org':
+            $group_id = 596;
+            break;
+        default:
+            $group_id = 595;
+            break;
+    }
+    return $group_id;
+}
+
+/**
+ * Get various slugs
+ * These are gathered here so when, inevitably, we have to change them, it'll be simple
+ *
+ * @since   1.0.0
+ * @return  string
+ */
+function cc_cafnr_get_slug(){
+    return 'survey-dashboard';
+}
+function cc_cafnr_get_survey_slug(){
+    return 'cafnr-add-activity';
+}
+
+/**
+ * Where are we?
+ * Checks for the various screens
+ *
+ * @since   1.0.0
+ * @return  string
+ */
+function cc_cafnr_on_survey_dashboard_screen(){
+    // There should be no action variables if on the main tab
+    if ( cc_cafnr_is_component() && ! ( bp_action_variables() )  ){
+        return true;
+    } else {
+        return false;
+    }
+}
+function cc_cafnr_on_survey_screen(){
+    if ( cc_cafbr_is_component() && bp_is_action_variable( cc_cafnr_get_survey_slug(), 0 ) ){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Are we on the CAFNR survey tab?
+ *
+ * @since   1.0.0
+ * @return  boolean
+ */
+function cc_cafnr_is_component() {
+    if ( bp_is_groups_component() && bp_is_current_action( cc_cafnr_get_slug() ) )
+        return true;
+
+    return false;
+}

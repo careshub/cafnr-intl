@@ -141,13 +141,25 @@ function cafnrIntakeFormLoad(){
 	//on form load, let's make sure right fields are displaying
 	
 	//if( jQuery('#pi_yes').is(':selected') ){
-	if( jQuery('#pi_yes').val() == 'Yes' ){
+	if( jQuery('#pi_yes').is(":checked") ){
 	
 		jQuery('.pi-only').removeClass('hidden-on-init');
 		jQuery('.non-pi-only').addClass('hidden-on-init');
 		//jQuery('#cafnr_end_date').show();
+	} else {
+		//otherwise, do the opposite
+		jQuery('.pi-only').addClass('hidden-on-init');
+		jQuery('.non-pi-only').removeClass('hidden-on-init');
 	}
 
+	//if we have a write-in pi, set the who_is_pi to the 'Write in PI' value to display the write_in_pi field
+	if ( jQuery('#write_in_pi').val() != "" ) {
+		//change select value
+		jQuery('#who_is_pi').val("add_new_pi");
+		//make sure write_in_pi field is visible
+		jQuery('#cafnr_write_in_pi').removeClass('hidden-on-init');
+	}
+	
 	//if we're not doing a research program, hide .research-only
 	if( !jQuery('#activity_radio_research').is(":checked") ){
 		jQuery('.research-only').addClass('hidden-on-init');
@@ -167,7 +179,7 @@ function cafnrIntakeFormLoad(){
 	
 	jQuery('.remove-activity-file').on("click", function() {
 		removeActivityFile();
-	}
+	});
 	
 	
 }
@@ -201,6 +213,7 @@ function activityUploader( browseButton, uiContainer ){
 
 	uploader.bind('FilesAdded', function(up, files){
 		up.start();
+		
 	});
 
 	uploader.bind('UploadProgress', function(up, file) {
@@ -219,16 +232,29 @@ function activityUploader( browseButton, uiContainer ){
 
 	uploader.bind('FileUploaded', function(up, file, response){
 		if (response.response) {
+			//response.response = file, url, type, fileBaseName
 			var activityFile = eval('(' + response.response + ')');
 			
-			var activityFileHtml = "<p>File uploaded: " + activityFile.fileBaseName + "</p>" + 
+			//To do: add display html here for the types..
+			var activityFileHtml = "<span><p>File uploaded: " + activityFile.fileBaseName + "<input class='remove-activity-file' type='button' value='Remove this sample' data-deletefile='" + activityFile.file + "' ></p>" + 
+				"File name: <input type='text' name='' value=''>" + activityFile.fileBaseName + "</input>" +
 				"<input type='hidden' name='activity_file' value='" + activityFile.file + "' />" +
-				"<input type='hidden' name='activity_file_type' value='" + activityFile.type + "' />";
-			jQuery('#' + uiContainer).hide().html(activityFileHtml).show('slow', function(){
+				"<input type='hidden' name='activity_file_type' value='" + activityFile.type + "' /></span>";
+			jQuery('#' + uiContainer).after(activityFileHtml).show('slow', function(){
+				jQuery('#plupload-upload-ui .ie9hide').hide();
+				jQuery('#plupload-upload-ui .red').hide();
 				
 			});
-			jQuery('#' + browseButton).html('Select a different file to upload...<br />');
-			jQuery( '<input class="remove-activity-file" type="button" value="Remove this sample" data-deletefile="' + activityFile.file + '" >' ).insertAfter( '#' + browseButton );
+			
+			//add remove listeners to this 
+			jQuery('.remove-activity-file').off("click", removeActivityFile);
+			jQuery('.remove-activity-file').on("click", {
+				uploader: uploader,
+				file: file
+				}, removeActivityFile );
+			
+			jQuery('#' + browseButton).html('<input type="button" value="Select another file to upload..." />');
+			//jQuery( '<input class="remove-activity-file" type="button" value="Remove this sample" data-deletefile="' + activityFile.file + '" >' ).insertAfter( '#' + browseButton );
 			
 		} else {
 			jQuery('#' + uiContainer).html('<p>Sorry, there was an error. Please try again.</p>');
@@ -236,10 +262,22 @@ function activityUploader( browseButton, uiContainer ){
 	});
 }
 
-function removeActivityFile(){
-	var fileurl = jQuery(this).data('deletefile');
+function removeActivityFile( uploaderInput ){
+	//var fileurl = jQuery(this).data('deletefile');
 	
 	
+	//jQuery(this).parents('span').remove();
+	//remove file from queue (doesn't seem to be removing it from uploads folder, hmm)
+	var errormaybe = uploaderInput.data.uploader.removeFile( uploaderInput.data.file );
+	var totalFileSpan = jQuery(this).parents('span');
+	
+	jQuery(this).parents('span').append(errormaybe);
+	totalFileSpan.fadeOut(500, function() { 
+		totalFileSpan.remove(); 
+	});
+	
+	// jQuery(this).parents('span').siblings()
+	console.log('file allegedly removed now');
 }
 
 

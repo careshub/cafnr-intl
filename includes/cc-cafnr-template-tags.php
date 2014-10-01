@@ -1646,9 +1646,10 @@ function cc_cafnr_get_countries() {
  * @params int Group_ID
  * @return array Array of Member ID => name
  */
-function cc_cafnr_get_member_array( $group_id = 595 ){
+function cc_cafnr_get_member_array( $group_id ){
 
 	global $bp;
+	$group_id = cc_cafnr_get_group_id();
 	
 	$group = groups_get_group( array( 'group_id' => $group_id ) );
 	//var_dump($group);
@@ -1975,8 +1976,9 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 <?php
 }
 
-function cc_cafnr_add_member_save( $email, $group_id = 596 ){
-
+function cc_cafnr_add_member_save( $email, $group_id ){
+	
+	$group_id = cc_cafnr_get_group_id();
 	$user_id = username_exists( $user_name );
 	
 	if ( !$user_id and email_exists($user_email) == false ) {

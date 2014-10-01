@@ -1670,9 +1670,10 @@ function cc_cafnr_get_member_array( $group_id ){
 	
 }
 
-function cc_cafnr_render_add_member_form(){
+function cc_cafnr_render_mod_admin_form(){
 	
 	$group_members = cc_cafnr_get_member_array();
+	
 	global $uid;
 	if( isset( $_POST['SubmitFaculty'] ) ){
 		//echo 'Faculty Found!'; //mel's checks
@@ -1721,7 +1722,7 @@ function cc_cafnr_render_add_member_form(){
 						$("#userinfo").show();
 						$("#newfacultydiv").hide();
 						$("#cafnr_faculty_form").hide();
-						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a href='/cafnr-intl-dashboard/'>change</a>)");
+						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a class='reload-page'>change</a>)");
 						
 					});
 				</script>
@@ -1767,30 +1768,30 @@ function cc_cafnr_render_add_member_form(){
 
 	
 	if (isset( $_POST['submitshortform'] )) {				
-				if( isset( $_POST['userID'] ) ){
-				
-					$uid=$_POST['userID'];
-					if ( isset ( $_POST['CVmethod'] ) ){
-						update_user_meta( $uid, 'CVmethod', $_POST['CVmethod'] );
-					}					
-					if ( isset ( $_POST['CVlink'] ) ){
-						update_user_meta( $uid, 'CVlink', $_POST['CVlink'] );
-					}
-					if ( isset ( $_POST['beyond5'] ) ){
-						update_user_meta( $uid, 'beyond5', $_POST['beyond5'] );
-					}
-					if ( isset ( $_POST['futureactivity'] ) ){
-						update_user_meta( $uid, 'futureactivity', $_POST['futureactivity'] );
-					}
-					if ( isset ( $_POST['leadassist'] ) ){
-						update_user_meta( $uid, 'leadassist', $_POST['leadassist'] );
-					}
-					if ( isset ( $_POST['futurecontact'] ) ){
-						update_user_meta( $uid, 'futurecontact', $_POST['futurecontact'] );
-					}
-					echo "Short Form Submitted!<br /><br />";
+		if( isset( $_POST['userID'] ) ){
+		
+			$uid=$_POST['userID'];
+			if ( isset ( $_POST['CVmethod'] ) ){
+				update_user_meta( $uid, 'CVmethod', $_POST['CVmethod'] );
+			}					
+			if ( isset ( $_POST['CVlink'] ) ){
+				update_user_meta( $uid, 'CVlink', $_POST['CVlink'] );
+			}
+			if ( isset ( $_POST['beyond5'] ) ){
+				update_user_meta( $uid, 'beyond5', $_POST['beyond5'] );
+			}
+			if ( isset ( $_POST['futureactivity'] ) ){
+				update_user_meta( $uid, 'futureactivity', $_POST['futureactivity'] );
+			}
+			if ( isset ( $_POST['leadassist'] ) ){
+				update_user_meta( $uid, 'leadassist', $_POST['leadassist'] );
+			}
+			if ( isset ( $_POST['futurecontact'] ) ){
+				update_user_meta( $uid, 'futurecontact', $_POST['futurecontact'] );
+			}
+			echo "Short Form Submitted!<br /><br />";
 
-				}
+		}
 	} else {
 		//echo "nope";
 	}
@@ -1873,6 +1874,124 @@ function cc_cafnr_render_add_member_form(){
 
 }
 
+function cc_cafnr_render_member_form(){
+	
+	$group_members = cc_cafnr_get_member_array();
+	
+	//get info for current user
+	$current_user = wp_get_current_user();
+	
+	echo 'Username: ' . $current_user->user_login . '<br />';
+    echo 'User email: ' . $current_user->user_email . '<br />';
+    echo 'User first name: ' . $current_user->user_firstname . '<br />';
+    echo 'User last name: ' . $current_user->user_lastname . '<br />';
+    echo 'User display name: ' . $current_user->display_name . '<br />';
+    echo 'User ID: ' . $current_user->ID . '<br />';
+	
+	$activities = cc_cafnr_get_faculty_activity_url_list( $current_user->ID );
+	cc_cafnr_render_faculty_activity_table( $activities );	
+	
+	$all_meta_for_user = get_user_meta( $current_user->ID );
+?>
+		<script type="text/javascript">
+			jQuery( document ).ready(function($) {
+				$("#userID").val("<?php echo $current_user->ID; ?>");
+				$("#activities").show();
+				$("#userinfo").show();
+				$("#newfacultydiv").hide();
+				$("#cafnr_faculty_form").hide();
+				$("#nameactivity").html("<?php echo $current_user->display_name; ?>'s Activities");
+				
+			});
+		</script>
+<?php
+	
+	
+	if (isset( $_POST['submitshortform'] )) {				
+		if( isset( $_POST['userID'] ) ){
+		
+			$uid=$_POST['userID'];
+			if ( isset ( $_POST['CVmethod'] ) ){
+				update_user_meta( $uid, 'CVmethod', $_POST['CVmethod'] );
+			}					
+			if ( isset ( $_POST['CVlink'] ) ){
+				update_user_meta( $uid, 'CVlink', $_POST['CVlink'] );
+			}
+			if ( isset ( $_POST['beyond5'] ) ){
+				update_user_meta( $uid, 'beyond5', $_POST['beyond5'] );
+			}
+			if ( isset ( $_POST['futureactivity'] ) ){
+				update_user_meta( $uid, 'futureactivity', $_POST['futureactivity'] );
+			}
+			if ( isset ( $_POST['leadassist'] ) ){
+				update_user_meta( $uid, 'leadassist', $_POST['leadassist'] );
+			}
+			if ( isset ( $_POST['futurecontact'] ) ){
+				update_user_meta( $uid, 'futurecontact', $_POST['futurecontact'] );
+			}
+			echo "Short Form Submitted!<br /><br />";
+
+		}
+	} else {
+		//echo "nope";
+	}
+?>
+	
+	<div id="userinfo">
+		<form id="cafnr_facultyadd_form" class="standard-form" method="post" action="">
+			<br /><br />
+			<input type="hidden" id="userID" name="userID" />
+			<strong>Would you like to LINK to or UPLOAD your CV?</strong><br/>
+			<input type="radio" id="CVmethod1" name="CVmethod" value="link" <?php if( $all_meta_for_user['CVmethod'][0] == "link") echo 'checked="checked"'; ?> />&nbsp;Link to my CV<br />
+			<input type="radio" id="CVmethod2" name="CVmethod" value="upload" <?php if( $all_meta_for_user['CVmethod'][0] == "upload") echo 'checked="checked"'; ?> />&nbsp;Upload my CV
+			
+			<div id="linkDiv" style="display:none;">
+				<br /><br />
+				<strong>Add link to CV here:</strong><br/>	
+				<input type="text" id="CVlink" name="CVlink" size="85" value="<?php echo $all_meta_for_user['CVlink'][0]; ?>" />
+			</div>
+			<div id="uploadDiv" style="display:none;">
+				<br /><br />
+				<strong>Upload CV here:</strong><br/>			
+			</div>		
+			<br /><br />
+			<strong>Beyond the last five years, have you been involved in any international activities?</strong><br/>
+			<input type="text" id="beyond5" name="beyond5" size="100" value="<?php echo $all_meta_for_user['beyond5'][0]; ?>" />
+			<br /><br />
+			<strong>Are you planning on engaging in any international activity in the future?</strong><br/>
+			<input type="text" id="futureactivity" name="futureactivity" size="100" value="<?php echo $all_meta_for_user['futureactivity'][0]; ?>" />
+			<br /><br />
+			<strong>Would you be interested in leading or assisting with a project in your academic field or research focus?</strong><br/>
+			<input type="text" id="leadassist" name="leadassist" size="100" value="<?php echo $all_meta_for_user['leadassist'][0]; ?>" />
+			<br /><br />	
+			<strong>In the future, would you prefer an online form or in-person interview?</strong><br/>
+			<input type="radio" id="futurecontact1" name="futurecontact" value="online" <?php if( $all_meta_for_user['futurecontact'][0] == "online") echo 'checked="checked"'; ?> />&nbsp;Online form<br />
+			<input type="radio" id="futurecontact2" name="futurecontact" value="interview" <?php if( $all_meta_for_user['futurecontact'][0] == "interview") echo 'checked="checked"'; ?> />&nbsp;Interview
+			<br /><br />		
+			<input type="submit" value="Submit" name="submitshortform" />
+		</form>
+	</div>	
+<?php
+	if ($all_meta_for_user['CVmethod'][0] == "link") {
+?>
+		<script type="text/javascript">
+			jQuery( document ).ready(function($) {
+				$("#linkDiv").show();
+			});			
+		</script>
+<?php	
+	} else if ($all_meta_for_user['CVmethod'][0] == "upload") {
+?>
+		<script type="text/javascript">
+			jQuery( document ).ready(function($) {
+				$("#uploadDiv").show();
+			});			
+		</script>
+<?php
+	}
+
+}
+
 
 /*
  * Returns array of activity names and links (to url form)
@@ -1891,9 +2010,10 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 	$intl_args = array(
 		'post_type' => 'cafnr-activity',
 		'post_status' => 'publish',	
-		'meta_key' => 'activity_owner',
-		'numberposts' => -1,
-		'meta_value' => $user_id
+	//	'meta_key' => 'activity_owner',
+		'posts_per_page' => -1,
+		'author' => $user_id
+	//	'meta_value' => $user_id
 	);
 	$user_activity_posts = get_posts( $intl_args );
 	//var_dump($user_activity_posts);

@@ -77,6 +77,12 @@ function clickListen(){
 	
 	//remove supplemental links listener
 	jQuery('.delete_supplemental_link').on("click", deleteSupplementalLink );
+	
+	jQuery('.reload-page').click(function() {
+		//location.reload( true ); //true = reload from server, not from cache
+		window.location = window.location.href; //to avoid POST warning.. for now, until we make GET page..
+	});
+	
 }
 
 //add collborating trs for saving goodness

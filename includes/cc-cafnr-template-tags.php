@@ -140,7 +140,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				
 				//$country_meta_array[] = $_POST['countrylist'.$i];
 				$country_meta_array[] = $_POST['countrylist-'.$i];
-				if ( isset( $_POST['region'.$i] ) ) {
+				if ( isset( $_POST['region-'.$i] ) ) {
 					$country_meta_array[] = $_POST['region-'.$i];
 				}
 				$success = add_post_meta( $activity_id, 'country', $country_meta_array );
@@ -379,7 +379,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 											</select>
 										</td>
 										<td class="gfield_list_cell">
-											<input type="text" tabindex="5" value="<?php echo $country[1]; ?>" name="region-<?php echo $count; ?>">
+											<input type="text" tabindex="4" value="<?php echo $country[1]; ?>" name="region-<?php echo $count; ?>">
 										</td>
 										
 										<td class="gfield_list_icons">
@@ -398,7 +398,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									</select>
 								</td>
 								<td class="gfield_list_cell">
-									<input type="text" tabindex="5" value="" name="region-<?php echo $count; ?>">
+									<input type="text" tabindex="4" value="" name="region-<?php echo $count; ?>">
 								</td>
 								<td class="gfield_list_icons">
 									<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">

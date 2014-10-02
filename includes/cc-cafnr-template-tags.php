@@ -136,15 +136,15 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				
 				//create array to hold country meta
 				$country_meta_array = array();
-				//${'country'.$i} = $_POST['countrylist'.$i] . ', ' . $_POST['region'.$i]; //$country1, $country2, etc
 				
-				//$country_meta_array[] = $_POST['countrylist'.$i];
-				$country_meta_array[] = $_POST['countrylist-'.$i];
-				if ( isset( $_POST['region-'.$i] ) ) {
-					$country_meta_array[] = $_POST['region-'.$i];
+				if ( $_POST['countrylist-'.$i] != "" ) {
+					$country_meta_array[] = $_POST['countrylist-'.$i];
+					if ( isset( $_POST['region-'.$i] ) ) {
+						$country_meta_array[] = $_POST['region-'.$i];
+					}
+					$success = add_post_meta( $activity_id, 'country', $country_meta_array );
+					//echo $success;
 				}
-				$success = add_post_meta( $activity_id, 'country', $country_meta_array );
-				echo $success;
 				//unset array
 				unset( $country_meta_array );
 				$i++;
@@ -187,7 +187,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				//clean sweep on every save
 				delete_post_meta( $activity_id, 'supplemental_links' );
 				foreach( $_POST['supplemental_links'] as $link ) {
-					add_post_meta( $activity_id, 'supplemental_links', $link, false );  //false since not unique
+					if ( $link != "" )
+						add_post_meta( $activity_id, 'supplemental_links', $link, false );  //false since not unique
 				}
 			}
 			
@@ -196,7 +197,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				//clean sweep on every save
 				delete_post_meta( $activity_id, 'collaborating' );
 				foreach( $_POST['collaborating'] as $link ) {
-					add_post_meta( $activity_id, 'collaborating', $link, false );  //false since not unique
+					if ( $link != "" )
+						add_post_meta( $activity_id, 'collaborating', $link, false );  //false since not unique
 				}
 			}
 			if( isset( $_POST['activity_checkbox'] ) ){

@@ -66,6 +66,12 @@ function clickListen(){
 		});
 	});
 	
+	//add country listener
+	jQuery('.add_country').on("click", addCountry );
+	
+	//remove country listener
+	jQuery('.delete_country').on("click", deleteCountry );
+	
 	//add collaborating listener
 	jQuery('.add_collaborating').on("click", addCollaborating );
 	
@@ -83,6 +89,34 @@ function clickListen(){
 		window.location = window.location.href; //to avoid POST warning.. for now, until we make GET page.
 	});
 	
+}
+
+//add countries as repeater
+function addCountry() {
+	var whereToAppend = jQuery(this).parents('tbody');
+	
+	var whatToAppend = '<tr class="gfield_list_row_even"><td class="gfield_list_cell list_cell">';
+	whatToAppend = whatToAppend + '<input type="text" tabindex="26" value="" name="collaborating[]"></td><td class="gfield_list_icons">';
+	whatToAppend = whatToAppend + '<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">';
+	whatToAppend = whatToAppend + '<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">';
+	whatToAppend = whatToAppend + '</td></tr>';
+
+	//add a new row
+	whereToAppend.append(whatToAppend);
+	
+	//turn off click listeners (so no double-listening on existing divs)
+	jQuery('.add_collaborating').off("click", addCollaborating );
+	jQuery('.delete_collaborating').off("click", deleteCollaborating );
+	
+	//turn them back on so new rows get listened to, too
+	jQuery('.add_collaborating').on("click", addCollaborating );
+	jQuery('.delete_collaborating').on("click", deleteCollaborating );
+}
+
+function deleteCountry() {
+	var whatToDelete = jQuery(this).parents('tr');
+	
+	whatToDelete.remove();
 }
 
 //add collborating trs for saving goodness
@@ -193,7 +227,7 @@ function cafnrIntakeFormLoad(){
 
 var activityFormUnload = function() {
 	//plupload: uploader.destroy();
-	for (var i = 0; i < pluploadVars.activityUploadVars.length; i++) {
+	for (var i = 0; i < pluploadVars.activityUploads.length; i++) {
 		pluploadVars.activityUploads[i].destroy();
 	}
 	

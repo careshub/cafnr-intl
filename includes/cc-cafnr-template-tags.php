@@ -126,6 +126,29 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				}
 			}
 			
+			//What countries and regions are we in?
+			$i = 1;
+						
+			//first, remove all prior countries in database
+			delete_post_meta($activity_id, 'country');
+			
+			while ( isset($_POST['countrylist-'.$i] ) ) {
+				//create array to hold country meta
+				$country_meta_array = array();
+				//${'country'.$i} = $_POST['countrylist'.$i] . ', ' . $_POST['region'.$i]; //$country1, $country2, etc
+				
+				//$country_meta_array[] = $_POST['countrylist'.$i];
+				$country_meta_array[] = $_POST['countrylist-'.$i];
+				if ( isset( $_POST['region'.$i] ) ) {
+					$country_meta_array[] = $_POST['region-'.$i];
+				}
+				add_post_meta( $activity_id, 'country', $country_meta_array );
+				
+				//unset array
+				unset( $country_meta_array );
+				$i++;
+			}
+			
 			//Is this user the pi? 
 			if( isset ( $_POST['pi_radio'] ) ){
 				update_post_meta( $activity_id, 'is_pi', $_POST['pi_radio'] );
@@ -284,7 +307,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		setup_postdata( $post ); 
 		//remove posts with parents from list
 		if( !empty( $post->post_parent ) ) continue; 
-		$activities_array[$post->ID] = $post->post_name;
+		$activities_array[$post->ID] = $post->post_title;
 	
 	}
 	
@@ -332,35 +355,58 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</label>
 				<div class="ginput_container ginput_list">
 					<table class="gfield_list">
-				<colgroup>
-					<col id="gfield_list_8_col1" class="gfield_list_col_odd">
-					<col id="gfield_list_8_col2" class="gfield_list_col_even">
-				</colgroup>
-				<thead>
-					<tr>
-						<th>Country</th>
-						<th>City or Region</th>
-						<th> </th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="gfield_list_row_odd">
-						<td class="gfield_list_cell gfield_list_8_cell1">
-							<select tabindex="4" name="input_8[]" id="countrylist">
-
-								
-							</select>
-						</td>
-						<td class="gfield_list_cell gfield_list_8_cell2">
-							<input type="text" tabindex="5" value="" name="country[]">
-						</td>
-						<td class="gfield_list_icons">
-							<img class="add_list_item " style="cursor:pointer; margin:0 3px;" onclick="gformAddListItem(this, 0)" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
-							<img class="delete_list_item" onclick="gformDeleteListItem(this, 0)" style="cursor:pointer; visibility:hidden;" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
-						</td>
-					</tr>
-				</tbody>
-				</table>
+						<colgroup>
+							<col id="gfield_list_8_col1" class="gfield_list_col_odd">
+							<col id="gfield_list_8_col2" class="gfield_list_col_even">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>Country</th>
+								<th>City or Region</th>
+								<th> </th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php $count = 1;
+							if ( $this_activity_fields['country'] ) {  //make sure the first one doesn't have a delete button
+								foreach( $this_activity_fields['country'] as $country ) { 
+									echo $country; ?>
+									<tr class="gfield_list_row_odd">
+										<td class="gfield_list_cell gfield_list_8_cell1">
+											<select tabindex="4" name="countrylist-<?php echo $count; ?>" id="countrylist">
+											</select>
+										</td>
+										<td class="gfield_list_cell gfield_list_8_cell2">
+											<input type="text" tabindex="5" value="" name="region-<?php echo $count; ?>">
+										</td>
+										
+										<td class="gfield_list_icons">
+											<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+											<?php if( $count!= 1 ) { ?>
+												<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+											<?php } ?>
+										</td>
+									</tr>
+								<?php $count++; }
+							} ?>
+							<?php //make sure we have one empty input field ?>
+							<tr class="gfield_list_row_odd">
+								<td class="gfield_list_cell gfield_list_8_cell1">
+									<select tabindex="4" name="countrylist-<?php echo $count; ?>" id="countrylist">
+									</select>
+								</td>
+								<td class="gfield_list_cell gfield_list_8_cell2">
+									<input type="text" tabindex="5" value="" name="region-<?php echo $count; ?>">
+								</td>
+								<td class="gfield_list_icons">
+									<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<?php if( $count!= 1 ) { ?>
+										<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+									<?php } ?>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</li>
 			
@@ -455,7 +501,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_country_lead" class="gfield">
 				<label class="gfield_label" for="input_22_34">Who is the in-country activity lead?</label>
 				<div class="ginput_container">
-					<input id="country_lead" class="medium" type="text" tabindex="11" value="<?php echo current( $this_activity_fields['country_lead'] ); ?>" name="country_lead">
+					<input id="country_lead" class="medium" type="text" tabindex="11" value="<?php if( !empty( $this_activity_fields['country_lead'] )) echo current( $this_activity_fields['country_lead'] ); ?>" name="country_lead">
 				</div>
 			</li>
 		
@@ -490,7 +536,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_subject_textbox" class="gfield">
 				<label class="gfield_label" for="input_22_35">Academic Field, Research Focus, or Subject of Activity</label>
 				<div class="ginput_container">
-					<input id="subject_textbox" class="medium" type="text" tabindex="18" value="<?php echo current( $this_activity_fields['subject_textbox'] ); ?>" name="subject_textbox">
+					<input id="subject_textbox" class="medium" type="text" tabindex="18" value="<?php if( !empty( $this_activity_fields['subject_textbox'] )) echo current( $this_activity_fields['subject_textbox'] ); ?>" name="subject_textbox">
 				</div>
 				<div class="gfield_description">Example: Ag Econ, Climate Change, Biofuels, Ag Policy, etc.</div>
 			</li>
@@ -517,7 +563,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<col id="gfield_list_18_col1" class="gfield_list_col_odd">
 						</colgroup>
 						<tbody>
-							<?php if ( $this_activity_fields['collaborating'] ) { $count = 1; //make sure the first one doesn't have a delete button
+							<?php $count = 1;
+							if ( $this_activity_fields['collaborating'] ) {  //make sure the first one doesn't have a delete button
 								foreach(  $this_activity_fields['collaborating'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
@@ -532,6 +579,18 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									</tr>
 								<?php $count++; }
 							} ?>
+							<?php //make sure we have one empty input field ?>
+							<tr class="gfield_list_row_odd">
+								<td class="gfield_list_cell list_cell">
+									<input type="text" tabindex="26" value="" name="collaborating[]">
+								</td>
+								<td class="gfield_list_icons">
+									<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<?php if( $count!= 1 ) { ?>
+										<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+									<?php } ?>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -547,14 +606,14 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_non_pi_role" class="gfield non-pi-only">
 				<label class="gfield_label" for="input_22_26">What was your role in this activity?</label>
 				<div class="ginput_container">
-					<textarea id="non_pi_role" class="textarea medium" cols="50" rows="10" tabindex="24" name="non_pi_role" value=""><?php echo current( $this_activity_fields['non_pi_role'] ); ?></textarea>
+					<textarea id="non_pi_role" class="textarea medium" cols="50" rows="10" tabindex="24" name="non_pi_role" value=""><?php if( !empty( $this_activity_fields['non_pi_role'] )) echo current( $this_activity_fields['non_pi_role'] ); ?></textarea>
 				</div>
 			</li>
 		
 			<li id="cafnr_funding_source" class="gfield pi-only hidden-on-init">
 				<label class="gfield_label" for="input_22_38">What is the source of funding for this activity?</label>
 				<div class="ginput_container">
-					<input id="funding_source" class="medium" type="text" tabindex="25" name="funding_source" value="<?php echo current( $this_activity_fields['funding_source'] ); ?>">
+					<input id="funding_source" class="medium" type="text" tabindex="25" name="funding_source" value="<?php if( !empty( $this_activity_fields['funding_source'] )) echo current( $this_activity_fields['funding_source'] ); ?>">
 				</div>
 			</li>
 		
@@ -566,7 +625,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<col id="gfield_list_39_col1" class="gfield_list_col_odd">
 						</colgroup>
 						<tbody>
-							<?php if ( $this_activity_fields['supplemental_links'] ) { $count = 1; //make sure the first one doesn't have a delete button
+							<?php $count = 1;
+							if ( $this_activity_fields['supplemental_links'] ) {  //make sure the first one doesn't have a delete button
 								foreach(  $this_activity_fields['supplemental_links'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
@@ -581,6 +641,18 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									</tr>
 								<?php $count++; }
 							} ?>
+							<?php //make sure we have one empty input field ?>
+							<tr class="gfield_list_row_odd">
+								<td class="gfield_list_cell list_cell">
+									<input type="text" tabindex="26" value="" name="supplemental_links[]">
+								</td>
+								<td class="gfield_list_icons">
+									<img class="add_list_item add_supplemental_link" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<?php if( $count!= 1 ) { ?>
+										<img class="delete_list_item delete_supplemental_link" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+									<?php } ?>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>

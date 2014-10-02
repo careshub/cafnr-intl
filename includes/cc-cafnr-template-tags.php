@@ -133,6 +133,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			delete_post_meta($activity_id, 'country');
 			
 			while ( isset($_POST['countrylist-'.$i] ) ) {
+				
 				//create array to hold country meta
 				$country_meta_array = array();
 				//${'country'.$i} = $_POST['countrylist'.$i] . ', ' . $_POST['region'.$i]; //$country1, $country2, etc
@@ -142,8 +143,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				if ( isset( $_POST['region'.$i] ) ) {
 					$country_meta_array[] = $_POST['region-'.$i];
 				}
-				add_post_meta( $activity_id, 'country', $country_meta_array );
-				
+				$success = add_post_meta( $activity_id, 'country', $country_meta_array );
+				echo $success;
 				//unset array
 				unset( $country_meta_array );
 				$i++;
@@ -370,10 +371,11 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<?php $count = 1;
 							if ( $this_activity_fields['country'] ) {  //make sure the first one doesn't have a delete button
 								foreach( $this_activity_fields['country'] as $country ) { 
-									echo $country; ?>
+									$country = maybe_unserialize( $country ); 
+									//echo $country[0] ; ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell gfield_list_8_cell1">
-											<select tabindex="4" name="countrylist-<?php echo $count; ?>" id="countrylist">
+											<select tabindex="4" name="countrylist-<?php echo $count; ?>" class="countrylist" data-countryvalue="<?php echo $country[0]; ?>" >
 											</select>
 										</td>
 										<td class="gfield_list_cell gfield_list_8_cell2">
@@ -392,7 +394,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<?php //make sure we have one empty input field ?>
 							<tr class="gfield_list_row_odd">
 								<td class="gfield_list_cell gfield_list_8_cell1">
-									<select tabindex="4" name="countrylist-<?php echo $count; ?>" id="countrylist">
+									<select tabindex="4" name="countrylist-<?php echo $count; ?>" class="countrylist">
 									</select>
 								</td>
 								<td class="gfield_list_cell gfield_list_8_cell2">

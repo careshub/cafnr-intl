@@ -1044,13 +1044,25 @@ function getCountries(){
 function populateCountryDropdown(){
 
 	var countryCodes = getCountries();
-	//set up options for select
-	var options = '';
-	for (var i = 0; i < countryCodes.length; i++) {
-		options += '<option value="' + countryCodes[i].code + '">' + countryCodes[i].name + '</option>';
-	}
+	var countrySelected;
 	
-	jQuery('#countrylist').html(options);
+	jQuery('.countrylist').each( function(){
+		//set up options for select
+		var options = '';
+		
+		//there's got to be a more efficient way to select the selected..
+		countrySelected = jQuery(this).data("countryvalue");
+		
+		for (var i = 0; i < countryCodes.length; i++) {
+			options += '<option value="' + countryCodes[i].code + '"';
+			if ( countrySelected == countryCodes[i].code ) {
+				options += ' selected';
+			}
+			options += '>';
+			options += countryCodes[i].name + '</option>';
+		}
+		jQuery(this).html(options);
+	});
 }
 
 

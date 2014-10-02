@@ -94,15 +94,43 @@ function clickListen(){
 //add countries as repeater
 function addCountry() {
 	var whereToAppend = jQuery(this).parents('tbody');
+	var count = 1; //need to get number of last country in list
+	var newcount; //placeholder
+	
+	//get all jQuery('.countrylist')
+	jQuery('.countrylist').each( function() {
+		newcount = jQuery(this).data("countrycount");
+		if ( newcount > count ){
+			count = newcount; //update count to the highest count number in form
+		}
+	});
+	//add one more to count, since new tr here
+	count++;
 	
 	var whatToAppend = '<tr class="gfield_list_row_even"><td class="gfield_list_cell list_cell">';
-	whatToAppend = whatToAppend + '<input type="text" tabindex="26" value="" name="collaborating[]"></td><td class="gfield_list_icons">';
-	whatToAppend = whatToAppend + '<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">';
-	whatToAppend = whatToAppend + '<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">';
-	whatToAppend = whatToAppend + '</td></tr>';
-
+	whatToAppend += '<select tabindex="4" name="countrylist-' + count + '" class="countrylist countrylist-' + count + '"></select></td>';
+	whatToAppend += '<td class="gfield_list_cell"><input type="text" tabindex="5" value="" name="region-' + count + '"></td><td class="gfield_list_icons">';
+	whatToAppend += '<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">';
+	whatToAppend += '<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">';
+	whatToAppend += '</td></tr>';
+		
 	//add a new row
 	whereToAppend.append(whatToAppend);
+	
+	//now populate added row with countries //TODO: Mel, make this efficient, plz
+	var countryCodes = getCountries();
+	//set up options for select
+	var options = '';
+	
+	for (var i = 0; i < countryCodes.length; i++) {
+		options += '<option value="' + countryCodes[i].code + '"';
+
+		options += '>';
+		options += countryCodes[i].name + '</option>';
+	}
+	
+	jQuery( 'select.countrylist-' + count ).html(options);
+	
 	
 	//turn off click listeners (so no double-listening on existing divs)
 	jQuery('.add_collaborating').off("click", addCollaborating );

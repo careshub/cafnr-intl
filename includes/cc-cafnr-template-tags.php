@@ -374,12 +374,12 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									$country = maybe_unserialize( $country ); 
 									//echo $country[0] ; ?>
 									<tr class="gfield_list_row_odd">
-										<td class="gfield_list_cell gfield_list_8_cell1">
-											<select tabindex="4" name="countrylist-<?php echo $count; ?>" class="countrylist" data-countryvalue="<?php echo $country[0]; ?>" >
+										<td class="gfield_list_cell">
+											<select tabindex="4" name="countrylist-<?php echo $count; ?>" class="countrylist" data-countryvalue="<?php echo $country[0]; ?>" data-countrycount="<?php echo $count; ?>">
 											</select>
 										</td>
-										<td class="gfield_list_cell gfield_list_8_cell2">
-											<input type="text" tabindex="5" value="" name="region-<?php echo $count; ?>">
+										<td class="gfield_list_cell">
+											<input type="text" tabindex="5" value="<?php echo $country[1]; ?>" name="region-<?php echo $count; ?>">
 										</td>
 										
 										<td class="gfield_list_icons">
@@ -393,17 +393,17 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							} ?>
 							<?php //make sure we have one empty input field ?>
 							<tr class="gfield_list_row_odd">
-								<td class="gfield_list_cell gfield_list_8_cell1">
-									<select tabindex="4" name="countrylist-<?php echo $count; ?>" class="countrylist">
+								<td class="gfield_list_cell">
+									<select tabindex="4" name="countrylist-<?php echo $count; ?>" class="countrylist" data-countrycount="<?php echo $count; ?>">
 									</select>
 								</td>
-								<td class="gfield_list_cell gfield_list_8_cell2">
+								<td class="gfield_list_cell">
 									<input type="text" tabindex="5" value="" name="region-<?php echo $count; ?>">
 								</td>
 								<td class="gfield_list_icons">
-									<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 									<?php if( $count!= 1 ) { ?>
-										<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+										<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 									<?php } ?>
 								</td>
 							</tr>
@@ -489,21 +489,21 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_add_pi" class="gfield no-title">
 				<label class="gfield_label" for="input_22_10">PI Name</label>
 				<div class="ginput_container">
-					<input id="add_pi_name" class="medium" type="text" tabindex="7" value="" name="add_pi_name">
+					<input id="add_pi_name" class="medium" type="text" tabindex="11" value="" name="add_pi_name">
 				</div>
 			</li>
 		
 			<li id="cafnr_write_in_pi" class="gfield write-in-pi">
 				<label class="gfield_label" for="input_22_34">Write in the name of the PI</label>
 				<div class="ginput_container">
-					<input id="write_in_pi" class="medium" type="text" tabindex="11" value="" name="write_in_pi">
+					<input id="write_in_pi" class="medium" type="text" tabindex="12" value="" name="write_in_pi">
 				</div>
 			</li>
 			
 			<li id="cafnr_country_lead" class="gfield">
 				<label class="gfield_label" for="input_22_34">Who is the in-country activity lead?</label>
 				<div class="ginput_container">
-					<input id="country_lead" class="medium" type="text" tabindex="11" value="<?php if( !empty( $this_activity_fields['country_lead'] )) echo current( $this_activity_fields['country_lead'] ); ?>" name="country_lead">
+					<input id="country_lead" class="medium" type="text" tabindex="13" value="<?php if( !empty( $this_activity_fields['country_lead'] )) echo current( $this_activity_fields['country_lead'] ); ?>" name="country_lead">
 				</div>
 			</li>
 		
@@ -512,23 +512,23 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				<div class="ginput_container">
 					<ul id="activity_type_checkbox" class="gfield_checkbox">
 						<li class="gchoice_11_1">
-							<input id="activity_checkbox_research" type="checkbox" tabindex="12" value="Research" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Research', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
+							<input id="activity_checkbox_research" type="checkbox" tabindex="14" value="Research" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Research', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
 							<label for="activity_checkbox_research">Research</label>
 						</li>
 						<li class="gchoice_11_2">
-							<input id="activity_checkbox_training" type="checkbox" tabindex="13" value="Training" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Training', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
+							<input id="activity_checkbox_training" type="checkbox" tabindex="15" value="Training" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Training', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
 							<label for="activity_checkbox_training">Training</label>
 						</li>
 						<li class="gchoice_11_3">
-							<input id="activity_checkbox_extension" type="checkbox" tabindex="14" value="Extension" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Extension', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
+							<input id="activity_checkbox_extension" type="checkbox" tabindex="16" value="Extension" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Extension', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
 							<label for="activity_checkbox_extension">Extension</label>
 						</li>
 						<li class="gchoice_11_4">
-							<input id="activity_checkbox_visit" type="checkbox" tabindex="15" value="Visit" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Visit', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
+							<input id="activity_checkbox_visit" type="checkbox" tabindex="17" value="Visit" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Visit', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
 							<label for="activity_checkbox_visit">Visit</label>
 						</li>
 						<li class="gchoice_11_5">
-							<input id="activity_checkbox_other" type="checkbox" tabindex="16" value="Other" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Other', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
+							<input id="activity_checkbox_other" type="checkbox" tabindex="18" value="Other" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Other', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
 							<label for="activity_checkbox_other">Other</label>
 						</li>
 					</ul>
@@ -538,7 +538,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_subject_textbox" class="gfield">
 				<label class="gfield_label" for="input_22_35">Academic Field, Research Focus, or Subject of Activity</label>
 				<div class="ginput_container">
-					<input id="subject_textbox" class="medium" type="text" tabindex="18" value="<?php if( !empty( $this_activity_fields['subject_textbox'] )) echo current( $this_activity_fields['subject_textbox'] ); ?>" name="subject_textbox">
+					<input id="subject_textbox" class="medium" type="text" tabindex="19" value="<?php if( !empty( $this_activity_fields['subject_textbox'] )) echo current( $this_activity_fields['subject_textbox'] ); ?>" name="subject_textbox">
 				</div>
 				<div class="gfield_description">Example: Ag Econ, Climate Change, Biofuels, Ag Policy, etc.</div>
 			</li>
@@ -546,14 +546,14 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_start_date" class="gfield pi-only hidden-on-init" >
 				<label class="gfield_label" for="start_date">Activity Start Date (approx.)</label>
 				<div class="ginput_container">
-					<input type="text" id="start_date" name="start_date" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['start_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['start_date'][0] ) ) ); } ?>">
+					<input type="text" id="start_date" name="start_date" tabindex="20" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['start_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['start_date'][0] ) ) ); } ?>">
 				</div>
 			</li>
 			
 			<li id="cafnr_end_date" class="gfield pi-only hidden-on-init">
 				<label class="gfield_label" for="end_date">Activity End Date (approx.)</label>
 				<div class="ginput_container">
-					<input type="text" id="end_date" name="end_date" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['end_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['end_date'][0] ) ) ); } ?>">
+					<input type="text" id="end_date" name="end_date" tabindex="21" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['end_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['end_date'][0] ) ) ); } ?>">
 				</div>
 			</li>
 			
@@ -570,7 +570,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 								foreach(  $this_activity_fields['collaborating'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
-											<input type="text" tabindex="26" value="<?php echo $link; ?>" name="collaborating[]">
+											<input type="text" tabindex="22" value="<?php echo $link; ?>" name="collaborating[]">
 										</td>
 										<td class="gfield_list_icons">
 											<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">

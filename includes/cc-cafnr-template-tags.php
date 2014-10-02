@@ -118,7 +118,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				);
 			foreach ( $activity_fields as $f ) {
 				if (isset($_POST[$f])) {
-					if ($_POST[$f] == '-1') { //defaults for country selects
+					if ( ( $_POST[$f] == '-1' ) || (  $_POST[$f] == "" ) ) { //defaults for selects
 						delete_post_meta($activity_id, $f);
 					} else {
 						update_post_meta( $activity_id, $f, $_POST[$f] );
@@ -128,7 +128,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			
 			//What countries and regions are we in?
 			$i = 1;
-						
+			
 			//first, remove all prior countries in database
 			delete_post_meta($activity_id, 'country');
 			

@@ -213,6 +213,7 @@ function cafnrIntakeFormLoad(){
 	
 		jQuery('.pi-only').removeClass('hidden-on-init');
 		jQuery('.non-pi-only').addClass('hidden-on-init');
+		jQuery('#cafnr_write_in_pi').addClass('hidden-on-init');
 		//jQuery('#cafnr_end_date').show();
 	} else {
 		//otherwise, do the opposite

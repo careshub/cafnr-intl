@@ -847,6 +847,33 @@ function cc_cafnr_render_mod_admin_form(){
 		//echo "nope";
 	}
 ?>
+	<style type="text/css">
+		.modal {
+			display:    none;
+			position:   fixed;
+			z-index:    1000;
+			top:        0;
+			left:       0;
+			height:     100%;
+			width:      100%;
+			background: rgba( 255, 255, 255, .8 ) 
+						url('/wordpress/wp-content/themes/CommonsRetheme/img/9.gif') 
+						50% 50% 
+						no-repeat;
+		}
+
+		/* When the body has the loading class, we turn
+		   the scrollbar off with overflow:hidden */
+		body.loading {
+			overflow: hidden;   
+		}
+
+		/* Anytime the body has the loading class, our
+		   modal element will be visible */
+		body.loading .modal {
+			display: block;
+		}	
+	</style>
 	<form id="cafnr_faculty_form" class="standard-form" method="post" action="">
 		<strong>Select a Faculty Member:</strong><br /><br />
 		<select id="faculty_select" name="faculty_select" style="font-size:12pt;width:450px;">
@@ -866,8 +893,8 @@ function cc_cafnr_render_mod_admin_form(){
 
 		<input type="submit" id="SubmitFaculty" name="SubmitFaculty" value="Go" style="font-size:12pt;" />
 		
-		<div id="newfacultydiv" style="margin-top:20px;"><strong>Add new Faculty Member:</strong><br /><br />
-			<input type="text" id="newfaculty" size="50" />&nbsp;&nbsp;<input type="button" id="submitnewfaculty" value="Add New Faculty" />
+		<div id="newfacultydiv" style="margin-top:20px;"><strong>Add new Faculty Member E-Mail Address:</strong><br /><br />
+			<input type="text" id="newfacultyemail" size="50" />&nbsp;&nbsp;<input type="button" id="submitnewfaculty" value="Add New Faculty" />
 		</div>
 	</form>
 	<div id="userinfo">
@@ -904,6 +931,48 @@ function cc_cafnr_render_mod_admin_form(){
 			<input type="submit" value="Submit" name="submitshortform" />
 		</form>
 	</div>	
+<div class="modal"></div>	
+	<script type="text/javascript">
+			jQuery( document ).ready(function($) {
+			
+			$body = $("body");
+
+			$(document).on({
+				ajaxStart: function() { $body.addClass("loading");    },
+				 ajaxStop: function() { $body.removeClass("loading"); }    
+			});			
+			
+				$("#submitnewfaculty").click(function() {
+						var email = $("#newfacultyemail").val();
+						if(validateEmail(email)){
+							var data = {
+								'action': 'add_cafnr_faculty',
+								'useremail': $("#newfacultyemail").val(),
+								'groupid': 595
+							};						
+							jQuery.post(ajaxurl, data, function(response) {
+								window.location = '/wordpress/cafnr-intl-dashboard/?user=' + response;
+								
+							});								 
+						} else {
+							 alert("Email is not in the correct format. Please enter a valid email address.");
+						}				
+				
+				
+					
+				});
+				function validateEmail(email){
+					var emailReg = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+					var valid = emailReg.test(email);
+
+					if(!valid) {
+						return false;
+					} else {
+						return true;
+					}
+				}				
+			});			
+	</script>	
 <?php
 	if ($all_meta_for_user['CVmethod'][0] == "link") {
 ?>
@@ -1141,31 +1210,6 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 <?php
 }
 
-function cc_cafnr_add_member_save( $email, $group_id ){
-	
-	$group_id = cc_cafnr_get_group_id();
-	$user_id = username_exists( $user_name );
-	
-	if ( !$user_id and email_exists($user_email) == false ) {
-		$random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
-		$user_id = wp_create_user( $user_name, $random_password, $user_email );
-	} else {
-		$random_password = __('User already exists.  Password inherited.');
-	}
-	
-	if( !is_numeric( $user_id ) || ( $user_id == 0 ) ){
-	
-		
-	}
-	/*When successful - this function returns the user ID of the created user. In case of failure 
-	(username or email already exists) the function returns an error object, with these possible values and messages;
 
-    empty_user_login, Cannot create a user with an empty login name.
-    existing_user_login, This username is already registered.
-    existing_user_email, This email address is already registered. */
-	
-	return $user_id;
-
-}
 
 ?>

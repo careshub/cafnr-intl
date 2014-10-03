@@ -182,6 +182,7 @@ function cc_cafnr_get_group_id(){
             $group_id = 595;
             break;
     }
+	
     return $group_id;
 }
 

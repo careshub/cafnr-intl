@@ -857,7 +857,7 @@ function cc_cafnr_render_mod_admin_form(){
 			height:     100%;
 			width:      100%;
 			background: rgba( 255, 255, 255, .8 ) 
-						url('/wordpress/wp-content/themes/CommonsRetheme/img/9.gif') 
+						url('http://localhost/wordpress/wp-content/themes/CommonsRetheme/img/9.gif') 
 						50% 50% 
 						no-repeat;
 		}

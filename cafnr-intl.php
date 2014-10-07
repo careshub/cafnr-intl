@@ -30,11 +30,18 @@ function cc_cafnr_intl_class_init(){
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_script( 'plupload' );
 		
+		//dirname( __FILE__ )
+		
+		wp_enqueue_script( 'cc-cafnr', plugins_url( '/includes/cc-cafnr.js', __FILE__), array(), '1.0.0', true );
+		wp_enqueue_style( 'datepicker-style', plugins_url( '/includes/css/datepicker.css', __FILE__) );
+		wp_enqueue_style( 'gf-style',  plugins_url( '/includes/css/g_forms_styles.css', __FILE__) );
+		wp_enqueue_style( 'cafnr-style', plugins_url( '/includes/css/cafnr-intl.css', __FILE__) );	
+		/*
 		wp_enqueue_script( 'cc-cafnr', plugins_url( 'cc-cafnr-intl2/includes/cc-cafnr.js', ''), array(), '1.0.0', true );
 		wp_enqueue_style( 'datepicker-style', plugins_url( 'cc-cafnr-intl2/includes/css/datepicker.css') );
 		wp_enqueue_style( 'gf-style',  plugins_url( 'cc-cafnr-intl2/includes/css/g_forms_styles.css') );
 		wp_enqueue_style( 'cafnr-style', plugins_url( 'cc-cafnr-intl2/includes/css/cafnr-intl.css') );	
-		
+		*/
 		//so we can use vars in js functions
 		wp_localize_script(
 			'cc-cafnr',

@@ -89,9 +89,9 @@ html>body .entry ul,
 .gform_wrapper li,
 .gform_wrapper form li {
 	margin-left: 0 !important;
-	list-style-type: none !important;
-	list-style-image: none !important;
-	list-style: none !important;
+	list-style-type: none;
+	list-style-image: none;
+	list-style: none;
 	overflow: visible;
 }
 

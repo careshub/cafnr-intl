@@ -212,17 +212,46 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				}
 			}
 			
-			if ( isset( $_POST['activity_file'] ) ) {
+			//get all files uploaded
+			$i = 1;
+			while ( isset($_POST['activity_file_count-' . $i] ) ) {
+				
+				//if we have new data
+				if ( isset( $_POST['activity_file-' . $i] ) && isset( $_POST['activity_file_type-' . $i] ) && isset( $_POST['activity_file_url-' . $i] ) ) {
+					if ( isset( $_POST['activity_attachment_name-' . $i] ) ) {
+						$attachment_title =  $_POST['activity_attachment_name-' . $i];
+					} else {
+						$attachment_title = $activity_name . ' - ' . $activity_id . ' (Attachment ' . $i . ' )';
+					}
+					
+					$attachment = array(
+						'post_title' => $attachment_title,
+						'post_content' => '',
+						'guid' => $_POST['activity_file_url-' . $i],
+						'post_status' => 'publish',
+						'post_mime_type' => $_POST['activity_file_type-' . $i]
+					);
+					
+					$attachment_id = wp_insert_attachment( $attachment, $_POST['activity_file'], $activity_id );	
+				}
+				
+				$i++;
+			}
+			
+			
+			/*if ( isset( $_POST['activity_file'] ) ) {
+				//if ( isset( $_POST['activity_attachement_name']
 				$attachment = array(
 					'post_title' => $activity_name . ' - ' . $activity_id . ' (Attachment)',
 					'post_content' => '',
+					'guid' => $_POST['activity_file'],
 					'post_status' => 'publish',
 					'post_mime_type' => $_POST['activity_file_type']
 				);
 				
 				$attachment_id = wp_insert_attachment( $attachment, $_POST['activity_file'], $activity_id );	
 
-			}
+			} */
 		
 		//	
 			//if successful, redirect to dashboard
@@ -495,7 +524,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 		
-			<li id="cafnr_write_in_pi" class="gfield write-in-pi">
+			<li id="cafnr_write_in_pi" class="gfield write-in-pi hidden-on-init">
 				<label class="gfield_label" for="input_22_34">Write in the name of the PI</label>
 				<div class="ginput_container">
 					<input id="write_in_pi" class="medium" type="text" tabindex="12" value="" name="write_in_pi">
@@ -665,17 +694,26 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_activity_upload" class="gfield">
 				<label class="gfield_label" for="input_22_39">Do you have any supplemental material you would like to UPLOAD?</label>
 			
-					<p><span id="plupload-browse-button">Select files to upload...</span></p>
+					<p><a id="plupload-browse-button"><input type="button" value="Select a file to upload..."></a></p>
 					<div id="plupload-upload-ui">
 					<?php //echo get_the_post_thumbnail( $p->ID ) //get attachemtns here??>
 					</div>
 
 					<?php
 					if ( $this_activity_attachments ) {
+						$count = 1;
+						echo '<div id="cafnr_upload_list"><h2>Files already uploaded: </h2><ul>';
 						foreach ( $this_activity_attachments as $attachment ) {
-							echo apply_filters( 'the_title' , $attachment->post_title );
-							the_attachment_link( $attachment->ID , false );
+							echo '<li>';
+							
+							$attachment_link = wp_get_attachment_url( $attachment->ID );
+							echo "<a href='" . $attachment_link . "' target='_blank'>" . apply_filters( 'the_title' , $attachment->post_title ) . "</a>";
+							
+							echo "<input type='hidden' class='activity_file_count' data-filecount='" . $count . "' name='activity_file_count-" . $count . "' value='" . $count . "' />";
+							echo '</li>';
+							$count++;
 						}
+						echo '</ul></div>';
 					}
 					?>
 			</li>

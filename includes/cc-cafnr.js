@@ -66,7 +66,7 @@ function clickListen(){
 		});
 	});
 	
-	//add country listener
+	//add country listener to existing .add_country in DOM
 	jQuery('.add_country').on("click", addCountry );
 	
 	//remove country listener
@@ -133,12 +133,12 @@ function addCountry() {
 	
 	
 	//turn off click listeners (so no double-listening on existing divs)
-	jQuery('.add_collaborating').off("click", addCollaborating );
-	jQuery('.delete_collaborating').off("click", deleteCollaborating );
+	jQuery('.add_country').off("click", addCountry );
+	jQuery('.delete_country').off("click", deleteCountry );
 	
 	//turn them back on so new rows get listened to, too
-	jQuery('.add_collaborating').on("click", addCollaborating );
-	jQuery('.delete_collaborating').on("click", deleteCollaborating );
+	jQuery('.add_country').on("click", addCountry );
+	jQuery('.delete_country').on("click", deleteCountry );
 }
 
 function deleteCountry() {
@@ -305,11 +305,28 @@ function activityUploader( browseButton, uiContainer ){
 			//response.response = file, url, type, fileBaseName
 			var activityFile = eval('(' + response.response + ')');
 			
+			//add count to inputs for multiple file inputs
+			var count = 0; //need to get number of last file in list
+			var newcount; //placeholder
+			
+			//get all jQuery('.countrylist')
+			jQuery('.activity_file_count').each( function() {
+				newcount = jQuery(this).data("filecount");
+				if ( newcount > count ){
+					count = newcount; //update count to the highest count number in form
+				}
+			});
+			//add one more to count, since new tr here
+			count++;
+			
+			
 			//To do: add display html here for the types..
-			var activityFileHtml = "<span><p>File uploaded: " + activityFile.fileBaseName + "<input class='remove-activity-file' type='button' value='Remove this sample' data-deletefile='" + activityFile.file + "' ></p>" + 
-				"File name: <input type='text' name='' value=''>" + activityFile.fileBaseName + "</input>" +
-				"<input type='hidden' name='activity_file' value='" + activityFile.file + "' />" +
-				"<input type='hidden' name='activity_file_type' value='" + activityFile.type + "' /></span>";
+			var activityFileHtml = "<span><p>File uploaded: " + activityFile.fileBaseName + "&nbsp;&nbsp;<input class='remove-activity-file' type='button' value='Remove this sample' data-deletefile='" + activityFile.file + "' >" + 
+				"&nbsp;&nbsp;&nbsp;&nbsp;Change file name: <input type='text' name='activity_attachment_name-" + count + "' value=''></input>  (default name: 'Attachment " + count + ")'</p>" +
+				"<input type='hidden' name='activity_file-" + count + "' value='" + activityFile.file + "' />" +
+				"<input type='hidden' name='activity_file_url-" + count + "' value='" + activityFile.url + "' />" +
+				"<input type='hidden' name='activity_file_type-" + count + "' value='" + activityFile.type + "' /></span>" +
+				"<input type='hidden' class='activity_file_count' data-filecount='" + count + "' name='activity_file_count-" + count + "' value='" + activityFile.count + "' /></span>";
 			jQuery('#' + uiContainer).after(activityFileHtml).show('slow', function(){
 				jQuery('#plupload-upload-ui .ie9hide').hide();
 				jQuery('#plupload-upload-ui .red').hide();

@@ -878,7 +878,10 @@ function cc_cafnr_render_mod_admin_form(){
 			if ( isset ( $_POST['futurecontact'] ) ){
 				update_user_meta( $uid, 'futurecontact', $_POST['futurecontact'] );
 			}
-			echo "Short Form Submitted!<br /><br />";
+			if ( isset( $_POST['user_file_url'] ) ) {
+				update_user_meta( $uid, 'cv-url', $_POST['user_file_url'] );
+			}
+			echo "User info updated!<br /><br />";
 
 		}
 	} else {
@@ -950,7 +953,14 @@ function cc_cafnr_render_mod_admin_form(){
 			</div>
 			<div id="uploadDiv" style="display:none;">
 				<br /><br />
-				<strong>Upload CV here:</strong><br/>			
+				<strong>Upload CV here:</strong><br/>
+				<?php if ( $all_meta_for_user['cv-url'][0] != "" ){
+					echo '<a href="' . $all_meta_for_user["cv-url"][0] . '" target="_blank">' . "Link to CV" . '</a>';
+				} else { ?>
+					<p><a id="user-plupload-browse-button"><input type="button" value="Select a file to upload..."></a></p>
+					<div id="user-plupload-upload-ui"></div>
+				<?php } ?>
+				
 			</div>		
 			<br /><br />
 			<strong>Beyond the last five years, have you been involved in any international activities?</strong><br/>
@@ -1086,6 +1096,9 @@ function cc_cafnr_render_member_form(){
 			}
 			if ( isset ( $_POST['futurecontact'] ) ){
 				update_user_meta( $uid, 'futurecontact', $_POST['futurecontact'] );
+			}
+			if ( isset( $_POST['user_file_url'] ) ) {
+				update_user_meta( $uid, 'cv-url', $_POST['user_file_url'] );
 			}
 			echo "Short Form Submitted!<br /><br />";
 

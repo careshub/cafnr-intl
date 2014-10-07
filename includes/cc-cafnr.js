@@ -7,6 +7,17 @@ var pluploadVars = {
 	imageUpload: null,
 	activityUploads: new Array()
 };
+
+var userPluploadVars = {
+	dirty: true,
+	lastSave: 0,
+	ajaxBusy: false,
+	infobarDefault: "somthing defaulty",
+	imageUpload: null,
+	userUploads: new Array()
+};
+
+
 // .research-only; hide if #activity_radio_research is !checked
 // pi-only; hide if pi_yes is !checked
 
@@ -254,6 +265,25 @@ function cafnrIntakeFormLoad(){
 	
 }
 
+//a function to make sure when post info is loaded into user form, appropriate fields show automagically
+function cafnrUserFormLoad(){
+
+	//on form load, let's make sure right fields are displaying
+	
+	//activity form and plupload init stuff
+	if (jQuery('#cafnr_facultyadd_form').length) {
+		
+		//init plupolader 
+		userUploader('user-plupload-browse-button', 'user-plupload-upload-ui');
+		
+	} else {
+		userFormUnload();
+	}
+	
+	
+}
+
+//funcitons in support of plupload for activity form
 var activityFormUnload = function() {
 	//plupload: uploader.destroy();
 	for (var i = 0; i < pluploadVars.activityUploads.length; i++) {
@@ -366,6 +396,104 @@ function removeActivityFile( uploaderInput ){
 	// jQuery(this).parents('span').siblings()
 	console.log('file allegedly removed now');
 }
+
+//user form plupload functions
+var userFormUnload = function() {
+	//plupload: uploader.destroy();
+	for (var i = 0; i < userPluploadVars.userUploads.length; i++) {
+		userPluploadVars.userUploads[i].destroy();
+	}
+	
+}
+
+function userUploader( browseButton, uiContainer ){
+	var userUploader = new plupload.Uploader({
+		runtimes:'html5,silverlight,flash,html4',
+		/*flash_swf_url: cafnr_ajax.pluploadSWF,
+		silverlight_xap_url: cafnr_ajax.pluploadXAP, */
+		browse_button: browseButton,
+		file_data_name: 'user_uploads',
+		max_file_size: '200kb',
+		url: cafnr_ajax.adminAjax,
+		filters: [{title:'User Upload', extensions:'pdf,mp3,jpg,jpeg,gif,png'}],  //TODO: add more extensions
+		multipart_params: { action: 'user_upload' }
+	});
+
+	//store reference to this object for later removal
+	userPluploadVars.userUploads.push( userUploader );
+
+	userUploader.init();
+
+	userUploader.bind('FilesAdded', function(up_user, files){
+		up_user.start();
+		
+	});
+
+	userUploader.bind('UploadProgress', function(up, file) {
+		jQuery('#' + uiContainer).html('<p class="ie9hide">' + file.percent + '% complete...</p><p class="red">Please wait to save your progress until your file has finished uploading</p>');
+	});
+
+	userUploader.bind('Error', function(up, err) {
+		if (err.code == -600) { //file size
+			jQuery('#' + uiContainer).html("<p class='red'>I'm sorry, this file is too large.  2MB or less, please.</p>");
+		} else if (err.code == -601) { //file type
+			jQuery('#' + uiContainer).html("<p class='red'>I'm sorry, we accept only PDFs or MP3s.</p>");
+		} else {
+			jQuery('#' + uiContainer).html("<p class='red'>Sorry, there was an error. Please try again.</p>");
+		}
+	});
+
+	userUploader.bind('FileUploaded', function(up, file, response){
+		if (response.response) {
+			//response.response = file, url, type, fileBaseName
+			var userFile = eval('(' + response.response + ')');
+			
+			//To do: add display html here for the types..
+			var userFileHtml = "<span><p>File uploaded: " + userFile.fileBaseName + "&nbsp;&nbsp;<input class='remove-user-file' type='button' value='Remove this CV' data-deletefile='" + userFile.file + "' >" + 
+				"&nbsp;&nbsp;&nbsp;&nbsp;Change file name: <input type='text' name='user_attachment_name' value=''></input> </p>" +
+				"<input type='hidden' name='user_file' value='" + userFile.file + "' />" +
+				"<input type='hidden' name='user_file_url' value='" + userFile.url + "' />" +
+				"<input type='hidden' name='user_file_type' value='" + userFile.type + "' /></span>";
+				
+			jQuery('#' + uiContainer).after(userFileHtml).show('slow', function(){
+				jQuery('#user-plupload-upload-ui .ie9hide').hide();
+				jQuery('#user-plupload-upload-ui .red').hide();
+				
+			});
+			
+			//add remove listeners to this 
+			jQuery('.remove-user-file').off("click", removeUserFile);
+			jQuery('.remove-user-file').on("click", {
+				uploader: userUploader,
+				file: file
+				}, removeUserFile );
+			
+			jQuery('#' + browseButton).html('<input type="button" value="Select another file to upload..." />');
+			
+		} else {
+			jQuery('#' + uiContainer).html('<p>Sorry, there was an error. Please try again.</p>');
+		}
+	});
+}
+
+function removeUserFile( uploaderInput ){
+	//var fileurl = jQuery(this).data('deletefile');
+	
+	
+	//jQuery(this).parents('span').remove();
+	//remove file from queue (doesn't seem to be removing it from uploads folder, hmm)
+	var errormaybe = uploaderInput.data.userUploader.removeFile( uploaderInput.data.file );
+	var totalFileSpan = jQuery(this).parents('span');
+	
+	jQuery(this).parents('span').append(errormaybe);
+	totalFileSpan.fadeOut(500, function() { 
+		totalFileSpan.remove(); 
+	});
+	
+	// jQuery(this).parents('span').siblings()
+	console.log('file allegedly removed now');
+}
+
 
 function getCountries(){
 
@@ -1120,6 +1248,8 @@ jQuery(document).ready(function($){
 	
 	cafnrIntakeFormLoad();
 	
+	cafnrUserFormLoad();
+	
 	jQuery( ".datepicker" ).datepicker({
 		changeMonth: true,
 		changeYear: true
@@ -1127,3 +1257,4 @@ jQuery(document).ready(function($){
 	
 	
 },(jQuery))
+

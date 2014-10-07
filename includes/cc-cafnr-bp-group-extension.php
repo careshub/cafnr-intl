@@ -41,6 +41,8 @@ class CC_CAFNR_Intl_Extension extends BP_Group_Extension {
 
         } else if ( cc_cafnr_on_survey_screen() ) {
 
+				cc_cafnr_activity_form_render();
+				
 			/*if ( ! cc_aha_user_can_do_assessment() ) {
 				echo '<div class="message info">Sorry, you do not have permission to view this page.</div>';
 			} else {

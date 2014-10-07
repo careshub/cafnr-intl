@@ -151,6 +151,21 @@ function cc_cafnr_activity_upload() {
 	}
 add_action( 'wp_ajax_activity_upload', 'cc_cafnr_activity_upload' );
 
+//ajax for plupload on the activity form
+function cc_cafnr_user_upload() {
+	
+	$new_file = wp_handle_upload( $_FILES['user_uploads'], array( 'test_form' => false ) );
+	
+	if ( $new_file ) {
+		$new_file['fileBaseName'] = basename( $new_file['file'] );
+		echo json_encode( $new_file );
+	} else {
+		echo "There seems to be an error.";
+	}
+		die();
+	}
+add_action( 'wp_ajax_user_upload', 'cc_cafnr_user_upload' );
+
 /**
  * Is this the CAFNR group?
  *
@@ -216,7 +231,7 @@ function cc_cafnr_on_survey_dashboard_screen(){
     }
 }
 function cc_cafnr_on_survey_screen(){
-    if ( cc_cafbr_is_component() && bp_is_action_variable( cc_cafnr_get_survey_slug(), 0 ) ){
+    if ( cc_cafnr_is_component() && bp_is_action_variable( cc_cafnr_get_survey_slug(), 0 ) ){
         return true;
     } else {
         return false;

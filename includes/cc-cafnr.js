@@ -106,6 +106,15 @@ function clickListen(){
 		var userId = jQuery("input[name='user_id']").val();
 		deleteActivityUploads( uploadHTML, whichUpload, userId );
 	});
+	
+	jQuery('#CVmethod1').click(function () {
+		jQuery("#linkDiv").show();
+		jQuery("#uploadDiv").hide();
+	});
+	jQuery('#CVmethod2').click(function () {
+		jQuery("#linkDiv").hide();
+		jQuery("#uploadDiv").show();
+	});	
 }
 
 //add countries as repeater
@@ -1299,6 +1308,7 @@ jQuery(document).ready(function($){
 		changeMonth: true,
 		changeYear: true
 	});
+	
 	
 	
 },(jQuery))

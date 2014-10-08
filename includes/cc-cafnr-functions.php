@@ -244,8 +244,23 @@ function cc_cafnr_get_group_id(){
 function cc_cafnr_get_slug(){
     return 'survey-dashboard';
 }
-function cc_cafnr_get_survey_slug(){
+function cc_cafnr_get_activity_slug(){
     return 'cafnr-add-activity';
+}
+
+/**
+ * Get URIs for the various pieces of this tab
+ * 
+ * @return string URL
+ */
+function cc_cafnr_get_home_permalink( $group_id = false ) {
+    $group_id = ( $group_id ) ? $group_id : bp_get_current_group_id() ;
+    $permalink = bp_get_group_permalink( groups_get_group( array( 'group_id' => $group_id ) ) ) .  cc_cafnr_get_slug() . '/';
+    return apply_filters( "cc_cafnr_home_permalink", $permalink, $group_id);
+}
+function cc_cafnr_get_activity_permalink( $page = 1, $group_id = false ) {
+    $permalink = cc_aha_get_home_permalink( $group_id ) . cc_cafnr_get_activity_slug() . '/' . $page . '/';
+    return apply_filters( "cc_cafnr_activity_permalink", $permalink, $group_id);
 }
 
 /**
@@ -263,8 +278,8 @@ function cc_cafnr_on_survey_dashboard_screen(){
         return false;
     }
 }
-function cc_cafnr_on_survey_screen(){
-    if ( cc_cafnr_is_component() && bp_is_action_variable( cc_cafnr_get_survey_slug(), 0 ) ){
+function cc_cafnr_on_activity_screen(){
+    if ( cc_cafnr_is_component() && bp_is_action_variable( cc_cafnr_get_activity_slug(), 0 ) ){
         return true;
     } else {
         return false;

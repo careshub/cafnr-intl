@@ -39,7 +39,7 @@ class CC_CAFNR_Intl_Extension extends BP_Group_Extension {
 		
             cc_cafnr_intl_dashboard();
 
-        } else if ( cc_cafnr_on_survey_screen() ) {
+        } else if ( cc_cafnr_on_activity_screen() ) {
 
 			cc_cafnr_activity_form_render();
 		

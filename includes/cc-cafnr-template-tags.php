@@ -461,7 +461,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 			
-			<li id="cafnr_pi_radio" class="gfield gfield_contains_required required research-only" style="display: list-item;">
+			<li id="cafnr_pi_radio" class="gfield gfield_contains_required required research-only">
 				<label class="gfield_label">
 					Are you the PI/leader of this activity?
 					<span class="gfield_required">*</span>

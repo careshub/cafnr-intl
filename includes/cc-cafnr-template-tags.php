@@ -1286,7 +1286,7 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 			<thead>
 				<tr>
 					<th scope="col" colspan="1"><span id="nameactivity"></span></th>	
-					<th scope="col" colspan="3" style="text-align:right;"><input id="btnAddNewActivity" type="button" value="+ Add New Activity" /></th>
+					<th scope="col" colspan="3" style="text-align:right;"><a href="<?php echo cc_cafnr_get_activity_permalink(); ?>" class="button">+ Add New Activity</a></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -1322,6 +1322,7 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 						jQuery.post(ajaxurl, data, function(response) {
 							alert('Activity Deleted!');
 							//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + activity_owner;
+							//TODO, change this to be function-based url
 							window.location = cafnr_ajax.homeURL . '/groups/cafnr-international-programs/survey-dashboard?user=' + author;
 						});					
 				} else {

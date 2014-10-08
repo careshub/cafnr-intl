@@ -2,6 +2,7 @@
 <?php
 
 function cc_cafnr_intl_dashboard() {
+//TODO - move js/css
 ?>
 	<a href="/wordpress/cafnr-intl-dashboard"><img src="http://dev.communitycommons.org/wp-content/uploads/2014/09/logo.jpg" width="400px" /></a><br /><br />
 	<p><span style="font-weight:bold;font-size:18pt;margin:15px 0px 30px 0px;">Dashboard</span></p>

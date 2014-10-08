@@ -103,7 +103,10 @@ add_action( 'wp_ajax_add_cafnr_faculty', 'add_cafnr_faculty' );
 function add_cafnr_faculty() {
 	//add user to Wordpress using an e-mail address
 	$group_id = $_POST['groupid'];
-	$email_address = $_POST['useremail'];		
+	$email_address = $_POST['useremail'];
+	$dname = $_POST['displayname'];
+	$fname = $_POST['firstname'];
+	$lname = $_POST['lastname'];
 
 		if( null == username_exists( $email_address ) ) {
 
@@ -114,8 +117,11 @@ function add_cafnr_faculty() {
 		  // Set the nickname
 		  wp_update_user(
 			array(
-			  'ID'          =>    $user_id,
-			  'nickname'    =>    $email_address
+			  'ID'          => $user_id,
+			  'nickname'    => $email_address,
+			  'display_name' =>	$dname,
+			  'first_name' => $fname,
+			  'last_name' => $lname
 			)
 		  );
 

@@ -859,7 +859,7 @@ function cc_cafnr_render_mod_admin_form(){
 	if (isset( $_POST['submitshortform'] )) {				
 		if( isset( $_POST['userID'] ) ){
 		
-			$uid=$_POST['userID'];
+			$uid = $_POST['userID'];
 			if ( isset ( $_POST['CVmethod'] ) ){
 				update_user_meta( $uid, 'CVmethod', $_POST['CVmethod'] );
 			}					
@@ -878,8 +878,25 @@ function cc_cafnr_render_mod_admin_form(){
 			if ( isset ( $_POST['futurecontact'] ) ){
 				update_user_meta( $uid, 'futurecontact', $_POST['futurecontact'] );
 			}
+			//we're going to store the cv file as an attachment, so we can delete it through WP on change
 			if ( isset( $_POST['user_file_url'] ) ) {
-				update_user_meta( $uid, 'cv-url', $_POST['user_file_url'] );
+				//if we have an attachment already, delete it
+				if ( isset( $_POST['old-cv-file'] ) ){
+					//remove existing file
+					$delete_success = wp_delete_attachment( $_POST['old-cv-file'] );
+				}
+				
+				//insert attachement (no parent) and update user meta
+				$attachment = array(
+					'guid'           => $_POST['user_file_url'], 
+					'post_mime_type' => $_POST['user_file_type'],
+					'post_title'     => $_POST['user_file_basename'],
+					'post_content'   => '',
+					'post_status'    => 'publish'
+				);
+
+				$attach_id = wp_insert_attachment( $attachment, $_POST['user_file_url'] );
+				update_user_meta( $uid, 'cv-file', $attach_id );
 			}
 			echo "User info updated!<br /><br />";
 
@@ -938,6 +955,8 @@ function cc_cafnr_render_mod_admin_form(){
 			<input type="text" id="newfacultyemail" size="50" />&nbsp;&nbsp;<input type="button" id="submitnewfaculty" value="Add New Faculty" />
 		</div>
 	</form>
+	
+	<?php if ( isset( $all_meta_for_user['cv-file'][0] ) ) echo 'yehaw' . $all_meta_for_user['cv-file'][0]; ?>
 	<div id="userinfo">
 		<form id="cafnr_facultyadd_form" class="standard-form" method="post" action="">
 			<br /><br />
@@ -954,8 +973,11 @@ function cc_cafnr_render_mod_admin_form(){
 			<div id="uploadDiv" style="display:none;">
 				<br /><br />
 				<strong>Upload CV here:</strong><br/>
-				<?php if ( $all_meta_for_user['cv-url'][0] != "" ){
-					echo '<a href="' . $all_meta_for_user["cv-url"][0] . '" target="_blank">' . "Link to CV" . '</a>';
+				<?php if ( $all_meta_for_user['cv-file'][0] != "" ){
+					echo '<a href="' . wp_get_attachment_url( $all_meta_for_user["cv-file"][0] ) . '" target="_blank">' . "Link to CV" . '</a>';
+					echo '<p><a id="user-plupload-browse-button"><input type="button" value="Select a different file to upload..."></a></p>';
+					echo '<input type="hidden" name="old-cv-file" value="' . $all_meta_for_user['cv-file'][0] . '" />';
+					echo '<div id="user-plupload-upload-ui"></div>';
 				} else { ?>
 					<p><a id="user-plupload-browse-button"><input type="button" value="Select a file to upload..."></a></p>
 					<div id="user-plupload-upload-ui"></div>

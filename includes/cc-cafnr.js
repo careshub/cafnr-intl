@@ -435,7 +435,7 @@ function userUploader( browseButton, uiContainer ){
 
 	userUploader.bind('Error', function(up, err) {
 		if (err.code == -600) { //file size
-			jQuery('#' + uiContainer).html("<p class='red'>I'm sorry, this file is too large.  2MB or less, please.</p>");
+			jQuery('#' + uiContainer).html("<p class='red'>I'm sorry, this file is too large.  200kb or less, please.</p>");
 		} else if (err.code == -601) { //file type
 			jQuery('#' + uiContainer).html("<p class='red'>I'm sorry, we accept only PDFs or MP3s.</p>");
 		} else {
@@ -453,6 +453,7 @@ function userUploader( browseButton, uiContainer ){
 				"&nbsp;&nbsp;&nbsp;&nbsp;Change file name: <input type='text' name='user_attachment_name' value=''></input> </p>" +
 				"<input type='hidden' name='user_file' value='" + userFile.file + "' />" +
 				"<input type='hidden' name='user_file_url' value='" + userFile.url + "' />" +
+				"<input type='hidden' name='user_file_basename' value='" + userFile.fileBaseName + "' />" +
 				"<input type='hidden' name='user_file_type' value='" + userFile.type + "' /></span>";
 				
 			jQuery('#' + uiContainer).after(userFileHtml).show('slow', function(){

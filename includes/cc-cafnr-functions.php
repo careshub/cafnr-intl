@@ -257,7 +257,7 @@ function cc_cafnr_get_survey_slug(){
  */
 function cc_cafnr_on_survey_dashboard_screen(){
     // There should be no action variables if on the main tab
-    if ( cc_cafnr_is_component() && ! ( bp_action_variables() )  ){
+    if ( cc_cafnr_is_component() && ! ( bp_action_variables( cc_cafnr_get_slug(), 0 ) ) ){
         return true;
     } else {
         return false;

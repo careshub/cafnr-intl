@@ -959,7 +959,6 @@ function cc_cafnr_render_mod_admin_form(){
 		</div>
 	</form>
 	
-	<?php if ( isset( $all_meta_for_user['cv-file'][0] ) ) echo 'yehaw' . $all_meta_for_user['cv-file'][0]; ?>
 	<div id="userinfo">
 		<form id="cafnr_facultyadd_form" class="standard-form" method="post" action="">
 			<br /><br />
@@ -1252,7 +1251,12 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 		setup_postdata( $post ); 
 		
 		//CAFNR_ACTIVITY_FORM_URL
-		$url = get_site_url() . CAFNR_ACTIVITY_FORM_URL . '?activity_id=' . $post->ID;
+		if ( bp_group_is_admin() || bp_group_is_mod() ) {
+			$url = get_site_url() . CAFNR_ACTIVITY_FORM_URL . '?activity_id=' . $post->ID . '&user=' . $post->post_author;
+		} else {
+			$url = get_site_url() . CAFNR_ACTIVITY_FORM_URL . '?activity_id=' . $post->ID;
+		}
+		
 		$activity_list[$count]['id'] = $post->ID;
 		$activity_list[$count]['title'] = $post->post_title;
 		$activity_list[$count]['form_url'] = $url;

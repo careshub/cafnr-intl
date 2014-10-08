@@ -41,17 +41,8 @@ class CC_CAFNR_Intl_Extension extends BP_Group_Extension {
 
         } else if ( cc_cafnr_on_survey_screen() ) {
 
-				cc_cafnr_activity_form_render();
-				
-			/*if ( ! cc_aha_user_can_do_assessment() ) {
-				echo '<div class="message info">Sorry, you do not have permission to view this page.</div>';
-			} else {
-				// We'll store the "active" metro id in a cookie for persistence.
-				cc_aha_print_metro_select_container_markup();                    
-				// Get the right page of the form to display. bp_action_variable(1) is the page number
-				cc_aha_render_form( bp_action_variable(1) );
-			}*/
-
+			cc_cafnr_activity_form_render();
+		
         }
 		
     }

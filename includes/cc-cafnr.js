@@ -102,9 +102,16 @@ function clickListen(){
 	
 	jQuery('.remove-activity-upload').on("click", function(){
 		var uploadHTML = jQuery(this);
+		var whichUpload = jQuery(this).data("deletefile");
+		var userId = jQuery("input[name='userID']").val();
+		deleteActivityUploads( uploadHTML, whichUpload, userId );
+	});
+	
+	jQuery('.remove-user-file').on("click", function(){
+		var uploadHTML = jQuery(this);
 		var whichUpload = jQuery(this).data("deleteupload");
 		var userId = jQuery("input[name='user_id']").val();
-		deleteActivityUploads( uploadHTML, whichUpload, userId );
+		deleteUserFile( uploadHTML, whichUpload, userId );
 	});
 	
 	jQuery('#CVmethod1').click(function () {
@@ -461,7 +468,7 @@ var userFormUnload = function() {
 }
 
 function userUploader( browseButton, uiContainer ){
-	var userUploader = new plupload.Uploader({
+	var userPluploader = new plupload.Uploader({
 		runtimes:'html5,silverlight,flash,html4',
 		/*flash_swf_url: cafnr_ajax.pluploadSWF,
 		silverlight_xap_url: cafnr_ajax.pluploadXAP, */
@@ -474,20 +481,20 @@ function userUploader( browseButton, uiContainer ){
 	});
 
 	//store reference to this object for later removal
-	userPluploadVars.userUploads.push( userUploader );
+	userPluploadVars.userUploads.push( userPluploader );
 
-	userUploader.init();
+	userPluploader.init();
 
-	userUploader.bind('FilesAdded', function(up_user, files){
+	userPluploader.bind('FilesAdded', function(up_user, files){
 		up_user.start();
 		
 	});
 
-	userUploader.bind('UploadProgress', function(up, file) {
+	userPluploader.bind('UploadProgress', function(up, file) {
 		jQuery('#' + uiContainer).html('<p class="ie9hide">' + file.percent + '% complete...</p><p class="red">Please wait to save your progress until your file has finished uploading</p>');
 	});
 
-	userUploader.bind('Error', function(up, err) {
+	userPluploader.bind('Error', function(up, err) {
 		if (err.code == -600) { //file size
 			jQuery('#' + uiContainer).html("<p class='red'>I'm sorry, this file is too large.  200kb or less, please.</p>");
 		} else if (err.code == -601) { //file type
@@ -497,7 +504,7 @@ function userUploader( browseButton, uiContainer ){
 		}
 	});
 
-	userUploader.bind('FileUploaded', function(up, file, response){
+	userPluploader.bind('FileUploaded', function(up, file, response){
 		if (response.response) {
 			//response.response = file, url, type, fileBaseName
 			var userFile = eval('(' + response.response + ')');
@@ -519,7 +526,7 @@ function userUploader( browseButton, uiContainer ){
 			//add remove listeners to this 
 			jQuery('.remove-user-file').off("click", removeUserFile);
 			jQuery('.remove-user-file').on("click", {
-				uploader: userUploader,
+				uploader: userPluploader,
 				file: file
 				}, removeUserFile );
 			
@@ -533,11 +540,11 @@ function userUploader( browseButton, uiContainer ){
 
 function removeUserFile( uploaderInput ){
 	//var fileurl = jQuery(this).data('deletefile');
-	
+	console.log('hey...');
 	
 	//jQuery(this).parents('span').remove();
 	//remove file from queue (doesn't seem to be removing it from uploads folder, hmm)
-	var errormaybe = uploaderInput.data.userUploader.removeFile( uploaderInput.data.file );
+	var errormaybe = uploaderInput.data.userPluploader.removeFile( uploaderInput.data.file );
 	var totalFileSpan = jQuery(this).parents('span');
 	
 	jQuery(this).parents('span').append(errormaybe);

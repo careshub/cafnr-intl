@@ -41,7 +41,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		if ( $_POST['new_activity'] == 'edit_activity' || $_POST['new_activity'] == 'new_activity' ) {
 			//only logged-in users can submit this form
 			if ( !is_user_logged_in() ) {
-				wp_redirect( home_url() . NM_CUSTOM_REGISTER );
+				wp_redirect( home_url() ); //TODO: where to go?
 				exit;
 			}
 			
@@ -257,7 +257,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		
 		$action = 'edit_activity';
 	} else if ( !( is_null( $_GET['activity_id'] ) ) ){ //if we're editing an existing activity
-		echo $_GET['activity_id'];
+		//echo $_GET['activity_id'];
 		
 		//Get post data, if we have ID in url
 		$post_id = $_GET['activity_id'];
@@ -297,7 +297,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	
 	//get user from params IF current user has permissions
 	if ( !( is_null( $_GET['user'] ) ) && ( bp_group_is_admin() || bp_group_is_mod() ) ){ 
-		echo $_GET['user'];
+		//echo $_GET['user'];
 		//$post_id = $_GET['activity_id'];
 		$user = $_GET['user'];
 		

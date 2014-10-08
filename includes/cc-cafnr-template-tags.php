@@ -37,6 +37,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		//Functionality to deal with $_POSTed form data
 		echo "<div class='usr-msg'>Success in saving!</div>";
 		
+		//TODO: add is author. mod or admin permissions to this submit
 		if ( $_POST['new_activity'] == 'edit_activity' || $_POST['new_activity'] == 'new_activity' ) {
 			//only logged-in users can submit this form
 			if ( !is_user_logged_in() ) {
@@ -44,9 +45,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				exit;
 			}
 			
-			
+			//update existing post
 			if ( isset( $_POST['activity_id'] ) && ( $_POST['activity_id'] > 0 ) ){
-				//update existing post
 				$activity_id = $_POST['activity_id'];
 				
 				//update the post fields, if need be - just summary?
@@ -59,13 +59,13 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				$activity_name = get_the_title( $activity_id );
 				
 			} else if ( ( $_POST['cafnr_activity_name'] != '-1' ) && ( $_POST['cafnr_activity_name'] != 'add_new_activity' ) ){
-					
-				//new activity
-				//get the activity title
+				
+				//new activity with parent name
 				
 				//we already have an id, so let's create a child post of same name, yes?
 				$parent_activity_id = $_POST['cafnr_activity_name'];
 				
+				//get the activity title
 				$activity_name = get_the_title( $parent_activity_id );
 				
 				//from here, we'll create a child post of the parent w/same name, current user author
@@ -79,10 +79,10 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				
 				$activity_id = wp_insert_post( $activity );
 				
-			} else { //mel doesn't know what this is about..
+			} else { //completely new activity with no parent
 				
 				$activity_name = $_POST['add_activity_title'];
-					
+				
 				$activity = array(
 					'post_title' => $activity_name,
 					'post_type' => 'cafnr-activity',
@@ -95,15 +95,16 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			}
 			
 			//set post author based on user id (TODO: change this methodology to be secure, once !admins/mods can access this form.)
-			if ( $_POST['user_id'] > 0 ){
+			if ( $_POST['user_id'] > 0 ){  //if we have an activity_owner as a param
 				$updating_post = array(
 					'ID'	=>	$activity_id,
 					'post_author'	=> $_POST['user_id']
 					);
 				wp_update_post( $updating_post );
 				
+				//TODO: remove this meta field, once post_author is set up correctly
 				//Post author may not be activity owner (in the case of Ben filling out form for another faculty member) so we need post_meta field to capture true owner
-				update_post_meta($activity_id, 'activity_owner', $_GET['user']);
+				update_post_meta( $activity_id, 'activity_owner', $_GET['user'] );
 			}
 			
 			//project-specific meta fields (the easy ones)
@@ -238,21 +239,6 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				$i++;
 			}
 			
-			
-			/*if ( isset( $_POST['activity_file'] ) ) {
-				//if ( isset( $_POST['activity_attachement_name']
-				$attachment = array(
-					'post_title' => $activity_name . ' - ' . $activity_id . ' (Attachment)',
-					'post_content' => '',
-					'guid' => $_POST['activity_file'],
-					'post_status' => 'publish',
-					'post_mime_type' => $_POST['activity_file_type']
-				);
-				
-				$attachment_id = wp_insert_attachment( $attachment, $_POST['activity_file'], $activity_id );	
-
-			} */
-		
 		//	
 			//if successful, redirect to dashboard
 			//TODO: make this redirect to tab, universally
@@ -261,27 +247,20 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		
 		
 		}
-	}
+	}	
+	/** END POST SUBMIT / SAVING ***/
 	
-	//TODO: this
-	//get prior data if exists
-	if ( !( is_null( $post_id ) ) ){
+	
+	//get prior activity data if exists
+	if ( !( is_null( $post_id ) ) ){ //if the function has the post_id set
 		//if we have a post_id, fill out the form
 		
-		//$post = get_post( $post_id );
 		$action = 'edit_activity';
-	} else if ( !( is_null( $_GET['activity_id'] ) ) ){
+	} else if ( !( is_null( $_GET['activity_id'] ) ) ){ //if we're editing an existing activity
 		echo $_GET['activity_id'];
 		
 		//Get post data, if we have ID in url
 		$post_id = $_GET['activity_id'];
-		
-		/*$args = array(
-			'p' => $post_id,
-			'post_type'	=> 'cafnr-activity',
-			'post_status' => 'publish'
-			); */
-			
 		$this_activity = get_post($post_id);
 		
 		//get parent of post
@@ -313,13 +292,17 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		$action = 'new_activity';
 	}
 	
-	//get user from params (for now, since only admins will be able to access form..)
-	if ( !( is_null( $_GET['user'] ) ) ){
+	//get current user info for id and access
+	$current_user = wp_get_current_user();  //$current_user->ID
+	
+	//get user from params IF current user has permissions
+	if ( !( is_null( $_GET['user'] ) ) && ( bp_group_is_admin() || bp_group_is_mod() ) ){ 
 		echo $_GET['user'];
 		//$post_id = $_GET['activity_id'];
 		$user = $_GET['user'];
-	} else {
-		$user = 0;
+		
+	} else { //get user from current user ID
+		$user = $current_user->ID;
 	}
 		
 	//get all cafnr activities in db
@@ -708,7 +691,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							
 							$attachment_link = wp_get_attachment_url( $attachment->ID );
 							echo "<a href='" . $attachment_link . "' target='_blank'>" . apply_filters( 'the_title' , $attachment->post_title ) . "</a>";
-							
+							echo "<input class='remove-activity-upload' name='remove-activity-upload' type='button' value='Remove this Upload' data-deleteupload='" + $attachment->ID + "' >";
 							echo "<input type='hidden' class='activity_file_count' data-filecount='" . $count . "' name='activity_file_count-" . $count . "' value='" . $count . "' />";
 							echo '</li>';
 							$count++;
@@ -865,6 +848,11 @@ function cc_cafnr_render_mod_admin_form(){
 			}					
 			if ( isset ( $_POST['CVlink'] ) ){
 				update_user_meta( $uid, 'CVlink', $_POST['CVlink'] );
+				//if they linked to a cv, delete the uploaded one.  TODO: make sure this is cool w/ folks
+				if ( isset( $_POST['old-cv-file'] ) ){
+					//remove existing file
+					$delete_success = wp_delete_attachment( $_POST['old-cv-file'] );
+				}
 			}
 			if ( isset ( $_POST['beyond5'] ) ){
 				update_user_meta( $uid, 'beyond5', $_POST['beyond5'] );
@@ -884,6 +872,7 @@ function cc_cafnr_render_mod_admin_form(){
 				if ( isset( $_POST['old-cv-file'] ) ){
 					//remove existing file
 					$delete_success = wp_delete_attachment( $_POST['old-cv-file'] );
+					delete_user_meta( $uid, 'cv-file' );
 				}
 				
 				//insert attachement (no parent) and update user meta
@@ -1106,6 +1095,11 @@ function cc_cafnr_render_member_form(){
 			}					
 			if ( isset ( $_POST['CVlink'] ) ){
 				update_user_meta( $uid, 'CVlink', $_POST['CVlink'] );
+				//if they linked to a cv, delete the uploaded one.  TODO: make sure this is cool w/ folks
+				if ( isset( $_POST['old-cv-file'] ) ){
+					//remove existing file
+					$delete_success = wp_delete_attachment( $_POST['old-cv-file'] );
+				}
 			}
 			if ( isset ( $_POST['beyond5'] ) ){
 				update_user_meta( $uid, 'beyond5', $_POST['beyond5'] );
@@ -1119,8 +1113,26 @@ function cc_cafnr_render_member_form(){
 			if ( isset ( $_POST['futurecontact'] ) ){
 				update_user_meta( $uid, 'futurecontact', $_POST['futurecontact'] );
 			}
+			//we're going to store the cv file as an attachment, so we can delete it through WP on change
 			if ( isset( $_POST['user_file_url'] ) ) {
-				update_user_meta( $uid, 'cv-url', $_POST['user_file_url'] );
+				//if we have an attachment already, delete it
+				if ( isset( $_POST['old-cv-file'] ) ){
+					//remove existing file
+					$delete_success = wp_delete_attachment( $_POST['old-cv-file'] );
+					delete_user_meta( $uid, 'cv-file' );
+				}
+				
+				//insert attachement (no parent) and update user meta
+				$attachment = array(
+					'guid'           => $_POST['user_file_url'], 
+					'post_mime_type' => $_POST['user_file_type'],
+					'post_title'     => $_POST['user_file_basename'],
+					'post_content'   => '',
+					'post_status'    => 'publish'
+				);
+
+				$attach_id = wp_insert_attachment( $attachment, $_POST['user_file_url'] );
+				update_user_meta( $uid, 'cv-file', $attach_id );
 			}
 			echo "Short Form Submitted!<br /><br />";
 
@@ -1145,7 +1157,19 @@ function cc_cafnr_render_member_form(){
 			</div>
 			<div id="uploadDiv" style="display:none;">
 				<br /><br />
-				<strong>Upload CV here:</strong><br/>			
+				
+				<?php if ( $all_meta_for_user['cv-file'][0] != "" ){
+					echo '<strong>Uploaded CV:</strong><br/>';
+					echo '<a href="' . wp_get_attachment_url( $all_meta_for_user["cv-file"][0] ) . '" target="_blank">' . "Link to CV" . '</a>';
+					echo '<p><a id="user-plupload-browse-button"><input type="button" value="Select a different file to upload..."></a></p>';
+					echo '<input type="hidden" name="old-cv-file" value="' . $all_meta_for_user['cv-file'][0] . '" />';
+					echo '<div id="user-plupload-upload-ui"></div>';
+				} else { ?>
+					<strong>Upload CV here:</strong><br/>
+					<p><a id="user-plupload-browse-button"><input type="button" value="Select a file to upload..."></a></p>
+					<div id="user-plupload-upload-ui"></div>
+				<?php } ?>
+				
 			</div>		
 			<br /><br />
 			<strong>Beyond the last five years, have you been involved in any international activities?</strong><br/>
@@ -1216,7 +1240,8 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 		$activity_list[$count]['title'] = $post->post_title;
 		$activity_list[$count]['form_url'] = $url;
 		$activity_list[$count]['url'] = get_site_url() . '/' . $post->post_name;
-		$activity_list[$count]['activity_owner'] = $post->activity_owner;
+		//$activity_list[$count]['activity_owner'] = $post->activity_owner;
+		$activity_list[$count]['author'] = $post->post_author;
 		$count++;
 	}
 
@@ -1251,12 +1276,13 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 					$title = $value["title"];
 					$url = $value["url"];
 					$form_url = $value["form_url"];
-					$activity_owner = $value["activity_owner"];				
+					//$activity_owner = $value["activity_owner"];				
+					$author = $value["author"];				
 				
 					echo '<tr><td style="width:70%;">' . $title . '</td>';
 					echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
 					echo '<td style="width:10%;"><a href="' . $form_url . '" class="button">Edit</a></td>';
-					echo '<td style="width:10%;"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $activity_owner . ')">Delete</a></td>';
+					echo '<td style="width:10%;"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $author . ')">Delete</a></td>';
 					echo '</tr>';
 				
 				} ?>
@@ -1264,7 +1290,8 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 		</table>
 	</div>
 	<script type="text/javascript">		
-			function delActivity(activityid, activity_owner) {				
+			//function delActivity(activityid, activity_owner) {				
+			function delActivity( activityid, author ) {				
 				var answer = confirm("Are you sure you want to delete this activity?");
 				if (answer){
 						var data = {
@@ -1273,7 +1300,8 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 						};						
 						jQuery.post(ajaxurl, data, function(response) {
 							alert('Activity Deleted!');
-							window.location = '/wordpress/cafnr-intl-dashboard/?user=' + activity_owner;
+							//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + activity_owner;
+							window.location = cafnr_ajax.homeURL . '/groups/cafnr-international-programs/survey-dashboard?user=' + author;
 						});					
 				} else {
 					return false;

@@ -450,7 +450,7 @@ function userUploader( browseButton, uiContainer ){
 			
 			//To do: add display html here for the types..
 			var userFileHtml = "<span><p>File uploaded: " + userFile.fileBaseName + "&nbsp;&nbsp;<input class='remove-user-file' type='button' value='Remove this CV' data-deletefile='" + userFile.file + "' >" + 
-				"&nbsp;&nbsp;&nbsp;&nbsp;Change file name: <input type='text' name='user_attachment_name' value=''></input> </p>" +
+				"</p>" +
 				"<input type='hidden' name='user_file' value='" + userFile.file + "' />" +
 				"<input type='hidden' name='user_file_url' value='" + userFile.url + "' />" +
 				"<input type='hidden' name='user_file_basename' value='" + userFile.fileBaseName + "' />" +

@@ -1252,9 +1252,9 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 		
 		//CAFNR_ACTIVITY_FORM_URL
 		if ( bp_group_is_admin() || bp_group_is_mod() ) {
-			$url = get_site_url() . CAFNR_ACTIVITY_FORM_URL . '?activity_id=' . $post->ID . '&user=' . $post->post_author;
+			$url = cc_cafnr_get_activity_permalink() . '?activity_id=' . $post->ID . '&user=' . $post->post_author;
 		} else {
-			$url = get_site_url() . CAFNR_ACTIVITY_FORM_URL . '?activity_id=' . $post->ID;
+			$url = cc_cafnr_get_activity_permalink() . '?activity_id=' . $post->ID;
 		}
 		
 		$activity_list[$count]['id'] = $post->ID;

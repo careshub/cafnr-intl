@@ -53,6 +53,7 @@ function cc_cafnr_intl_class_init(){
 	
 //	add_action( 'bp_include', array( 'CC_AHA_Extras', 'get_instance' ), 21 );
 
+	//TODO: remove this in favor of active: cc_cafnr_get_activity_permalink()
 	define( 'CAFNR_ACTIVITY_FORM_URL', '/cafnr-add-activity' );
 	
 	

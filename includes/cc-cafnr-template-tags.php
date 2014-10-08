@@ -242,7 +242,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		//	
 			//if successful, redirect to dashboard
 			//TODO: make this redirect to tab, universally
-			wp_redirect( '/wordpress/cafnr-intl-dashboard?user=' . $_GET['user'] );
+			wp_redirect( cc_cafnr_get_home_permalink() . '?user=' . $_POST['user_id'] );
 			exit;
 		
 		
@@ -755,7 +755,7 @@ function cc_cafnr_render_mod_admin_form(){
 		
 		$activities = cc_cafnr_get_faculty_activity_url_list( $_POST['faculty_select'] );
 		//var_dump($activities);		
-		cc_cafnr_render_faculty_activity_table( $activities );
+		cc_cafnr_render_faculty_activity_table( $activities, $_POST['faculty_select'] );
 		
 		//If user selects --Select-- show nothing
 		if ( $_POST['faculty_select'] == "-1" ) {
@@ -803,7 +803,7 @@ function cc_cafnr_render_mod_admin_form(){
 		}
 	} else if (	!empty( $_GET['user'] )) {			
 			$activities = cc_cafnr_get_faculty_activity_url_list( $_GET['user'] );			
-			cc_cafnr_render_faculty_activity_table( $activities );			
+			cc_cafnr_render_faculty_activity_table( $activities, $_GET['user'] );			
 			$user_info = get_userdata( $_GET['user'] );
 			$uid = $_GET['user'];
 			
@@ -1020,7 +1020,8 @@ function cc_cafnr_render_mod_admin_form(){
 							var data = {
 								'action': 'add_cafnr_faculty',
 								'useremail': $("#newfacultyemail").val(),
-								'groupid': 595,
+							//	'groupid': 595,
+								'groupid': cafnr_ajax.groupID,
 								'displayname': $("#displayname").val(),
 								'firstname': $("#firstname").val(),
 								'lastname': $("#lastname").val()
@@ -1084,7 +1085,7 @@ function cc_cafnr_render_member_form(){
     echo 'User ID: ' . $current_user->ID . '<br />';
 	
 	$activities = cc_cafnr_get_faculty_activity_url_list( $current_user->ID );
-	cc_cafnr_render_faculty_activity_table( $activities );	
+	cc_cafnr_render_faculty_activity_table( $activities, $current_user->ID );	
 	
 	$all_meta_for_user = get_user_meta( $current_user->ID );
 ?>
@@ -1277,7 +1278,7 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
  *
  */
 //TODO: expand this table after input array is expanded
-function cc_cafnr_render_faculty_activity_table( $activities ) {
+function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 ?>
 
 	<div id="activities">
@@ -1286,7 +1287,11 @@ function cc_cafnr_render_faculty_activity_table( $activities ) {
 			<thead>
 				<tr>
 					<th scope="col" colspan="1"><span id="nameactivity"></span></th>	
-					<th scope="col" colspan="3" style="text-align:right;"><a href="<?php echo cc_cafnr_get_activity_permalink(); ?>" class="button">+ Add New Activity</a></th>
+					<?php if ( bp_group_is_admin() || bp_group_is_mod() ) { ?>
+						<th scope="col" colspan="3" style="text-align:right;"><a href="<?php echo cc_cafnr_get_activity_permalink() . "?user=" . $which_user; ?>" class="button">+ Add New Activity</a></th>
+					<?php } else { ?>
+						<th scope="col" colspan="3" style="text-align:right;"><a href="<?php echo cc_cafnr_get_activity_permalink(); ?>" class="button">+ Add New Activity</a></th>
+					<?php } ?>
 				</tr>
 			</thead>
 			<tbody>

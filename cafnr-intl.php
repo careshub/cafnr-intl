@@ -43,7 +43,8 @@ function cc_cafnr_intl_class_init(){
 			'cafnr_ajax',
 				array(
 				'adminAjax' => admin_url( 'admin-ajax.php' ),
-				'homeURL' => get_site_url()
+				'homeURL' => get_site_url(),
+				'groupID' => cc_cafnr_get_group_id()
 				)
 		);
 	}

@@ -100,6 +100,12 @@ function clickListen(){
 		window.location = window.location.href; //to avoid POST warning.. for now, until we make GET page.
 	});
 	
+	jQuery('.remove-activity-upload').on("click", function(){
+		var uploadHTML = jQuery(this);
+		var whichUpload = jQuery(this).data("deleteupload");
+		var userId = jQuery("input[name='user_id']").val();
+		deleteActivityUploads( uploadHTML, whichUpload, userId );
+	});
 }
 
 //add countries as repeater
@@ -396,6 +402,45 @@ function removeActivityFile( uploaderInput ){
 	// jQuery(this).parents('span').siblings()
 	console.log('file allegedly removed now');
 }
+
+//ajax function for deleting uploads
+function deleteActivityUploads( uploadHTML, whichUpload, userId ){
+
+	//set up our ajax and data
+	jQuery.ajax({
+		type: 'post',
+		url: cafnr_ajax.adminAjax,
+		dataType: 'json',
+		data: {
+			action: 'activity_upload_delete',
+			user_id: userId,
+			attachment_id: whichUpload
+		},
+		success: function(data, textStatus, jqXHR){
+			if ( data.error != undefined ) {
+				alert( data.error );
+			} else if ( data.success != undefined ) {
+				uploadHTML.parent('li').hide();
+			}
+			
+			return false;
+		},
+		beforeSend: function(jqXHR, settings){
+			//jQuery('#PageLoader').fadeIn();
+		},
+		complete: function(jqXHR, textStatus){
+			//fadeout spinny, scroll to top, message?
+			//jQuery('#PageLoader').fadeOut();
+			//window.scrollTo(0,0);
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+			alert("I'm sorry, there was an error. Please try again.");
+		}
+
+	});
+}
+
+
 
 //user form plupload functions
 var userFormUnload = function() {
@@ -1239,7 +1284,6 @@ function populateCountryDropdown(){
 		jQuery(this).html(options);
 	});
 }
-
 
 
 jQuery(document).ready(function($){

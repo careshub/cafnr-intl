@@ -219,7 +219,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				
 				//if we have new data
 				if ( isset( $_POST['activity_file-' . $i] ) && isset( $_POST['activity_file_type-' . $i] ) && isset( $_POST['activity_file_url-' . $i] ) ) {
-					if ( isset( $_POST['activity_attachment_name-' . $i] ) ) {
+					if ( $_POST['activity_attachment_name-' . $i] != "" ) {  //if user sets name here
 						$attachment_title =  $_POST['activity_attachment_name-' . $i];
 					} else {
 						$attachment_title = $activity_name . ' - ' . $activity_id . ' (Attachment ' . $i . ' )';
@@ -691,7 +691,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							
 							$attachment_link = wp_get_attachment_url( $attachment->ID );
 							echo "<a href='" . $attachment_link . "' target='_blank'>" . apply_filters( 'the_title' , $attachment->post_title ) . "</a>";
-							echo "<input class='remove-activity-upload' name='remove-activity-upload' type='button' value='Remove this Upload' data-deleteupload='" + $attachment->ID + "' >";
+							echo "&nbsp;&nbsp;<input class='remove-activity-upload' name='remove-activity-upload' type='button' value='Remove this Upload' data-deleteupload='" . $attachment->ID . "' >";
 							echo "<input type='hidden' class='activity_file_count' data-filecount='" . $count . "' name='activity_file_count-" . $count . "' value='" . $count . "' />";
 							echo '</li>';
 							$count++;

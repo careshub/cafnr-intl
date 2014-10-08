@@ -166,6 +166,39 @@ function cc_cafnr_user_upload() {
 	}
 add_action( 'wp_ajax_user_upload', 'cc_cafnr_user_upload' );
 
+//ajax for plupload on the activity form
+function cc_cafnr_activity_upload_delete() {
+	
+	$current_user = wp_get_current_user(); 
+	
+	//make sure user is author or admin
+	$user_id = $_POST['user_id'];
+	$attach_id = $_POST['attachment_id'];
+	$parent_id = get_post_field( 'post_parent', $attach_id );
+	
+	$post_author = get_post_field( 'post_author', $parent_id );
+	
+	//if !author or ( bp_group_is_admin() || bp_group_is_mod() ), don't allow deletion!
+	if ( ( $current_user->ID != $post_author ) && !( bp_group_is_admin() || bp_group_is_mod() ) ) {
+		$data['error'] = $post_author . 'you do not have permission to delete this file';
+		echo json_encode( $data );
+		die();
+	} else if ( $attach_id <= 0 ) {
+		$data['error'] = 'Hmm, that is not a real file, now is it?';
+		echo json_encode( $data );
+		die();
+	}
+	
+	$data['success'] = wp_delete_attachment( $attach_id );
+	
+	echo json_encode( $data );
+	die();
+	
+}
+
+add_action( 'wp_ajax_activity_upload_delete', 'cc_cafnr_activity_upload_delete' );
+
+
 /**
  * Is this the CAFNR group?
  *

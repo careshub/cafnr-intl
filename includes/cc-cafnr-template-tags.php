@@ -940,8 +940,22 @@ function cc_cafnr_render_mod_admin_form(){
 
 		<input type="submit" id="SubmitFaculty" name="SubmitFaculty" value="Go" style="font-size:12pt;" />
 		
-		<div id="newfacultydiv" style="margin-top:20px;"><strong>Add new Faculty Member E-Mail Address:</strong><br /><br />
-			<input type="text" id="newfacultyemail" size="50" />&nbsp;&nbsp;<input type="button" id="submitnewfaculty" value="Add New Faculty" />
+		<div id="newfacultydiv" style="margin-top:35px;border-top:1px #888888 solid;">
+			<br /><br />
+			<strong>Add new Faculty Member E-Mail Address (REQUIRED):</strong><br /><br />
+			<input type="text" id="newfacultyemail" size="50" />
+			<br /><br />
+			<strong>Add Display Name (optional):</strong><br /><br />
+			<input type="text" id="displayname" size="50" />
+			<br /><br />
+			<strong>Add First Name (optional):</strong><br /><br />
+			<input type="text" id="firstname" size="50" />
+			<br /><br />
+			<strong>Add Last Name (optional):</strong><br /><br />
+			<input type="text" id="lastname" size="50" />
+			<br /><br /><br />
+			<input type="button" id="submitnewfaculty" value="Add New Faculty" />
+			<br /><br />			
 		</div>
 	</form>
 	
@@ -1007,7 +1021,10 @@ function cc_cafnr_render_mod_admin_form(){
 							var data = {
 								'action': 'add_cafnr_faculty',
 								'useremail': $("#newfacultyemail").val(),
-								'groupid': 595
+								'groupid': 595,
+								'displayname': $("#displayname").val(),
+								'firstname': $("#firstname").val(),
+								'lastname': $("#lastname").val()
 							};						
 							jQuery.post(ajaxurl, data, function(response) {
 								window.location = '/wordpress/cafnr-intl-dashboard/?user=' + response;

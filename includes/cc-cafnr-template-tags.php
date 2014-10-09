@@ -771,13 +771,13 @@ function cc_cafnr_render_mod_admin_form(){
 			//if user selects adds new faculty, show newfacultydiv and hide other divs
 			
 ?>
-				<script type="text/javascript">
-					jQuery( document ).ready(function($) {
-						$("#activities").hide();
-						$("#userinfo").hide();
-						$("#newfacultydiv").show();
-					});
-				</script>
+			<script type="text/javascript">
+				jQuery( document ).ready(function($) {
+					$("#activities").hide();
+					$("#userinfo").hide();
+					$("#newfacultydiv").show();
+				});
+			</script>
 <?php	
 		} else {
 

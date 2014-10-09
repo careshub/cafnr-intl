@@ -100,7 +100,8 @@ function del_cafnr_activity() {
 	die(); // this is required to terminate immediately and return a proper response
 }
 
-add_action('wp_ajax_nopriv_add_cafnr_faculty', 'add_cafnr_faculty');
+//no_priv = not authenticated.
+//add_action('wp_ajax_nopriv_add_cafnr_faculty', 'add_cafnr_faculty');
 add_action( 'wp_ajax_add_cafnr_faculty', 'add_cafnr_faculty' );
 function add_cafnr_faculty() {
 	//add user to Wordpress using an e-mail address
@@ -112,67 +113,47 @@ function add_cafnr_faculty() {
 
 		if( null == username_exists( $email_address ) ) {
 
-		  // Generate the password and create the user
-		  $password = wp_generate_password( 12, false );
-		  $user_id = wp_create_user( $email_address, $password, $email_address );
+			// Generate the password and create the user
+			$password = wp_generate_password( 12, false );
+			$user_id = wp_create_user( $email_address, $password, $email_address );
 
-		  // Set the nickname
-		  wp_update_user(
-			array(
-			  'ID'          => $user_id,
-			  'nickname'    => $email_address,
-			  'display_name' =>	$dname,
-			  'first_name' => $fname,
-			  'last_name' => $lname
-			)
-		  );
+			// Set the nickname
+			wp_update_user(
+				array(
+					'ID'          => $user_id,
+					'nickname'    => $email_address,
+					'display_name' =>	$dname,
+					'first_name' => $fname,
+					'last_name' => $lname
+				)
+			);
 
-		  // Set the role
-		  $user = new WP_User( $user_id );
-		  $user->set_role( 'contributor' );
+			// Set the role
+			$user = new WP_User( $user_id );
+			$user->set_role( 'contributor' );
 
-		  // Email the user
-		  wp_mail( $email_address, 'Welcome!', 'Your Password: ' . $password );
-		  cc_cafnr_automatic_group_membership( $user_id );
-		  echo $user_id;
+			// Email the user: TODO: are we doing this?
+			//wp_mail( $email_address, 'Welcome!', 'Your Password: ' . $password );
+			//cc_cafnr_automatic_group_membership( $user_id );
+			
+			//add user to this group
+			$group_id = cc_cafnr_get_group_id();
+			groups_accept_invite( $user_id, $group_id );
+			
+			echo $user_id;
 		} // end if
 
-	die(); 
+	die();
 }
 
+/*
+//This adds all incoming to group, because of filter
 function cc_cafnr_automatic_group_membership( $user_id ) {
 	//adds new user to BuddyPress group
 	if( !$user_id ) return false; 
 		$group_id = cc_cafnr_get_group_id();
 		groups_accept_invite( $user_id, $group_id );
 	}
-add_action( 'bp_core_activated_user', 'cc_cafnr_automatic_group_membership' );
+add_action( 'bp_core_activated_user', 'cc_cafnr_automatic_group_membership' ); */
 
-
-// add_filter("gform_field_value_facultyemail", "cafnr_intl_populate_email");
-// function cafnr_intl_populate_email($value){
-	// $useremail;
-	// if (!empty($_GET['email'])) {
-		// $useremail = $_GET['email'];
-	// } else {
-	  // $current_user = wp_get_current_user();
-	  // $useremail = $current_user->user_email;
-	// }
-    // return $useremail;
-// }
-
-
-
-// add_filter("gform_column_input_22_36_1", "cafnr_intl_set_column2", 10, 5);
-// add_filter("gform_column_input_22_37_1", "cafnr_intl_set_column2", 10, 5);
-// function cafnr_intl_set_column2($input_info, $field, $column, $value, $form_id){
-    // return array("type" => "select", "choices" => 
-			// array(
-				// "" => "---Select---",
-				// "Bob Jones" => "Bob Jones",
-				// "Anne Smith" => "Anne Smith",
-				// "Harry Potter" => "Harry Potter"
-				// )
-			// );
-// }
 

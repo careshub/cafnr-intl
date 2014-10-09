@@ -1328,7 +1328,7 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 							alert('Activity Deleted!');
 							//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + activity_owner;
 							//TODO, change this to be function-based url
-							window.location = cafnr_ajax.homeURL . '/groups/cafnr-international-programs/survey-dashboard?user=' + author;
+							window.location = cafnr_ajax.homeURL + '/groups/cafnr-international-programs/survey-dashboard?user=' + author;
 						});					
 				} else {
 					return false;

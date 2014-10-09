@@ -1027,7 +1027,8 @@ function cc_cafnr_render_mod_admin_form(){
 								'lastname': $("#lastname").val()
 							};						
 							jQuery.post(ajaxurl, data, function(response) {
-								window.location = '/wordpress/cafnr-intl-dashboard/?user=' + response;
+								//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + response;
+								window.location = cafnr_ajax.surveyDashboard + '?user=' + response;
 								
 							});								 
 						} else {

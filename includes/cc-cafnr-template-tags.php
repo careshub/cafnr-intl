@@ -816,7 +816,7 @@ function cc_cafnr_render_mod_admin_form(){
 						$("#userinfo").show();
 						$("#newfacultydiv").hide();
 						$("#cafnr_faculty_form").hide();
-						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a href='/cafnr-intl-dashboard/'>change</a>)");
+						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a href='" + cafnr_ajax.surveyDashboard + "'>change</a>)");
 						
 					});
 				</script>

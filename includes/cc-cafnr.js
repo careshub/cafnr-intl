@@ -485,9 +485,14 @@ function userUploader( browseButton, uiContainer ){
 
 	userPluploader.init();
 
+	userPluploader.bind('BeforeUpload', function(up_user, files){
+		if( jQuery('.user-file-span').length > 0 ) {
+			jQuery('.user-file-span').remove();
+		}
+	});
+	
 	userPluploader.bind('FilesAdded', function(up_user, files){
 		up_user.start();
-		
 	});
 
 	userPluploader.bind('UploadProgress', function(up, file) {
@@ -510,7 +515,7 @@ function userUploader( browseButton, uiContainer ){
 			var userFile = eval('(' + response.response + ')');
 			
 			//To do: add display html here for the types..
-			var userFileHtml = "<span><p>File uploaded: " + userFile.fileBaseName + "&nbsp;&nbsp;<input class='remove-user-file' type='button' value='Remove this CV' data-deletefile='" + userFile.file + "' >" + 
+			var userFileHtml = "<span class='user-file-span'><p>File uploaded: " + userFile.fileBaseName + "&nbsp;&nbsp;<input class='remove-user-file' type='button' value='Remove this CV' data-deletefile='" + userFile.file + "' >" + 
 				"</p>" +
 				"<input type='hidden' name='user_file' value='" + userFile.file + "' />" +
 				"<input type='hidden' name='user_file_url' value='" + userFile.url + "' />" +
@@ -530,7 +535,7 @@ function userUploader( browseButton, uiContainer ){
 				file: file
 				}, removeUserFile );
 			
-			jQuery('#' + browseButton).html('<input type="button" value="Select another file to upload..." />');
+			jQuery('#' + browseButton).html('<input type="button" value="Select a different file to upload..." />');
 			
 		} else {
 			jQuery('#' + uiContainer).html('<p>Sorry, there was an error. Please try again.</p>');
@@ -544,7 +549,7 @@ function removeUserFile( uploaderInput ){
 	
 	//jQuery(this).parents('span').remove();
 	//remove file from queue (doesn't seem to be removing it from uploads folder, hmm)
-	var errormaybe = uploaderInput.data.userPluploader.removeFile( uploaderInput.data.file );
+	var errormaybe = uploaderInput.data.uploader.removeFile( uploaderInput.data.file );
 	var totalFileSpan = jQuery(this).parents('span');
 	
 	jQuery(this).parents('span').append(errormaybe);

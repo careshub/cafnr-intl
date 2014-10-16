@@ -298,7 +298,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 		
-			<li id="cafnr_write_in_pi" class="gfield write-in-pi hidden-on-init">
+			<li id="cafnr_write_in_pi" class="gfield write-in-pi hidden-on-init research-only">
 				<label class="gfield_label" for="input_22_34">Write in the name of the PI</label>
 				<div class="ginput_container">
 					<input id="write_in_pi" class="medium" type="text" tabindex="12" value="" name="write_in_pi">

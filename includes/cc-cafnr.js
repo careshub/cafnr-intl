@@ -23,11 +23,21 @@ var userPluploadVars = {
 
 function clickListen(){
 
+	//Detect changes to activity radio buttons
 	jQuery('input[name=activity_radio]').click(function() {
 		if( jQuery(this).val() != "funded-research-project") {
 			jQuery('.research-only').hide();
 		} else {
 			jQuery('.research-only').show();
+			if ( jQuery('input[name=pi_radio]').val() == "Yes" ) {
+				jQuery('.write-in-pi').hide();
+				jQuery('.pi-only').show();
+				jQuery('.non-pi-only').hide();
+			} else {
+				jQuery('.pi-only').hide();
+				jQuery('.non-pi-only').show();
+			
+			}
 		}
 	});
 	

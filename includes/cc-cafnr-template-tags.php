@@ -651,6 +651,31 @@ function cc_cafnr_render_mod_admin_form(){
 			if ( isset ( $_POST['futureactivity'] ) ){
 				update_user_meta( $uid, 'futureactivity', $_POST['futureactivity'] );
 			}
+			
+			//"If so, wcan you identify the country or countries?"
+			$i = 1;
+			
+			//first, remove all prior countries in database
+			delete_post_meta( $uid, 'country' );
+			
+			while ( isset($_POST['countrylist-'.$i] ) ) {
+				
+				//create array to hold country meta
+				$country_meta_array = array();
+				
+				if ( $_POST['countrylist-'.$i] != "" ) {
+					$country_meta_array[] = $_POST['countrylist-'.$i];
+					if ( isset( $_POST['region-'.$i] ) ) {
+						$country_meta_array[] = $_POST['region-'.$i];
+					}
+					$success = add_user_meta( $uid, 'country', $country_meta_array );
+					//echo $success;
+				}
+				//unset array
+				unset( $country_meta_array );
+				$i++;
+			}
+			
 			if ( isset ( $_POST['leadassist'] ) ){
 				update_user_meta( $uid, 'leadassist', $_POST['leadassist'] );
 			}
@@ -755,9 +780,71 @@ function cc_cafnr_render_mod_admin_form(){
 			<strong>Beyond the last five years, have you been involved in any international activities?</strong><br/>
 			<input type="text" id="beyond5" name="beyond5" size="100" value="<?php echo $all_meta_for_user['beyond5'][0]; ?>" />
 			<br /><br />
+			
 			<strong>Are you planning on engaging in any international activity in the future? If so, can you identify the country or countries?</strong><br/>
 			<input type="text" id="futureactivity" name="futureactivity" size="100" value="<?php echo $all_meta_for_user['futureactivity'][0]; ?>" />
 			<br /><br />
+			<?php //populated via javascript function (for repeater goodness) ?>
+			<div id="cafnr_country" class="gfield gfield_contains_required required">
+				<div class="ginput_container ginput_list">
+					<table class="gfield_list">
+						<colgroup>
+							<col id="gfield_list_8_col1" class="gfield_list_col_odd">
+							<col id="gfield_list_8_col2" class="gfield_list_col_even">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>Country</th>
+								<th>City or Region</th>
+								<th> </th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php $count = 1;
+							if ( $all_meta_for_user['country'] ) {  //make sure the first one doesn't have a delete button
+								foreach( $all_meta_for_user['country'] as $country ) { 
+									$country = maybe_unserialize( $country ); 
+									//echo $country[0] ; ?>
+									<tr class="gfield_list_row_odd">
+										<td class="gfield_list_cell">
+											<select tabindex="4" name="countrylist-<?php echo $count; ?>" class="countrylist" data-countryvalue="<?php echo $country[0]; ?>" data-countrycount="<?php echo $count; ?>">
+											</select>
+										</td>
+										<td class="gfield_list_cell">
+											<input type="text" tabindex="4" value="<?php echo $country[1]; ?>" name="region-<?php echo $count; ?>">
+										</td>
+										
+										<td class="gfield_list_icons">
+											<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+											<?php if( $count!= 1 ) { ?>
+												<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+											<?php } ?>
+										</td>
+									</tr>
+								<?php $count++; }
+							} ?>
+							<?php //make sure we have one empty input field ?>
+							<tr class="gfield_list_row_odd">
+								<td class="gfield_list_cell">
+									<select tabindex="4" name="countrylist-<?php echo $count; ?>" class="countrylist" data-countrycount="<?php echo $count; ?>">
+									</select>
+								</td>
+								<td class="gfield_list_cell">
+									<input type="text" tabindex="4" value="" name="region-<?php echo $count; ?>">
+								</td>
+								<td class="gfield_list_icons">
+									<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<?php if( $count!= 1 ) { ?>
+										<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+									<?php } ?>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<br />
 			<strong>Would you be interested in leading or assisting with a project in your academic field or research focus?</strong><br/>
 			<input type="text" id="leadassist" name="leadassist" size="100" value="<?php echo $all_meta_for_user['leadassist'][0]; ?>" />
 			<br /><br />	
@@ -892,6 +979,32 @@ function cc_cafnr_render_member_form(){
 			if ( isset ( $_POST['futureactivity'] ) ){
 				update_user_meta( $uid, 'futureactivity', $_POST['futureactivity'] );
 			}
+			
+			//"If so, wcan you identify the country or countries?"
+			$i = 1;
+			
+			//first, remove all prior countries in database
+			delete_post_meta( $uid, 'country' );
+			
+			while ( isset($_POST['countrylist-'.$i] ) ) {
+				
+				//create array to hold country meta
+				$country_meta_array = array();
+				
+				if ( $_POST['countrylist-'.$i] != "" ) {
+					$country_meta_array[] = $_POST['countrylist-'.$i];
+					if ( isset( $_POST['region-'.$i] ) ) {
+						$country_meta_array[] = $_POST['region-'.$i];
+					}
+					$success = add_user_meta( $uid, 'country', $country_meta_array );
+					//echo $success;
+				}
+				//unset array
+				unset( $country_meta_array );
+				$i++;
+			}
+			
+			
 			if ( isset ( $_POST['leadassist'] ) ){
 				update_user_meta( $uid, 'leadassist', $_POST['leadassist'] );
 			}
@@ -963,6 +1076,67 @@ function cc_cafnr_render_member_form(){
 			<strong>Are you planning on engaging in any international activity in the future? If so, can you identify the country or countries?</strong><br/>
 			<input type="text" id="futureactivity" name="futureactivity" size="100" value="<?php echo $all_meta_for_user['futureactivity'][0]; ?>" />
 			<br /><br />
+			<?php //populated via javascript function (for repeater goodness) ?>
+			<div id="cafnr_country" class="gfield gfield_contains_required required">
+				<div class="ginput_container ginput_list">
+					<table class="gfield_list">
+						<colgroup>
+							<col id="gfield_list_8_col1" class="gfield_list_col_odd">
+							<col id="gfield_list_8_col2" class="gfield_list_col_even">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>Country</th>
+								<th>City or Region</th>
+								<th> </th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php $count = 1;
+							if ( $all_meta_for_user['country'] ) {  //make sure the first one doesn't have a delete button
+								foreach( $all_meta_for_user['country'] as $country ) { 
+									$country = maybe_unserialize( $country ); 
+									//echo $country[0] ; ?>
+									<tr class="gfield_list_row_odd">
+										<td class="gfield_list_cell">
+											<select tabindex="4" name="countrylist-<?php echo $count; ?>" class="countrylist" data-countryvalue="<?php echo $country[0]; ?>" data-countrycount="<?php echo $count; ?>">
+											</select>
+										</td>
+										<td class="gfield_list_cell">
+											<input type="text" tabindex="4" value="<?php echo $country[1]; ?>" name="region-<?php echo $count; ?>">
+										</td>
+										
+										<td class="gfield_list_icons">
+											<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+											<?php if( $count!= 1 ) { ?>
+												<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+											<?php } ?>
+										</td>
+									</tr>
+								<?php $count++; }
+							} ?>
+							<?php //make sure we have one empty input field ?>
+							<tr class="gfield_list_row_odd">
+								<td class="gfield_list_cell">
+									<select tabindex="4" name="countrylist-<?php echo $count; ?>" class="countrylist" data-countrycount="<?php echo $count; ?>">
+									</select>
+								</td>
+								<td class="gfield_list_cell">
+									<input type="text" tabindex="4" value="" name="region-<?php echo $count; ?>">
+								</td>
+								<td class="gfield_list_icons">
+									<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<?php if( $count!= 1 ) { ?>
+										<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+									<?php } ?>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<br />
 			<strong>Would you be interested in leading or assisting with a project in your academic field or research focus?</strong><br/>
 			<input type="text" id="leadassist" name="leadassist" size="100" value="<?php echo $all_meta_for_user['leadassist'][0]; ?>" />
 			<br /><br />	

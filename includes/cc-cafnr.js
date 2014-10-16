@@ -288,6 +288,7 @@ function activityFormLoad(){
 		activityUploader('plupload-browse-button', 'plupload-upload-ui');
 		
 	} else {
+		//plupload needs to destroy itself
 		activityFormUnload();
 	}
 	
@@ -302,10 +303,12 @@ function activityFormLoad(){
 }
 
 //a function to make sure when post info is loaded into user form, appropriate fields show automagically
-function cafnrUserFormLoad(){
+function userFormLoad(){
 
 	//on form load, let's make sure right fields are displaying
 	
+	//populate country dropdowns here
+	populateCountryDropdown();
 	//activity form and plupload init stuff
 	if (jQuery('#cafnr_facultyadd_form').length) {
 		
@@ -1374,10 +1377,13 @@ jQuery(document).ready(function($){
 	//TODO: autocomplete for form..
 	clickListen();
 	
+	//load initial activity form state, save ajax function
 	activityFormLoad();
 	
-	cafnrUserFormLoad();
+	//load user form change/click listens
+	userFormLoad();
 	
+	//instantiate datepicker
 	jQuery( ".datepicker" ).datepicker({
 		changeMonth: true,
 		changeYear: true

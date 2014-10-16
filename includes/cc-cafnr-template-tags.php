@@ -640,9 +640,9 @@ function cc_cafnr_render_mod_admin_form(){
 			if ( isset ( $_POST['CVlink'] ) ){
 				update_user_meta( $uid, 'CVlink', $_POST['CVlink'] );
 				//if they linked to a cv, delete the uploaded one.  TODO: make sure this is cool w/ folks
-				if ( isset( $_POST['old-cv-file'] ) ){
+				if ( isset( $_POST['old-CVfile'] ) ){
 					//remove existing file
-					$delete_success = wp_delete_attachment( $_POST['old-cv-file'] );
+					$delete_success = wp_delete_attachment( $_POST['old-CVfile'] );
 				}
 			}
 			if ( isset ( $_POST['beyond5'] ) ){
@@ -660,10 +660,10 @@ function cc_cafnr_render_mod_admin_form(){
 			//we're going to store the cv file as an attachment, so we can delete it through WP on change
 			if ( isset( $_POST['user_file_url'] ) ) {
 				//if we have an attachment already, delete it
-				if ( isset( $_POST['old-cv-file'] ) ){
+				if ( isset( $_POST['old-CVfile'] ) ){
 					//remove existing file
-					$delete_success = wp_delete_attachment( $_POST['old-cv-file'] );
-					delete_user_meta( $uid, 'cv-file' );
+					$delete_success = wp_delete_attachment( $_POST['old-CVfile'] );
+					delete_user_meta( $uid, 'CVfile' );
 				}
 				
 				//insert attachement (no parent) and update user meta
@@ -676,7 +676,7 @@ function cc_cafnr_render_mod_admin_form(){
 				);
 
 				$attach_id = wp_insert_attachment( $attachment, $_POST['user_file_url'] );
-				update_user_meta( $uid, 'cv-file', $attach_id );
+				update_user_meta( $uid, 'CVfile', $attach_id );
 			}
 			echo "User info updated!<br /><br />";
 
@@ -738,11 +738,11 @@ function cc_cafnr_render_mod_admin_form(){
 			</div>
 			<div id="uploadDiv" style="display:none;">
 				<br /><br />
-				<?php if ( $all_meta_for_user['cv-file'][0] != "" ){
+				<?php if ( $all_meta_for_user['CVfile'][0] != "" ){
 					echo '<strong>Uploaded CV:</strong><br/>';
-					echo '<a href="' . wp_get_attachment_url( $all_meta_for_user["cv-file"][0] ) . '" target="_blank">' . "Link to CV" . '</a>';
+					echo '<a href="' . wp_get_attachment_url( $all_meta_for_user["CVfile"][0] ) . '" target="_blank">' . "Link to CV" . '</a>';
 					echo '<p><a id="user-plupload-browse-button"><input type="button" value="Select a different file to upload..."></a></p>';
-					echo '<input type="hidden" name="old-cv-file" value="' . $all_meta_for_user['cv-file'][0] . '" />';
+					echo '<input type="hidden" name="old-CVfile" value="' . $all_meta_for_user['CVfile'][0] . '" />';
 					echo '<div id="user-plupload-upload-ui"></div>';
 				} else { ?>
 					<strong>Upload CV here:</strong><br/>
@@ -755,7 +755,7 @@ function cc_cafnr_render_mod_admin_form(){
 			<strong>Beyond the last five years, have you been involved in any international activities?</strong><br/>
 			<input type="text" id="beyond5" name="beyond5" size="100" value="<?php echo $all_meta_for_user['beyond5'][0]; ?>" />
 			<br /><br />
-			<strong>Are you planning on engaging in any international activity in the future?</strong><br/>
+			<strong>Are you planning on engaging in any international activity in the future? If so, can you identify the country or countries?</strong><br/>
 			<input type="text" id="futureactivity" name="futureactivity" size="100" value="<?php echo $all_meta_for_user['futureactivity'][0]; ?>" />
 			<br /><br />
 			<strong>Would you be interested in leading or assisting with a project in your academic field or research focus?</strong><br/>
@@ -881,9 +881,9 @@ function cc_cafnr_render_member_form(){
 			if ( isset ( $_POST['CVlink'] ) ){
 				update_user_meta( $uid, 'CVlink', $_POST['CVlink'] );
 				//if they linked to a cv, delete the uploaded one.  TODO: make sure this is cool w/ folks
-				if ( isset( $_POST['old-cv-file'] ) ){
+				if ( isset( $_POST['old-CVfile'] ) ){
 					//remove existing file
-					$delete_success = wp_delete_attachment( $_POST['old-cv-file'] );
+					$delete_success = wp_delete_attachment( $_POST['old-CVfile'] );
 				}
 			}
 			if ( isset ( $_POST['beyond5'] ) ){
@@ -901,10 +901,10 @@ function cc_cafnr_render_member_form(){
 			//we're going to store the cv file as an attachment, so we can delete it through WP on change
 			if ( isset( $_POST['user_file_url'] ) ) {
 				//if we have an attachment already, delete it
-				if ( isset( $_POST['old-cv-file'] ) ){
+				if ( isset( $_POST['old-CVfile'] ) ){
 					//remove existing file
-					$delete_success = wp_delete_attachment( $_POST['old-cv-file'] );
-					delete_user_meta( $uid, 'cv-file' );
+					$delete_success = wp_delete_attachment( $_POST['old-CVfile'] );
+					delete_user_meta( $uid, 'CVfile' );
 				}
 				
 				//insert attachement (no parent) and update user meta
@@ -917,7 +917,7 @@ function cc_cafnr_render_member_form(){
 				);
 
 				$attach_id = wp_insert_attachment( $attachment, $_POST['user_file_url'] );
-				update_user_meta( $uid, 'cv-file', $attach_id );
+				update_user_meta( $uid, 'CVfile', $attach_id );
 			}
 			echo "Short Form Submitted!<br /><br />";
 
@@ -943,11 +943,11 @@ function cc_cafnr_render_member_form(){
 			<div id="uploadDiv" style="display:none;">
 				<br /><br />
 				
-				<?php if ( $all_meta_for_user['cv-file'][0] != "" ){
+				<?php if ( $all_meta_for_user['CVfile'][0] != "" ){
 					echo '<strong>Uploaded CV:</strong><br/>';
-					echo '<a href="' . wp_get_attachment_url( $all_meta_for_user["cv-file"][0] ) . '" target="_blank">' . "Link to CV" . '</a>';
+					echo '<a href="' . wp_get_attachment_url( $all_meta_for_user["CVfile"][0] ) . '" target="_blank">' . "Link to CV" . '</a>';
 					echo '<p><a id="user-plupload-browse-button"><input type="button" value="Select a different file to upload..."></a></p>';
-					echo '<input type="hidden" name="old-cv-file" value="' . $all_meta_for_user['cv-file'][0] . '" />';
+					echo '<input type="hidden" name="old-CVfile" value="' . $all_meta_for_user['CVfile'][0] . '" />';
 					echo '<div id="user-plupload-upload-ui"></div>';
 				} else { ?>
 					<strong>Upload CV here:</strong><br/>
@@ -960,7 +960,7 @@ function cc_cafnr_render_member_form(){
 			<strong>Beyond the last five years, have you been involved in any international activities?</strong><br/>
 			<input type="text" id="beyond5" name="beyond5" size="100" value="<?php echo $all_meta_for_user['beyond5'][0]; ?>" />
 			<br /><br />
-			<strong>Are you planning on engaging in any international activity in the future?</strong><br/>
+			<strong>Are you planning on engaging in any international activity in the future? If so, can you identify the country or countries?</strong><br/>
 			<input type="text" id="futureactivity" name="futureactivity" size="100" value="<?php echo $all_meta_for_user['futureactivity'][0]; ?>" />
 			<br /><br />
 			<strong>Would you be interested in leading or assisting with a project in your academic field or research focus?</strong><br/>

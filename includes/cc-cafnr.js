@@ -284,6 +284,9 @@ function cafnrIntakeFormLoad(){
 		removeActivityFile();
 	});
 	
+	//make sure we're saving the form
+	activityFormSave();
+	
 	
 }
 
@@ -305,7 +308,55 @@ function cafnrUserFormLoad(){
 	
 }
 
-//funcitons in support of plupload for activity form
+//save activity form via ajax
+function activityFormSave() {
+	jQuery('#cafnr_activity_form').on('submit', function(e){
+		
+		e.preventDefault();
+		var querystring = jQuery(this).serialize();
+		
+		//TODO: add nonce on both sides
+		//querystring += "&cafnr_ajax_data_nonce=" + nm_ajax.cafnr_ajax_data_nonce;
+		querystring += "&action=" + 'cafnr_intl_edit_activity';
+		
+		jQuery.ajax({
+			type: 'post',
+			url: cafnr_ajax.adminAjax,
+			data: querystring,
+			success: function(data, textStatus, jqXHR){
+				jQuery('#infobar').show().html("<p>Your changes have been saved.</p>")
+				window.setTimeout(
+					function(){ jQuery("#infobar").fadeOut(); },
+					5000
+				);
+				jQuery('#PageLoader').fadeOut();
+				return false;
+			},
+			beforeSend: function(jqXHR, settings){
+				jQuery('#PageLoader').fadeIn();
+			},
+			complete: function(jqXHR, textStatus){
+				//redirect to the dashboard
+				//TODO: check for user param, activity param for message
+				window.location = cafnr_ajax.surveyDashboard
+				
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+				e.preventDefault();
+			}
+		});
+		
+		e.preventDefault();
+		return false;
+
+	});
+	
+}
+
+
+//functions in support of plupload for activity form
 var activityFormUnload = function() {
 	//plupload: uploader.destroy();
 	for (var i = 0; i < pluploadVars.activityUploads.length; i++) {

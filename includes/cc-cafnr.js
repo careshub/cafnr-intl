@@ -236,8 +236,9 @@ function deleteSupplementalLink() {
 	whatToDelete.remove();
 }
 
-//a function to make sure when post info is loaded into form, appropriate fields show automagically
-function cafnrIntakeFormLoad(){
+//on activity form load, make sure when post info is loaded into form, appropriate fields show automagically
+//	also, load ajax function (triggered on form submit)
+function activityFormLoad(){
 
 	//on form load, let's make sure right fields are displaying
 	
@@ -1363,7 +1364,7 @@ jQuery(document).ready(function($){
 	//TODO: autocomplete for form..
 	clickListen();
 	
-	cafnrIntakeFormLoad();
+	activityFormLoad();
 	
 	cafnrUserFormLoad();
 	

@@ -64,6 +64,12 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			
 		$this_activity_attachments = get_posts( $attach_args );
 
+		//Get Activity checkbox vars
+		$this_activity_checkbox = array();
+		if ( !empty ( current( $this_activity_fields['activity_checkbox'] ) ) ) {
+			$this_activity_checkbox = unserialize( current( $this_activity_fields['activity_checkbox'] ) );
+		}
+		
 		//var_dump ($this_activity_types);
 		
 		//var_dump( ($this_activity_fields) );  //post_id int
@@ -94,7 +100,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	$args = array(
 		'post_type'	=> 'cafnr-activity',
 		'post_status' => 'publish',
-		'posts_per_page' => '-1'
+		'posts_per_page' => '-1',
+		'orderby'=> 'title', 
+		'order' => 'ASC'
 		);
 	$activities = get_posts($args);
 	
@@ -130,15 +138,15 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				<div class="ginput_container">
 					<ul id="cafnr_activity_type_radio" class="gfield_radio">
 						<li class="activity_radio">
-							<input id="activity_radio_research" type="radio" onclick="" tabindex="1" value="funded-research-project" name="activity_radio" <?php if( in_array( 'funded-research-project', $this_activity_types ) ) echo 'checked="checked"'; ?>>
+							<input id="activity_radio_research" type="radio" onclick="" tabindex="1" value="funded-research-project" name="activity_radio" <?php if( !empty( $this_activity_types) ) if ( in_array( 'funded-research-project', $this_activity_types ) ) echo 'checked="checked"'; ?>>
 							<label for="activity_radio_research">Funded Research Project</label>
 						</li>
 						<li class="activity_radio">
-							<input id="activity_radio_training" type="radio" onclick="" tabindex="2" value="training-program" name="activity_radio" <?php if( in_array( 'training-program', $this_activity_types ) ) echo 'checked="checked"'; ?>>
+							<input id="activity_radio_training" type="radio" onclick="" tabindex="2" value="training-program" name="activity_radio" <?php if( !empty( $this_activity_types) ) if ( in_array( 'training-program', $this_activity_types ) ) echo 'checked="checked"'; ?>>
 							<label for="activity_radio_training">Training Program</label>
 						</li>
 						<li class="activity_radio">
-							<input id="activity_radio_visit" type="radio" onclick="" tabindex="3" value="professional-visit" name="activity_radio" <?php if( in_array( 'professional-visit', $this_activity_types ) ) echo 'checked="checked"'; ?>>
+							<input id="activity_radio_visit" type="radio" onclick="" tabindex="3" value="professional-visit" name="activity_radio" <?php if( !empty( $this_activity_types) ) if ( in_array( 'professional-visit', $this_activity_types ) ) echo 'checked="checked"'; ?>>
 							<label for="activity_radio_visit">Professional Visit</label>
 						</li>
 					</ul>
@@ -309,23 +317,23 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				<div class="ginput_container">
 					<ul id="activity_type_checkbox" class="gfield_checkbox">
 						<li class="gchoice_11_1">
-							<input id="activity_checkbox_research" type="checkbox" tabindex="14" value="Research" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Research', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
+							<input id="activity_checkbox_research" type="checkbox" tabindex="14" value="Research" onclick="" name="activity_checkbox[]" <?php if( !empty( $this_activity_checkbox ) ) echo ( in_array( 'Research', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
 							<label for="activity_checkbox_research">Research</label>
 						</li>
 						<li class="gchoice_11_2">
-							<input id="activity_checkbox_training" type="checkbox" tabindex="15" value="Training" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Training', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
+							<input id="activity_checkbox_training" type="checkbox" tabindex="15" value="Training" onclick="" name="activity_checkbox[]" <?php if( !empty( $this_activity_checkbox ) ) echo ( in_array( 'Training', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
 							<label for="activity_checkbox_training">Training</label>
 						</li>
 						<li class="gchoice_11_3">
-							<input id="activity_checkbox_extension" type="checkbox" tabindex="16" value="Extension" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Extension', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
+							<input id="activity_checkbox_extension" type="checkbox" tabindex="16" value="Extension" onclick="" name="activity_checkbox[]" <?php if( !empty( $this_activity_checkbox ) ) echo ( in_array( 'Extension', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
 							<label for="activity_checkbox_extension">Extension</label>
 						</li>
 						<li class="gchoice_11_4">
-							<input id="activity_checkbox_visit" type="checkbox" tabindex="17" value="Visit" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Visit', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
+							<input id="activity_checkbox_visit" type="checkbox" tabindex="17" value="Visit" onclick="" name="activity_checkbox[]" <?php if( !empty( $this_activity_checkbox ) ) echo ( in_array( 'Visit', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
 							<label for="activity_checkbox_visit">Visit</label>
 						</li>
 						<li class="gchoice_11_5">
-							<input id="activity_checkbox_other" type="checkbox" tabindex="18" value="Other" onclick="" name="activity_checkbox[]" <?php if( !is_null( unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) echo ( in_array( 'Other', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
+							<input id="activity_checkbox_other" type="checkbox" tabindex="18" value="Other" onclick="" name="activity_checkbox[]" <?php if( !empty( $this_activity_checkbox ) ) echo ( in_array( 'Other', unserialize( current( $this_activity_fields['activity_checkbox'] ) ) ) ) ? 'checked="checked"' : ''; ?>>
 							<label for="activity_checkbox_other">Other</label>
 						</li>
 					</ul>

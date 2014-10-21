@@ -1230,9 +1230,9 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 				<tr>
 					<th scope="col" colspan="1"><span id="nameactivity"></span></th>	
 					<?php if ( bp_group_is_admin() || bp_group_is_mod() ) { ?>
-						<th scope="col" colspan="3" style="text-align:right;"><a href="<?php echo cc_cafnr_get_activity_permalink() . "?user=" . $which_user; ?>" class="button">+ Add New Activity</a></th>
+						<th scope="col" colspan="2" style="text-align:right;"><a href="<?php echo cc_cafnr_get_activity_permalink() . "?user=" . $which_user; ?>" class="button">+ Add New Activity</a></th>
 					<?php } else { ?>
-						<th scope="col" colspan="3" style="text-align:right;"><a href="<?php echo cc_cafnr_get_activity_permalink(); ?>" class="button">+ Add New Activity</a></th>
+						<th scope="col" colspan="2" style="text-align:right;"><a href="<?php echo cc_cafnr_get_activity_permalink(); ?>" class="button">+ Add New Activity</a></th>
 					<?php } ?>
 				</tr>
 			</thead>
@@ -1248,7 +1248,7 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 					$author = $value["author"];				
 				
 					echo '<tr><td style="width:70%;">' . $title . '</td>';
-					echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
+					//echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
 					echo '<td style="width:10%;"><a href="' . $form_url . '" class="button">Edit</a></td>';
 					echo '<td style="width:10%;"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $author . ')">Delete</a></td>';
 					echo '</tr>';

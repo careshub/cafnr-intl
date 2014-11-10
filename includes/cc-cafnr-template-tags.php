@@ -66,8 +66,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 
 		//Get Activity checkbox vars
 		$this_activity_checkbox = array();
-		if ( !empty ( current( $this_activity_fields['activity_checkbox'] ) ) ) {
-			$this_activity_checkbox = unserialize( current( $this_activity_fields['activity_checkbox'] ) );
+		if ( !empty ( $this_activity_fields['activity_checkbox'] ) ) {
+			$this_activity_checkbox = maybe_unserialize( $this_activity_fields['activity_checkbox'] );
 		}
 		
 		//var_dump ($this_activity_types);

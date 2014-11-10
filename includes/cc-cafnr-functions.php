@@ -226,6 +226,9 @@ function cc_cafnr_get_group_id(){
         case 'http://dev.communitycommons.org':
             $group_id = 596;
             break;
+        case 'http://www.communitycommons.org':
+            $group_id = 622;
+            break;
         default:
             $group_id = 595;
             break;

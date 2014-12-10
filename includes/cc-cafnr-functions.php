@@ -9,6 +9,66 @@
  */
 
  
+ 
+/**
+ * Are we on the CAFNR survey tab?
+ *
+ * @since   1.0.0
+ * @return  boolean
+ */
+function cc_cafnr_is_component() {
+    if ( bp_is_groups_component() && bp_is_current_action( cc_cafnr_get_slug() ) )
+        return true;
+
+    return false;
+}
+
+/**
+ * Get various slugs
+ * These are gathered here so when, inevitably, we have to change them, it'll be simple
+ *
+ * @since   1.0.0
+ * @return  string
+ */
+function cc_cafnr_get_slug(){
+    return 'survey-dashboard';
+}
+function cc_cafnr_get_activity_slug(){
+    return 'cafnr-add-activity';
+}
+
+ 
+function cafnr_intl_scripts() {
+	wp_enqueue_script( 'jquery-ui-datepicker' );
+	wp_enqueue_script( 'plupload' );
+	
+	//dirname( __FILE__ )
+	
+	wp_enqueue_script( 'cc-cafnr', plugins_url( '/cc-cafnr.js', __FILE__), array(), '1.0.0', true );
+	wp_enqueue_style( 'datepicker-style', plugins_url( '/css/datepicker.css', __FILE__) );
+	wp_enqueue_style( 'gf-style',  plugins_url( '/css/g_forms_styles.css', __FILE__) );
+	wp_enqueue_style( 'cafnr-style', plugins_url( '/css/cafnr-intl.css', __FILE__) );	
+
+	//so we can use vars in js functions
+	wp_localize_script(
+		'cc-cafnr',
+		'cafnr_ajax',
+			array(
+			'adminAjax' => admin_url( 'admin-ajax.php' ),
+			'homeURL' => get_site_url(),
+			'groupID' => cc_cafnr_get_group_id(),
+			'surveyDashboard' => cc_cafnr_get_home_permalink()
+			)
+	);
+}
+
+add_action( 'wp_enqueue_scripts', 'enqueue_go', 7 );
+function enqueue_go(){
+	if( cc_cafnr_is_component() ){
+		add_action( 'wp_enqueue_scripts', 'cafnr_intl_scripts' );
+	} 
+}
+ 
 /*
  * Register CAFNR Activity
  *
@@ -237,19 +297,6 @@ function cc_cafnr_get_group_id(){
     return $group_id;
 }
 
-/**
- * Get various slugs
- * These are gathered here so when, inevitably, we have to change them, it'll be simple
- *
- * @since   1.0.0
- * @return  string
- */
-function cc_cafnr_get_slug(){
-    return 'survey-dashboard';
-}
-function cc_cafnr_get_activity_slug(){
-    return 'cafnr-add-activity';
-}
 
 /**
  * Get URIs for the various pieces of this tab
@@ -294,20 +341,6 @@ function cc_cafnr_on_activity_screen(){
         return false;
     }
 }
-
-/**
- * Are we on the CAFNR survey tab?
- *
- * @since   1.0.0
- * @return  boolean
- */
-function cc_cafnr_is_component() {
-    if ( bp_is_groups_component() && bp_is_current_action( cc_cafnr_get_slug() ) )
-        return true;
-
-    return false;
-}
-
 
 
 /*

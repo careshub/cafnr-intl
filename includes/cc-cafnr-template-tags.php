@@ -188,9 +188,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 										</td>
 										
 										<td class="gfield_list_icons">
-											<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+											<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 											<?php if( $count!= 1 ) { ?>
-												<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+												<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 											<?php } ?>
 										</td>
 									</tr>
@@ -206,9 +206,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									<input type="text" tabindex="4" value="" name="region-<?php echo $count; ?>">
 								</td>
 								<td class="gfield_list_icons">
-									<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 									<?php if( $count!= 1 ) { ?>
-										<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+										<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 									<?php } ?>
 								</td>
 							</tr>
@@ -378,9 +378,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 											<input type="text" tabindex="22" value="<?php echo $link; ?>" name="collaborating[]">
 										</td>
 										<td class="gfield_list_icons">
-											<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+											<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 											<?php if( $count!= 1 ) { ?>
-												<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+												<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 											<?php } ?>
 										</td>
 									</tr>
@@ -392,9 +392,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									<input type="text" tabindex="26" value="" name="collaborating[]">
 								</td>
 								<td class="gfield_list_icons">
-									<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<img class="add_list_item add_collaborating" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 									<?php if( $count!= 1 ) { ?>
-										<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+										<img class="delete_list_item delete_collaborating" onclick="" alt="Remove this row" title="Remove this row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 									<?php } ?>
 								</td>
 							</tr>
@@ -440,9 +440,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 											<input type="text" tabindex="26" value="<?php echo $link; ?>" name="supplemental_links[]">
 										</td>
 										<td class="gfield_list_icons">
-											<img class="add_list_item add_supplemental_link" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+											<img class="add_list_item add_supplemental_link" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 											<?php if( $count!= 1 ) { ?>
-												<img class="delete_list_item delete_supplemental_link" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+												<img class="delete_list_item delete_supplemental_link" onclick="" alt="Remove this row" title="Remove this row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 											<?php } ?>
 										</td>
 									</tr>
@@ -454,9 +454,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 									<input type="text" tabindex="26" value="" name="supplemental_links[]">
 								</td>
 								<td class="gfield_list_icons">
-									<img class="add_list_item add_supplemental_link" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<img class="add_list_item add_supplemental_link" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 									<?php if( $count!= 1 ) { ?>
-										<img class="delete_list_item delete_supplemental_link" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+										<img class="delete_list_item delete_supplemental_link" onclick="" alt="Remove this row" title="Remove this row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 									<?php } ?>
 								</td>
 							</tr>
@@ -815,9 +815,9 @@ function cc_cafnr_render_mod_admin_form(){
 										</td>
 										
 										<td class="gfield_list_icons">
-											<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+											<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 											<?php if( $count!= 1 ) { ?>
-												<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+												<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 											<?php } ?>
 										</td>
 									</tr>
@@ -833,9 +833,9 @@ function cc_cafnr_render_mod_admin_form(){
 									<input type="text" tabindex="4" value="" name="region-<?php echo $count; ?>">
 								</td>
 								<td class="gfield_list_icons">
-									<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 									<?php if( $count!= 1 ) { ?>
-										<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+										<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 									<?php } ?>
 								</td>
 							</tr>
@@ -1107,9 +1107,9 @@ function cc_cafnr_render_member_form(){
 										</td>
 										
 										<td class="gfield_list_icons">
-											<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+											<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 											<?php if( $count!= 1 ) { ?>
-												<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+												<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 											<?php } ?>
 										</td>
 									</tr>
@@ -1125,9 +1125,9 @@ function cc_cafnr_render_member_form(){
 									<input type="text" tabindex="4" value="" name="region-<?php echo $count; ?>">
 								</td>
 								<td class="gfield_list_icons">
-									<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
+									<img class="add_list_item add_country" style="cursor:pointer; margin:0 3px;" onclick="" alt="Add a row" title="Add another row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/add.png">
 									<?php if( $count!= 1 ) { ?>
-										<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://dev.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
+										<img class="delete_list_item delete_country" onclick="" alt="Remove this row" title="Remove this row" src="http://www.communitycommons.org/wp-content/plugins/gravityforms/images/remove.png">
 									<?php } ?>
 								</td>
 							</tr>

@@ -105,9 +105,6 @@ function clickListen(){
 	//remove supplemental links listener
 	jQuery('.delete_supplemental_link').on("click", deleteSupplementalLink );
 	
-	//listener to submit button - to send activity data to SQL server
-	jQuery("#activity-submit").on("click", activitySubmitClick );
-	
 	jQuery('.reload-page').click(function() {
 		//location.reload( true ); //true = reload from server, not from cache
 		window.location = window.location.href; //to avoid POST warning.. for now, until we make GET page.
@@ -249,14 +246,6 @@ function deleteSupplementalLink() {
 	whatToDelete.remove();
 }
 
-//on activity save, ajax the activity data over to 
-function activitySubmitClick() {
-	var submitbutton = jQuery(this);
-	
-	//console.log('activity click');
-
-}
-
 //on activity form load, make sure when post info is loaded into form, appropriate fields show automagically
 //	also, load ajax function (triggered on form submit)
 function activityFormLoad(){
@@ -340,10 +329,32 @@ function activityFormSave() {
 		e.preventDefault();
 		var querystring = jQuery(this).serialize();
 		
+		//objects for sql json ajax
+		var activity_inputs = jQuery("#cafnr_activity_form :input");
+		var o = {};
+		var activity_obj = jQuery.map(activity_inputs, function(n, i)
+		{
+			o[n.name] = jQuery(n).val();
+			//return o;
+		});
+		
+		o['activity-name'] = jQuery("#cafnr_activity_name :selected").text();
+		
+		activity_obj=o;
+		
+		//different way to get an object from the form
+		var activity_array = jQuery("#cafnr_activity_form").serializeArray();
+		var activity_json_obj = {};
+		jQuery.each( activity_array, function( i, v){
+			activity_json_obj[v.name] = v.value;
+		});
+		
+		
 		//TODO: add nonce on both sides
 		//querystring += "&cafnr_ajax_data_nonce=" + nm_ajax.cafnr_ajax_data_nonce;
 		querystring += "&action=" + 'cafnr_intl_edit_activity';
 		
+		//first, post to wordpress
 		jQuery.ajax({
 			type: 'post',
 			url: cafnr_ajax.adminAjax,
@@ -361,9 +372,61 @@ function activityFormSave() {
 				jQuery('#PageLoader').fadeIn();
 			},
 			complete: function(jqXHR, textStatus){
+			
+				// once complete, post to external url for SQL and map things..
+				
+				var sql_url = "http://staging.maps.communitycommons.org/apiservice/getdata.svc/cafnr";
+				
+				var req = { "id": 111, "program": "test"};
+				jQuery.ajax({
+					type: "POST",
+					url: 'http://staging.maps.communitycommons.org/apiservice/getdata.svc/cafnr',
+					dataType: 'json',
+					contentType: "application/json",
+					crossDomain: true,
+					data: JSON.stringify(activity_json_obj),
+					success: function (response) {
+						console.log('success', response);
+					},
+					error: function (response) {
+						console.log('error', response);
+					}
+				});
+
+		
+				/*jQuery.ajax({
+					type: "POST",
+					url: sql_url,
+					crossDomain: true,
+					//data: JSON.stringify(querystring),
+					contentType:'application/json; charset=utf-8',
+					data: querystring_test,
+					dataType: 'json',
+					success: function(data, textStatus, jqXHR){
+					
+						jQuery('#PageLoader').fadeOut();
+						return false;
+					},
+					beforeSend: function(jqXHR, settings){
+						jQuery('#PageLoader').fadeIn();
+					},
+					complete: function(jqXHR, textStatus){
+						//redirect to the dashboard
+						//TODO: check for user param, activity param for message
+						//window.location = cafnr_ajax.surveyDashboard
+						
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						alert(xhr.status);
+						alert(thrownError);
+						e.preventDefault();
+					}
+				});*/
+				
+				
 				//redirect to the dashboard
 				//TODO: check for user param, activity param for message
-				window.location = cafnr_ajax.surveyDashboard
+				//window.location = cafnr_ajax.surveyDashboard
 				
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
@@ -372,6 +435,7 @@ function activityFormSave() {
 				e.preventDefault();
 			}
 		});
+
 		
 		e.preventDefault();
 		return false;

@@ -291,7 +291,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 			
-			<li id="cafnr_add_pi" class="gfield no-title">
+			<li id="cafnr_add_pi" class="gfield">
 				<label class="gfield_label" for="input_22_10">PI Name</label>
 				<div class="ginput_container">
 					<input id="add_pi_name" class="medium" type="text" tabindex="11" value="" name="add_pi_name">
@@ -493,7 +493,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</li>
 			
 		
-		<input type="submit" name="SubmitButton" value="SUBMIT ACTIVITY" />
+		<input type="submit" id="activity-submit" name="SubmitButton" value="SUBMIT ACTIVITY" />
 		
 		</form>
 	</div>

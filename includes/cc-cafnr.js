@@ -105,6 +105,9 @@ function clickListen(){
 	//remove supplemental links listener
 	jQuery('.delete_supplemental_link').on("click", deleteSupplementalLink );
 	
+	//listener to submit button - to send activity data to SQL server
+	jQuery("#activity-submit").on("click", activitySubmitClick );
+	
 	jQuery('.reload-page').click(function() {
 		//location.reload( true ); //true = reload from server, not from cache
 		window.location = window.location.href; //to avoid POST warning.. for now, until we make GET page.
@@ -244,6 +247,14 @@ function deleteSupplementalLink() {
 	var whatToDelete = jQuery(this).parents('tr');
 	
 	whatToDelete.remove();
+}
+
+//on activity save, ajax the activity data over to 
+function activitySubmitClick() {
+	var submitbutton = jQuery(this);
+	
+	//console.log('activity click');
+
 }
 
 //on activity form load, make sure when post info is loaded into form, appropriate fields show automagically

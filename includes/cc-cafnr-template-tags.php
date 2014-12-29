@@ -291,12 +291,14 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 			
-			<li id="cafnr_add_pi" class="gfield">
+			<!-- Mel isn't sure this is relevant anymore - 12/29/14
+			<li id="cafnr_add_pi" class="gfield non-pi-only research-only hidden-on-init">
 				<label class="gfield_label" for="input_22_10">PI Name</label>
 				<div class="ginput_container">
 					<input id="add_pi_name" class="medium" type="text" tabindex="11" value="" name="add_pi_name">
 				</div>
 			</li>
+			-->
 		
 			<li id="cafnr_write_in_pi" class="gfield write-in-pi hidden-on-init research-only">
 				<label class="gfield_label" for="input_22_34">Write in the name of the PI</label>

@@ -15,6 +15,9 @@
 .hidden-on-init {
 	display:none;
 }
+a.reload-page {
+	cursor:pointer;
+}
 
 #cafnr_activity_upload {
 	background-color: #eaeaea;
@@ -37,7 +40,7 @@
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 	font-size: 12px;
 	//margin: 45px;
-	width: 60%;
+	width: 75%;
 	text-align: left;
 	border-collapse: collapse;
 }

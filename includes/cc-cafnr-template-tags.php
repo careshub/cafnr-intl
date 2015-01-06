@@ -595,7 +595,7 @@ function cc_cafnr_render_mod_admin_form(){
 						$("#userinfo").show();
 						$("#newfacultydiv").hide();
 						$("#cafnr_faculty_form").hide();
-						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a class='reload-page'>change</a>)");
+						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a class='reload-page'>select different faculty</a>)");
 						
 					});
 				</script>
@@ -603,24 +603,24 @@ function cc_cafnr_render_mod_admin_form(){
 			
 		}
 	} else if (	!empty( $_GET['user'] )) {			
-			$activities = cc_cafnr_get_faculty_activity_url_list( $_GET['user'] );			
-			cc_cafnr_render_faculty_activity_table( $activities, $_GET['user'] );			
-			$user_info = get_userdata( $_GET['user'] );
-			$uid = $_GET['user'];
-			
-			$all_meta_for_user = get_user_meta( $uid );
+		$activities = cc_cafnr_get_faculty_activity_url_list( $_GET['user'] );			
+		cc_cafnr_render_faculty_activity_table( $activities, $_GET['user'] );			
+		$user_info = get_userdata( $_GET['user'] );
+		$uid = $_GET['user'];
+		
+		$all_meta_for_user = get_user_meta( $uid );
 ?>
-				<script type="text/javascript">
-					jQuery( document ).ready(function($) {
-						$("#userID").val("<?php echo $_GET['user']; ?>");
-						$("#activities").show();
-						$("#userinfo").show();
-						$("#newfacultydiv").hide();
-						$("#cafnr_faculty_form").hide();
-						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a href='" + cafnr_ajax.surveyDashboard + "'>change</a>)");
-						
-					});
-				</script>
+		<script type="text/javascript">
+			jQuery( document ).ready(function($) {
+				$("#userID").val("<?php echo $_GET['user']; ?>");
+				$("#activities").show();
+				$("#userinfo").show();
+				$("#newfacultydiv").hide();
+				$("#cafnr_faculty_form").hide();
+				$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a href='" + cafnr_ajax.surveyDashboard + "'>select different faculty</a>)");
+				
+			});
+		</script>
 <?php
 
 	
@@ -721,7 +721,7 @@ function cc_cafnr_render_mod_admin_form(){
 	}
 ?>
 	<form id="cafnr_faculty_form" class="standard-form" method="post" action="">
-		<strong>Select a Faculty Member:</strong><br /><br />
+		<strong>Select a Faculty Member to view/edit their Activities:</strong><br /><br />
 		<select id="faculty_select" name="faculty_select" style="font-size:12pt;width:450px;">
 			<option value="-1" selected="selected">---Select---</option>
 			<option value="add_new_faculty">ADD NEW FACULTY</option>
@@ -762,7 +762,7 @@ function cc_cafnr_render_mod_admin_form(){
 		<form id="cafnr_facultyadd_form" class="standard-form" method="post" action="">
 			<br /><br />
 			<input type="hidden" id="userID" name="userID" />
-			<strong>Would you like to LINK to or UPLOAD your CV?</strong><br/>
+			<strong>LINK to or UPLOAD <?php echo $user_info->display_name; ?>'s CV?</strong><br/>
 			<input type="radio" id="CVmethod1" name="CVmethod" value="link" <?php if( $all_meta_for_user['CVmethod'][0] == "link") echo 'checked="checked"'; ?> />&nbsp;Link to my CV<br />
 			<input type="radio" id="CVmethod2" name="CVmethod" value="upload" <?php if( $all_meta_for_user['CVmethod'][0] == "upload") echo 'checked="checked"'; ?> />&nbsp;Upload my CV
 			
@@ -787,11 +787,11 @@ function cc_cafnr_render_mod_admin_form(){
 				
 			</div>		
 			<br /><br />
-			<strong>Beyond the last five years, have you been involved in any international activities?</strong><br/>
+			<strong>Beyond the last five years, has <?php echo $user_info->display_name; ?> been involved in any international activities?</strong><br/>
 			<input type="text" id="beyond5" name="beyond5" size="100" value="<?php echo $all_meta_for_user['beyond5'][0]; ?>" />
 			<br /><br />
 			
-			<strong>Are you planning on engaging in any international activity in the future? If so, can you identify the country or countries?</strong><br/>
+			<strong>Is <?php echo $user_info->display_name;?> planning on engaging in any international activity in the future? If so, can you identify the country or countries?</strong><br/>
 			<input type="text" id="futureactivity" name="futureactivity" size="100" value="<?php echo $all_meta_for_user['futureactivity'][0]; ?>" />
 			<br /><br />
 			<?php //populated via javascript function (for repeater goodness) ?>
@@ -855,10 +855,10 @@ function cc_cafnr_render_mod_admin_form(){
 			</div>
 			
 			<br />
-			<strong>Would you be interested in leading or assisting with a project in your academic field or research focus?</strong><br/>
+			<strong>Would <?php echo $user_info->display_name;?> be interested in leading or assisting with a project in their academic field or research focus?</strong><br/>
 			<input type="text" id="leadassist" name="leadassist" size="100" value="<?php echo $all_meta_for_user['leadassist'][0]; ?>" />
 			<br /><br />	
-			<strong>In the future, would you prefer an online form or in-person interview?</strong><br/>
+			<strong>In the future, would <?php echo $user_info->display_name; ?> prefer an online form or in-person interview?</strong><br/>
 			<input type="radio" id="futurecontact1" name="futurecontact" value="online" <?php if( $all_meta_for_user['futurecontact'][0] == "online") echo 'checked="checked"'; ?> />&nbsp;Online form<br />
 			<input type="radio" id="futurecontact2" name="futurecontact" value="interview" <?php if( $all_meta_for_user['futurecontact'][0] == "interview") echo 'checked="checked"'; ?> />&nbsp;Interview
 			<br /><br />		
@@ -1276,7 +1276,7 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 		function delActivity( activityid, author ) {				
 			var answer = confirm("Are you sure you want to delete this activity?");
 			if (answer){
-				var activity_json_obj = [];
+				var activity_json_obj = {};
 				activity_json_obj["activity_id"] = data;
 				activity_json_obj["new_activity"] = "delete_activity"; 
 				activity_json_obj["user_id"] = author; 

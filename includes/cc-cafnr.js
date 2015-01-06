@@ -323,31 +323,54 @@ function userFormLoad(){
 }
 
 //save activity form via ajax
+// also, send to SQL on complete (via ajax)
 function activityFormSave() {
 	jQuery('#cafnr_activity_form').on('submit', function(e){
 		
 		e.preventDefault();
 		var querystring = jQuery(this).serialize();
 		
-		//objects for sql json ajax
-		var activity_inputs = jQuery("#cafnr_activity_form :input");
-		var o = {};
-		var activity_obj = jQuery.map(activity_inputs, function(n, i)
-		{
-			o[n.name] = jQuery(n).val();
-			//return o;
-		});
-		
-		o['activity-name'] = jQuery("#cafnr_activity_name :selected").text();
-		
-		activity_obj=o;
-		
-		//different way to get an object from the form
+		// get an object from the form
 		var activity_array = jQuery("#cafnr_activity_form").serializeArray();
+
 		var activity_json_obj = {};
+		var activity_checkbox_array = [];
+		var collaborating_array= [];
+		var supplemental_links_array= [];
+		
 		jQuery.each( activity_array, function( i, v){
-			activity_json_obj[v.name] = v.value;
+			if ( ( v.name != "activity_checkbox[]" ) && ( v.name != "collaborating[]" ) && ( v.name != "supplemental_links[]" ) ) {
+			
+				activity_json_obj[v.name] = v.value;
+				
+			} else if ( v.name == "activity_checkbox[]" ){
+				activity_checkbox_array.push( v.value );
+			} else if ( v.name == "collaborating[]" ){
+				collaborating_array.push( v.value );
+			} else if ( v.name == "supplemental_links[]" ){
+				supplemental_links_array.push( v.value );
+			}
 		});
+		
+		activity_json_obj['activity_checkbox'] = activity_checkbox_array;
+		activity_json_obj['collaborating'] = collaborating_array;
+		activity_json_obj['supplemental_links'] = supplemental_links_array;
+		
+		
+		// fix name if !new activity (shows up as post #)
+		if ( activity_json_obj["cafnr_activity_name"] != "add_new_activity" ){
+			activity_json_obj["parent_activity_id"] = activity_json_obj["cafnr_activity_name"];
+			activity_json_obj["cafnr_activity_name"] = jQuery("#cafnr_activity_name :selected").text();
+			delete activity_json_obj["add_activity_title"];
+			delete activity_json_obj["activity-name"];
+			delete activity_json_obj["SubmitButton"];
+		} else {
+			activity_json_obj["parent_activity_id"] = "0"; 
+			activity_json_obj["cafnr_activity_name"] = activity_json_obj["add_activity_title"];
+			delete activity_json_obj["add_activity_title"];
+			delete activity_json_obj["activity-name"];
+			delete activity_json_obj["SubmitButton"];
+		}
 		
 		
 		//TODO: add nonce on both sides
@@ -366,6 +389,11 @@ function activityFormSave() {
 					5000
 				);
 				jQuery('#PageLoader').fadeOut();
+				
+				//add returned activity id to activity_json_obj
+				activity_json_obj["ajax-returned-id"] = data;
+				activity_json_obj["activity_id"] = data;
+				
 				return false;
 			},
 			beforeSend: function(jqXHR, settings){
@@ -392,36 +420,6 @@ function activityFormSave() {
 						console.log('error', response);
 					}
 				});
-
-		
-				/*jQuery.ajax({
-					type: "POST",
-					url: sql_url,
-					crossDomain: true,
-					//data: JSON.stringify(querystring),
-					contentType:'application/json; charset=utf-8',
-					data: querystring_test,
-					dataType: 'json',
-					success: function(data, textStatus, jqXHR){
-					
-						jQuery('#PageLoader').fadeOut();
-						return false;
-					},
-					beforeSend: function(jqXHR, settings){
-						jQuery('#PageLoader').fadeIn();
-					},
-					complete: function(jqXHR, textStatus){
-						//redirect to the dashboard
-						//TODO: check for user param, activity param for message
-						//window.location = cafnr_ajax.surveyDashboard
-						
-					},
-					error: function (xhr, ajaxOptions, thrownError) {
-						alert(xhr.status);
-						alert(thrownError);
-						e.preventDefault();
-					}
-				});*/
 				
 				
 				//redirect to the dashboard

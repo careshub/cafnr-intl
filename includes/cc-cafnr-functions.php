@@ -642,7 +642,7 @@ function cafnr_intl_edit_activity(){
 	
 	}
 	//this will NOT redirect if we've already POSTed data to this page ('headers already sent')
-	echo $dashboard;
+	echo $activity_id;
 	//wp_redirect( $dashboard . '?user=' . $_POST['user_id'] . '&msg=1' );
 	wp_redirect( $dashboard );
 	exit;

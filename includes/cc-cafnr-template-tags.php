@@ -93,6 +93,11 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	} else { //get user from current user ID
 		$user = $current_user->ID;
 	}
+	
+	$user_info = get_userdata( $user );
+    $username = $user_info->user_login;
+    $first_name = $user_info->first_name;
+    $last_name = $user_info->last_name;
 		
 	//get all cafnr activities in db
 	$activities = array();
@@ -128,6 +133,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<input type="hidden" name="new_activity" value="<?php echo $action; ?>">
 			<input type="hidden" name="activity_id" value="<?php echo $this_activity->ID; ?>">
 			<input type="hidden" name="user_id" value="<?php echo $user; ?>">
+			<input type="hidden" name="user_name" value="<?php echo $username; ?>">
+			<input type="hidden" name="first_name" value="<?php echo $first_name; ?>">
+			<input type="hidden" name="last_name" value="<?php echo $last_name; ?>">
 			
 			<li id="cafnr_master_type" class="gfield gfield_contains_required required">
 			
@@ -934,12 +942,15 @@ function cc_cafnr_render_member_form(){
 	//get info for current user
 	$current_user = wp_get_current_user();
 	
+	/*
 	echo 'Username: ' . $current_user->user_login . '<br />';
     echo 'User email: ' . $current_user->user_email . '<br />';
     echo 'User first name: ' . $current_user->user_firstname . '<br />';
     echo 'User last name: ' . $current_user->user_lastname . '<br />';
     echo 'User display name: ' . $current_user->display_name . '<br />';
     echo 'User ID: ' . $current_user->ID . '<br />';
+	*/
+	echo 'Welcome, ' . $current_user->display_name .'!';
 	
 	$activities = cc_cafnr_get_faculty_activity_url_list( $current_user->ID );
 	cc_cafnr_render_faculty_activity_table( $activities, $current_user->ID );	
@@ -1043,6 +1054,7 @@ function cc_cafnr_render_member_form(){
 ?>
 	
 	<div id="userinfo">
+		<h3>User Information</h3>
 		<form id="cafnr_facultyadd_form" class="standard-form" method="post" action="">
 			<br /><br />
 			<input type="hidden" id="userID" name="userID" />
@@ -1260,24 +1272,48 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 		</table>
 	</div>
 	<script type="text/javascript">		
-			//function delActivity(activityid, activity_owner) {				
-			function delActivity( activityid, author ) {				
-				var answer = confirm("Are you sure you want to delete this activity?");
-				if (answer){
-						var data = {
-							'action': 'del_cafnr_activity',
-							'activityid': activityid
-						};						
-						jQuery.post(ajaxurl, data, function(response) {
-							alert('Activity Deleted!');
-							//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + activity_owner;
-							//TODO, change this to be function-based url
-							window.location = cafnr_ajax.homeURL + '/groups/cafnr-international-programs/survey-dashboard?user=' + author;
-						});					
-				} else {
-					return false;
-				}
-			}		
+		//function delActivity(activityid, activity_owner) {				
+		function delActivity( activityid, author ) {				
+			var answer = confirm("Are you sure you want to delete this activity?");
+			if (answer){
+				var activity_json_obj = [];
+				activity_json_obj["activity_id"] = data;
+				activity_json_obj["new_activity"] = "delete_activity"; 
+				activity_json_obj["user_id"] = author; 
+				
+				var data = {
+					'action': 'del_cafnr_activity',
+					'activityid': activityid
+				};						
+				jQuery.post(ajaxurl, data, function(response) {
+				
+					//on complete, send data to sql
+					var sql_url = "http://staging.maps.communitycommons.org/apiservice/getdata.svc/cafnr";
+		
+					var req = { "id": 111, "program": "test"};
+					jQuery.ajax({
+						type: "POST",
+						url: 'http://staging.maps.communitycommons.org/apiservice/getdata.svc/cafnr',
+						dataType: 'json',
+						contentType: "application/json",
+						crossDomain: true,
+						data: JSON.stringify(activity_json_obj),
+						success: function (response) {
+							console.log('success', response);
+						},
+						error: function (response) {
+							console.log('error', response);
+						}
+					});
+					alert('Activity Deleted!');
+					//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + activity_owner;
+					//TODO, change this to be function-based url
+					//window.location = cafnr_ajax.homeURL + '/groups/cafnr-international-programs/survey-dashboard?user=' + author;
+				});					
+			} else {
+				return false;
+			}
+		}		
 	</script>
 <?php
 }

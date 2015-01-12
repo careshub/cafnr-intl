@@ -37,7 +37,6 @@ function cc_cafnr_get_activity_slug(){
     return 'cafnr-add-activity';
 }
 
- 
 function cafnr_intl_scripts() {
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'plupload' );
@@ -196,7 +195,12 @@ function cc_cafnr_populate_group_members(){
 
 //groups_is_user_admin( $user_id, $group_id )
 
-//ajax for plupload on the activity form
+/**
+ * Ajax functionality for plupload on the activity form
+ *
+ *
+ * @return json
+ */
 function cc_cafnr_activity_upload() {
 	
 	$new_file = wp_handle_upload( $_FILES['activity_uploads'], array( 'test_form' => false ) );
@@ -211,7 +215,12 @@ function cc_cafnr_activity_upload() {
 	}
 add_action( 'wp_ajax_activity_upload', 'cc_cafnr_activity_upload' );
 
-//ajax for plupload on the activity form
+/**
+ * Ajax functionality for plupload on the user form
+ *
+ *
+ * @return json
+ */
 function cc_cafnr_user_upload() {
 	
 	$new_file = wp_handle_upload( $_FILES['user_uploads'], array( 'test_form' => false ) );
@@ -226,7 +235,12 @@ function cc_cafnr_user_upload() {
 	}
 add_action( 'wp_ajax_user_upload', 'cc_cafnr_user_upload' );
 
-//ajax for plupload on the activity form
+/**
+ * Ajax functionality for deleting user's uploaded file on the user form
+ *
+ *
+ * @return json
+ */
 function cc_cafnr_activity_upload_delete() {
 	
 	$current_user = wp_get_current_user(); 

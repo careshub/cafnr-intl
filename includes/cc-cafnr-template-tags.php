@@ -548,6 +548,12 @@ function cc_cafnr_get_member_array( ){
 function cc_cafnr_render_mod_admin_form(){
 	
 	$group_members = cc_cafnr_get_member_array();
+	//get array of ALL activity objects
+	$activity_args = array(
+		'post_type' => 'cafnr-activity',
+		'post_status' => 'publish'
+	);
+	$activities_query = new WP_Query( $activity_args );
 	
 	global $uid;
 	if( isset( $_POST['SubmitFaculty'] ) ){
@@ -1277,7 +1283,7 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 			var answer = confirm("Are you sure you want to delete this activity?");
 			if (answer){
 				var activity_json_obj = {};
-				activity_json_obj["activity_id"] = data;
+				activity_json_obj["activity_id"] = activityid;
 				activity_json_obj["new_activity"] = "delete_activity"; 
 				activity_json_obj["user_id"] = author; 
 				
@@ -1287,13 +1293,9 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 				};						
 				jQuery.post(ajaxurl, data, function(response) {
 				
-					//on complete, send data to sql
-					var sql_url = "http://staging.maps.communitycommons.org/apiservice/getdata.svc/cafnr";
-		
-					var req = { "id": 111, "program": "test"};
 					jQuery.ajax({
 						type: "POST",
-						url: 'http://staging.maps.communitycommons.org/apiservice/getdata.svc/cafnr',
+						url: 'http://maps.communitycommons.org/apiservice/getdata.svc/cafnr',
 						dataType: 'json',
 						contentType: "application/json",
 						crossDomain: true,

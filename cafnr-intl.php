@@ -1,6 +1,6 @@
 <?php
 /*
- * Plugin Name: CAFNR International Programs - Mel's Dev
+ * Plugin Name: CAFNR International Programs 
  * Version: Current Version
  * Author: Michael Barbaro
  * Description: This plugin creates a small dashboard form and support for a larger Gravity Form.

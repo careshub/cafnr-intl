@@ -401,14 +401,9 @@ function activityFormSave() {
 			},
 			complete: function(jqXHR, textStatus){
 			
-				// once complete, post to external url for SQL and map things..
-				
-				var sql_url = "http://staging.maps.communitycommons.org/apiservice/getdata.svc/cafnr";
-				
-				var req = { "id": 111, "program": "test"};
 				jQuery.ajax({
 					type: "POST",
-					url: 'http://staging.maps.communitycommons.org/apiservice/getdata.svc/cafnr',
+					url: 'http://maps.communitycommons.org/apiservice/getdata.svc/cafnr',
 					dataType: 'json',
 					contentType: "application/json",
 					crossDomain: true,

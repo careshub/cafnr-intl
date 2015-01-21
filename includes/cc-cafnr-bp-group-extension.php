@@ -43,7 +43,10 @@ class CC_CAFNR_Intl_Extension extends BP_Group_Extension {
 
 			cc_cafnr_activity_form_render();
 		
-        }
+        } else if ( cc_cafnr_on_all_activities_screen() ) {
+			
+			cc_cafnr_all_activities_render();
+		}
 		
     }
 

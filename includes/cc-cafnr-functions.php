@@ -31,11 +31,119 @@ function cc_cafnr_is_component() {
  * @return  string
  */
 function cc_cafnr_get_slug(){
-    return 'survey-dashboard';
+    return 'intl-activities';
+}
+function cc_cafnr_get_all_activities_slug(){
+    return 'all';
 }
 function cc_cafnr_get_activity_slug(){
     return 'cafnr-add-activity';
 }
+function cc_cafnr_get_one_activity_slug(){
+	return 'view-activity';
+}
+
+/**
+ * Is this the CAFNR group?
+ *
+ * @since    1.0.0
+ * @return   boolean
+ */
+function cc_cafnr_is_cafnr_group(){
+    return ( bp_get_current_group_id() == cc_cafnr_get_group_id() );
+}
+
+/**
+ * Get the group id based on the context
+ *
+ * @since   1.0.0
+ * @return  integer
+ */
+function cc_cafnr_get_group_id(){
+    switch ( get_home_url() ) {
+        case 'http://commonsdev.local':
+            $group_id = 596;
+            break;
+		case 'http://localhost/cc_local':
+            $group_id = 622;  //596
+            break;
+        case 'http://dev.communitycommons.org':
+            $group_id = 596;
+            break;
+        case 'http://www.communitycommons.org':
+            $group_id = 622;
+            break;
+        default:
+            $group_id = 622;
+            break;
+    }
+	
+    return $group_id;
+}
+
+
+/**
+ * Get URIs for the various pieces of this tab
+ * 
+ * @return string URL
+ */
+function cc_cafnr_get_home_permalink( $group_id = false ) {
+    $group_id = ( $group_id ) ? $group_id : bp_get_current_group_id() ;
+    $permalink = bp_get_group_permalink( groups_get_group( array( 'group_id' => $group_id ) ) ) .  cc_cafnr_get_slug() . '/';
+    return apply_filters( "cc_cafnr_get_home_permalink", $permalink, $group_id);
+}
+
+function cc_cafnr_get_activity_permalink( $group_id = false ) {
+    $permalink = cc_cafnr_get_home_permalink( $group_id ) . cc_cafnr_get_activity_slug() . '/';
+    return apply_filters( "cc_cafnr_get_activity_permalink", $permalink, $group_id);
+}
+
+function cc_cafnr_save_activity_permalink( $group_id = false ) {
+    $permalink = cc_cafnr_get_home_permalink( $group_id ) . cc_cafnr_get_activity_slug() . '/update-activity';
+    return apply_filters( "cc_cafnr_save_activity_permalink", $permalink, $group_id);
+}
+
+function cc_cafnr_get_all_activities_permalink( $group_id = false ) {
+    $permalink = cc_cafnr_get_home_permalink( $group_id ) . cc_cafnr_get_all_activities_slug() . '/';
+    return apply_filters( "cc_cafnr_get_all_activities_permalink", $permalink, $group_id);
+}
+
+function cc_cafnr_get_activity_view_permalink( $activity_id ){
+    $permalink = cc_cafnr_get_home_permalink( $group_id ) . cc_cafnr_get_one_activity_slug() . '/';
+    return apply_filters( "cc_cafnr_get_activity_view_permalink", $permalink, $group_id);
+}
+
+	
+/**
+ * Where are we?
+ * Checks for the various screens
+ *
+ * @since   1.0.0
+ * @return  string
+ */
+function cc_cafnr_on_survey_dashboard_screen(){
+    // There should be no action variables if on the main tab
+    if ( cc_cafnr_is_component() && ! ( bp_action_variables( cc_cafnr_get_slug(), 0 ) ) ){
+        return true;
+    } else {
+        return false;
+    }
+}
+function cc_cafnr_on_activity_screen(){
+    if ( cc_cafnr_is_component() && bp_is_action_variable( cc_cafnr_get_activity_slug(), 0 ) ){
+        return true;
+    } else {
+        return false;
+    }
+}
+function cc_cafnr_on_all_activities_screen(){
+    if ( cc_cafnr_is_component() && bp_is_action_variable( cc_cafnr_get_all_activities_slug(), 0 ) ){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 function cafnr_intl_scripts() {
 	wp_enqueue_script( 'jquery-ui-datepicker' );
@@ -271,91 +379,6 @@ function cc_cafnr_activity_upload_delete() {
 }
 
 add_action( 'wp_ajax_activity_upload_delete', 'cc_cafnr_activity_upload_delete' );
-
-
-/**
- * Is this the CAFNR group?
- *
- * @since    1.0.0
- * @return   boolean
- */
-function cc_cafnr_is_cafnr_group(){
-    return ( bp_get_current_group_id() == cc_cafnr_get_group_id() );
-}
-
-/**
- * Get the group id based on the context
- *
- * @since   1.0.0
- * @return  integer
- */
-function cc_cafnr_get_group_id(){
-    switch ( get_home_url() ) {
-        case 'http://commonsdev.local':
-            $group_id = 596;
-            break;
-		case 'http://localhost/cc_local':
-            $group_id = 596;
-            break;
-        case 'http://dev.communitycommons.org':
-            $group_id = 596;
-            break;
-        case 'http://www.communitycommons.org':
-            $group_id = 622;
-            break;
-        default:
-            $group_id = 595;
-            break;
-    }
-	
-    return $group_id;
-}
-
-
-/**
- * Get URIs for the various pieces of this tab
- * 
- * @return string URL
- */
-function cc_cafnr_get_home_permalink( $group_id = false ) {
-    $group_id = ( $group_id ) ? $group_id : bp_get_current_group_id() ;
-    $permalink = bp_get_group_permalink( groups_get_group( array( 'group_id' => $group_id ) ) ) .  cc_cafnr_get_slug() . '/';
-    return apply_filters( "cc_cafnr_get_home_permalink", $permalink, $group_id);
-}
-
-function cc_cafnr_get_activity_permalink( $group_id = false ) {
-    $permalink = cc_cafnr_get_home_permalink( $group_id ) . cc_cafnr_get_activity_slug() . '/';
-    return apply_filters( "cc_cafnr_get_activity_permalink", $permalink, $group_id);
-}
-
-function cc_cafnr_save_activity_permalink( $group_id = false ) {
-    $permalink = cc_cafnr_get_home_permalink( $group_id ) . cc_cafnr_get_activity_slug() . '/update-activity';
-    return apply_filters( "cc_cafnr_save_activity_permalink", $permalink, $group_id);
-}
-
-/**
- * Where are we?
- * Checks for the various screens
- *
- * @since   1.0.0
- * @return  string
- */
-function cc_cafnr_on_survey_dashboard_screen(){
-    // There should be no action variables if on the main tab
-    if ( cc_cafnr_is_component() && ! ( bp_action_variables( cc_cafnr_get_slug(), 0 ) ) ){
-        return true;
-    } else {
-        return false;
-    }
-}
-function cc_cafnr_on_activity_screen(){
-    if ( cc_cafnr_is_component() && bp_is_action_variable( cc_cafnr_get_activity_slug(), 0 ) ){
-        return true;
-    } else {
-        return false;
-    }
-}
-
 
 /*
  * Add page templates for form, dashboards

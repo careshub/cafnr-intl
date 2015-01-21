@@ -32,6 +32,8 @@
  
 function cc_cafnr_activity_form_render( $post_id = null ){
 
+	//render the subnav..
+	cc_cafnr_render_tab_subnav();
 	
 	
 	//get prior activity data if exists
@@ -125,7 +127,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	$group_members = cc_cafnr_get_member_array();
 	?>
 	
-	<h3 class="gform_title">CAFNR International Programs</h3>
+	
+	<h3 class="gform_title">CAFNR International Programs Activity Survey</h3>
 	
 	<div class="gform_wrapper cafnr_activity">
 		<form id="cafnr_activity_form" class="standard-form" method="post" action="">
@@ -508,44 +511,11 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		</form>
 	</div>
 	
-	
-	
-	
 	<?php
 }
 
 
-/*
- * Returns array of members of CAFNR Group
- *
- * @params int Group_ID
- * @return array Array of Member ID => name
- */
-function cc_cafnr_get_member_array( ){
-
-	global $bp;
-	$group_id = cc_cafnr_get_group_id();
-	
-	$group = groups_get_group( array( 'group_id' => $group_id ) );
-	//var_dump($group);
-	
-	//set up group member array for drop downs
-	$group_members = array();
-	if ( bp_group_has_members( array( 'group_id' => $group_id, 'per_page' => 9999 ) ) ) {
-	
-		//iterate through group members, creating array for form list (drop down)
-		while ( bp_group_members() ) : bp_group_the_member(); 
-			$group_members[bp_get_group_member_id()] = bp_get_group_member_name();
-		endwhile; 
-		
-		//var_dump ($group_members);  //works!
-	}
-	
-	return $group_members;
-	
-}
-
-function cc_cafnr_render_mod_admin_form(){
+function cc_cafnr_render_mod_admin_page(){
 	
 	$group_members = cc_cafnr_get_member_array();
 	//get array of ALL activity objects
@@ -608,8 +578,12 @@ function cc_cafnr_render_mod_admin_form(){
 <?php
 			
 		}
-	} else if (	!empty( $_GET['user'] )) {			
+	} else if (	!empty( $_GET['user'] )) {	
+	
+		cc_cafnr_render_tab_subnav();
+	
 		$activities = cc_cafnr_get_faculty_activity_url_list( $_GET['user'] );			
+		
 		cc_cafnr_render_faculty_activity_table( $activities, $_GET['user'] );			
 		$user_info = get_userdata( $_GET['user'] );
 		$uid = $_GET['user'];
@@ -726,6 +700,7 @@ function cc_cafnr_render_mod_admin_form(){
 		//echo "nope";
 	}
 ?>
+
 	<form id="cafnr_faculty_form" class="standard-form" method="post" action="">
 		<strong>Select a Faculty Member to view/edit their Activities:</strong><br /><br />
 		<select id="faculty_select" name="faculty_select" style="font-size:12pt;width:450px;">
@@ -873,52 +848,6 @@ function cc_cafnr_render_mod_admin_form(){
 	</div>	
 	<div class="modal"></div>	
 	
-	<script type="text/javascript">
-		jQuery( document ).ready(function($) {
-			
-			$body = $("body");
-
-			$(document).on({
-				ajaxStart: function() { $body.addClass("loading");    },
-				ajaxStop: function() { $body.removeClass("loading"); }    
-			});			
-			
-			$("#submitnewfaculty").click(function() {
-					var email = $("#newfacultyemail").val();
-					if(validateEmail(email)){
-						var data = {
-							'action': 'add_cafnr_faculty',
-							'useremail': $("#newfacultyemail").val(),
-						//	'groupid': 595,
-							'groupid': cafnr_ajax.groupID,
-							'displayname': $("#displayname").val(),
-							'firstname': $("#firstname").val(),
-							'lastname': $("#lastname").val()
-						};						
-						jQuery.post(ajaxurl, data, function(response) {
-							//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + response;
-							window.location = cafnr_ajax.surveyDashboard + '?user=' + response;
-							
-						});								 
-					} else {
-						 alert("Email is not in the correct format. Please enter a valid email address.");
-					}				
-			
-			
-				
-			});
-			function validateEmail(email){
-				var emailReg = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-				var valid = emailReg.test(email);
-
-				if(!valid) {
-					return false;
-				} else {
-					return true;
-				}
-			}				
-		});			
-	</script>	
 	
 <?php
 	if ($all_meta_for_user['CVmethod'][0] == "link") {
@@ -941,10 +870,8 @@ function cc_cafnr_render_mod_admin_form(){
 
 }
 
-function cc_cafnr_render_member_form(){
-	
-	$group_members = cc_cafnr_get_member_array();
-	
+function cc_cafnr_render_member_page(){
+		
 	//get info for current user
 	$current_user = wp_get_current_user();
 	
@@ -956,9 +883,13 @@ function cc_cafnr_render_member_form(){
     echo 'User display name: ' . $current_user->display_name . '<br />';
     echo 'User ID: ' . $current_user->ID . '<br />';
 	*/
-	echo 'Welcome, ' . $current_user->display_name .'!';
+	
+	//render the subnav
+	cc_cafnr_render_tab_subnav();
 	
 	$activities = cc_cafnr_get_faculty_activity_url_list( $current_user->ID );
+	
+	//render the activities box
 	cc_cafnr_render_faculty_activity_table( $activities, $current_user->ID );	
 	
 	$all_meta_for_user = get_user_meta( $current_user->ID );
@@ -1189,8 +1120,157 @@ function cc_cafnr_render_member_form(){
 }
 
 
+/* 
+ * Renders a table of activities already added for a faculty member
+ *
+ * @params array Associative array of names => links to forms
+ *
+ */
+//TODO: expand this table after input array is expanded
+function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
+?>
+
+	<div id="activities">
+		
+		<table class="mu-table">
+			<thead>
+				<tr>
+					<th scope="col" colspan="3"><span id="nameactivity"></span></th>	
+					<?php if ( bp_group_is_admin() || bp_group_is_mod() ) { ?>
+						<th class="add-activity-button" scope="col" colspan="3"><a href="<?php echo cc_cafnr_get_activity_permalink() . "?user=" . $which_user; ?>" class="button">+ Add New Activity</a></th>
+					<?php } else { ?>
+						<th class="add-activity-button" scope="col" colspan="3"><a href="<?php echo cc_cafnr_get_activity_permalink(); ?>" class="button">+ Add New Activity</a></th>
+					<?php } ?>
+				</tr>
+			</thead>
+			<tbody>
+				<?php 
+				foreach ( $activities as $key => $value ){ //TODO: add VIEW
+					
+					$id = $value["id"];
+					$title = $value["title"];
+					$url = $value["url"];
+					$form_url = $value["form_url"];
+					//$activity_owner = $value["activity_owner"];				
+					$author = $value["author"];				
+					
+					echo '<tr><td colspan="3">' . $title . '</td>';
+					//echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
+					echo '<td class="edit-activity-button"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $author . ')">Delete</a></td>';
+					echo '<td class="edit-activity-button"><a href="' . $form_url . '" class="button">Edit</a></td>';
+					echo '<td class="edit-activity-button"><a class="button quick-view-activity">Quick View</a></td>';
+					echo '</tr>';
+					
+					echo '<tr class="hidden quick-view-info">';
+					echo '<td>stuff</td>';
+					echo '</tr>';
+				
+				} ?>
+			</tbody>
+		</table>
+	</div>
+<?php
+}
+
+
+/* 
+ * Renders a table of all activities added to system
+ *
+ * @params array Associative array of names => links to post
+ *
+ */
+//TODO: add search filters to here?
+//TODO: maybe show adminks edit link, too
+function cc_cafnr_render_all_activity_table( $activities ) {
+?>
+
+	<div id="activities">
+		
+		<table class="mu-table">
+			<thead>
+				<tr>
+					<th scope="col" colspan="6"><span id="nameactivity">All Activities</span></th>	
+					
+				</tr>
+			</thead>
+			<tbody>
+				<?php 
+				foreach ( $activities as $key => $value ){ //TODO: add VIEW
+					
+					$id = $value["id"];
+					$title = $value["title"];
+					$url = $value["url"];
+					$form_url = $value["form_url"];
+					//$activity_owner = $value["activity_owner"];				
+					$author = $value["author"];				
+					
+					echo '<tr><td colspan="3">' . $title . '</td>';
+					//echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
+					echo '<td class="edit-activity-button"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $author . ')">Delete</a></td>';
+					echo '<td class="edit-activity-button"><a href="' . $form_url . '" class="button">Edit</a></td>';
+					echo '<td class="edit-activity-button"><a class="button quick-view-activity">Quick View</a></td>';
+					echo '</tr>';
+					
+					echo '<tr class="hidden quick-view-info">';
+					echo '<td>stuff</td>';
+					echo '</tr>';
+				
+				} ?>
+			</tbody>
+		</table>
+	</div>
+<?php
+}
+
+
+function cc_cafnr_all_activities_render(){
+	
+	//render the subnav..
+	cc_cafnr_render_tab_subnav();
+
+	
+	$activities = cc_cafnr_get_activity_list();
+	
+	cc_cafnr_render_all_activity_table( $activities );
+}
+
+
+
+/*** UTILITY FUNCTIONS ****/
+
 /*
- * Returns array of activity names and links (to url form)
+ * Returns array of members of CAFNR Group
+ *
+ * @params int Group_ID
+ * @return array Array of Member ID => name
+ */
+function cc_cafnr_get_member_array( ){
+
+	global $bp;
+	$group_id = cc_cafnr_get_group_id();
+	
+	$group = groups_get_group( array( 'group_id' => $group_id ) );
+	//var_dump($group);
+	
+	//set up group member array for drop downs
+	$group_members = array();
+	if ( bp_group_has_members( array( 'group_id' => $group_id, 'per_page' => 9999 ) ) ) {
+	
+		//iterate through group members, creating array for form list (drop down)
+		while ( bp_group_members() ) : bp_group_the_member(); 
+			$group_members[bp_get_group_member_id()] = bp_get_group_member_name();
+		endwhile; 
+		
+		//var_dump ($group_members);  //works!
+	}
+	
+	return $group_members;
+	
+}
+
+
+/*
+ * Returns array of activity names and links, by user id (to url form)
  *
  */
 //TODO: expand this array to include ids and live links!
@@ -1233,92 +1313,72 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 	return $activity_list;
 }
 
-/* 
- * Renders a table of activities already added for a faculty member
- *
- * @params array Associative array of names => links to forms
+
+/*
+ * Returns array of all activity names and links (to activity view - TODO)
  *
  */
-//TODO: expand this table after input array is expanded
-function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
-?>
+//TODO: filters through this function
+function cc_cafnr_get_activity_list( ){
 
-	<div id="activities">
+	//this is where the faculty prior forms and bio stuff will render
+	
+	$intl_args = array(
+		'post_type' => 'cafnr-activity',
+		'post_status' => 'publish',	
+		'posts_per_page' => -1
+	);
+	
+	$user_activity_posts = get_posts( $intl_args );
+	//var_dump($user_activity_posts);
+	$activity_list = array();
+	$count = 1;
+	foreach ( $user_activity_posts as $post ){
+		setup_postdata( $post ); 
 		
-		<table id="box-table-a">
-			<thead>
-				<tr>
-					<th scope="col" colspan="1"><span id="nameactivity"></span></th>	
-					<?php if ( bp_group_is_admin() || bp_group_is_mod() ) { ?>
-						<th scope="col" colspan="2" style="text-align:right;"><a href="<?php echo cc_cafnr_get_activity_permalink() . "?user=" . $which_user; ?>" class="button">+ Add New Activity</a></th>
-					<?php } else { ?>
-						<th scope="col" colspan="2" style="text-align:right;"><a href="<?php echo cc_cafnr_get_activity_permalink(); ?>" class="button">+ Add New Activity</a></th>
-					<?php } ?>
-				</tr>
-			</thead>
-			<tbody>
-				<?php 
-				foreach ( $activities as $key => $value ){ //TODO: add VIEW
-					
-					$id = $value["id"];
-					$title = $value["title"];
-					$url = $value["url"];
-					$form_url = $value["form_url"];
-					//$activity_owner = $value["activity_owner"];				
-					$author = $value["author"];				
-				
-					echo '<tr><td style="width:70%;">' . $title . '</td>';
-					//echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
-					echo '<td style="width:10%;"><a href="' . $form_url . '" class="button">Edit</a></td>';
-					echo '<td style="width:10%;"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $author . ')">Delete</a></td>';
-					echo '</tr>';
-				
-				} ?>
-			</tbody>
-		</table>
-	</div>
-	<script type="text/javascript">		
-		//function delActivity(activityid, activity_owner) {				
-		function delActivity( activityid, author ) {				
-			var answer = confirm("Are you sure you want to delete this activity?");
-			if (answer){
-				var activity_json_obj = {};
-				activity_json_obj["activity_id"] = activityid;
-				activity_json_obj["new_activity"] = "delete_activity"; 
-				activity_json_obj["user_id"] = author; 
-				
-				var data = {
-					'action': 'del_cafnr_activity',
-					'activityid': activityid
-				};						
-				jQuery.post(ajaxurl, data, function(response) {
-				
-					jQuery.ajax({
-						type: "POST",
-						url: 'http://maps.communitycommons.org/apiservice/getdata.svc/cafnr',
-						dataType: 'json',
-						contentType: "application/json",
-						crossDomain: true,
-						data: JSON.stringify(activity_json_obj),
-						success: function (response) {
-							console.log('success', response);
-						},
-						error: function (response) {
-							console.log('error', response);
-						}
-					});
-					alert('Activity Deleted!');
-					//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + activity_owner;
-					//TODO, change this to be function-based url
-					//window.location = cafnr_ajax.homeURL + '/groups/cafnr-international-programs/survey-dashboard?user=' + author;
-				});					
-			} else {
-				return false;
-			}
-		}		
-	</script>
-<?php
+		//View post
+		$url = the_permalink();
+		
+		
+		$activity_list[$count]['id'] = $post->ID;
+		$activity_list[$count]['title'] = $post->post_title;
+		$activity_list[$count]['form_url'] = $url;
+		$activity_list[$count]['url'] = get_site_url() . '/' . $post->post_name;
+		//$activity_list[$count]['activity_owner'] = $post->activity_owner;
+		$activity_list[$count]['author'] = $post->post_author;
+		$count++;
+	}
+
+	//var_dump ($activity_list);
+	return $activity_list;
 }
+
+/**
+ * Builds the subnav of the CAFNR survey group tab
+ *
+ * @since   1.0.0
+ * @return  HTML
+ */
+function cc_cafnr_render_tab_subnav(){
+	?>
+	<div id="subnav" class="item-list-tabs no-ajax">
+		<ul class="nav-tabs">
+			<li <?php if ( cc_cafnr_on_survey_dashboard_screen() ) { echo 'class="current"'; } ?>>
+				<a href="<?php echo cc_cafnr_get_home_permalink(); ?>">My Activities/Info</a>
+			</li>
+			<li <?php if ( cc_cafnr_on_activity_screen() ) { echo 'class="current"'; } ?>>
+				<a href="<?php echo cc_cafnr_get_activity_permalink(); ?>">Add Activity</a>
+			</li>
+			<li <?php if ( cc_cafnr_on_all_activities_screen() ) { echo 'class="current"'; } ?>>
+				<a href="<?php echo cc_cafnr_get_all_activities_permalink(); ?>">All Activities/Search</a>
+			</li>
+				
+			
+		</ul>
+	</div>
+	<?php
+}
+
 
 
 

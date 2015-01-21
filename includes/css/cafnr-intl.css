@@ -64,6 +64,51 @@ a.reload-page {
 	background: #d0dafd;
 	color: #339;
 }
+
+.mu-table thead, .mu-table th {
+	background-color: #F1B82D;
+}
+.mu-table #nameactivity {
+	font-size:1.5em;
+	color:#000000;
+	padding-left:8px;
+}
+.mu-table .add-activity-button{
+	text-align:right;
+	
+}
+.mu-table .add-activity-button a.button{
+	cursor:pointer;
+	color:rgba(0, 0, 0, 0.8);
+}
+.mu-table .add-activity-button a.button:hover{
+	background:none;
+	background-color:#222222;
+	color:#f1b82d;
+	border:1px solid #f1b82d;
+	box-shadow:none;
+	text-shadow:none;
+}
+.mu-table td.edit-activity-button a{
+	float:right;
+	cursor:pointer;
+}.mu-table td.edit-activity-button {
+	width:auto;
+	float:right;
+}
+.mu-table .quick-view-info{
+	border:none;
+}
+.mu-table .quick-view-info td {
+	border-top: none;
+	padding: 12px;
+	border-bottom:1px solid #ededed;
+}
+
+
+
+
+
 .modal {
 	display:    none;
 	position:   fixed;
@@ -88,4 +133,8 @@ body.loading {
    modal element will be visible */
 body.loading .modal {
 	display: block;
-}	
+}
+
+.hidden{
+	display: none;
+}

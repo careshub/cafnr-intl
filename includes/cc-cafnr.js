@@ -132,7 +132,44 @@ function clickListen(){
 		jQuery("#linkDiv").hide();
 		jQuery("#uploadDiv").show();
 	});	
+	
+	jQuery("#submitnewfaculty").click(function() {
+	
+		var email = jQuery("#newfacultyemail").val();
+		if(validateEmail(email)){
+			var data = {
+				'action': 'add_cafnr_faculty',
+				'useremail': jQuery("#newfacultyemail").val(),
+				'groupid': cafnr_ajax.groupID,
+				'displayname': jQuery("#displayname").val(),
+				'firstname': jQuery("#firstname").val(),
+				'lastname': jQuery("#lastname").val()
+			};						
+			jQuery.post(ajaxurl, data, function(response) {
+				//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + response;
+				window.location = cafnr_ajax.surveyDashboard + '?user=' + response;
+				
+			});								 
+		} else {
+			 alert("Email is not in the correct format. Please enter a valid email address.");
+		}				
+
+		
+	});
+
 }
+
+//regex function for email validation
+function validateEmail(email){
+	var emailReg = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+	var valid = emailReg.test(email);
+
+	if(!valid) {
+		return false;
+	} else {
+		return true;
+	}
+}		
 
 //add countries as repeater
 function addCountry() {
@@ -437,6 +474,43 @@ function activityFormSave() {
 	
 }
 
+function delActivity( activityid, author ) {				
+	var answer = confirm("Are you sure you want to delete this activity?");
+	if (answer){
+		var activity_json_obj = {};
+		activity_json_obj["activity_id"] = activityid;
+		activity_json_obj["new_activity"] = "delete_activity"; 
+		activity_json_obj["user_id"] = author; 
+		
+		var data = {
+			'action': 'del_cafnr_activity',
+			'activityid': activityid
+		};						
+		jQuery.post(ajaxurl, data, function(response) {
+		
+			jQuery.ajax({
+				type: "POST",
+				url: 'http://maps.communitycommons.org/apiservice/getdata.svc/cafnr',
+				dataType: 'json',
+				contentType: "application/json",
+				crossDomain: true,
+				data: JSON.stringify(activity_json_obj),
+				success: function (response) {
+					console.log('success', response);
+				},
+				error: function (response) {
+					console.log('error', response);
+				}
+			});
+			alert('Activity Deleted!');
+			//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + activity_owner;
+			//TODO, change this to be function-based url
+			//window.location = cafnr_ajax.homeURL + '/groups/cafnr-international-programs/survey-dashboard?user=' + author;
+		});					
+	} else {
+		return false;
+	}
+}		
 
 //functions in support of plupload for activity form
 var activityFormUnload = function() {
@@ -1456,6 +1530,13 @@ jQuery(document).ready(function($){
 		changeMonth: true,
 		changeYear: true
 	});
+	
+	var $body = jQuery("body");
+
+	jQuery(document).on({
+		ajaxStart: function() { $body.addClass("loading");    },
+		ajaxStop: function() { $body.removeClass("loading"); }    
+	});		
 	
 	
 	

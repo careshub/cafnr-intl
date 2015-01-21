@@ -1158,12 +1158,14 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 					//echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
 					echo '<td class="edit-activity-button"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $author . ')">Delete</a></td>';
 					echo '<td class="edit-activity-button"><a href="' . $form_url . '" class="button">Edit</a></td>';
-					echo '<td class="edit-activity-button"><a class="button quick-view-activity">Quick View</a></td>';
+					echo '<td class="edit-activity-button"><a class="button quick-view-activity" data-activityid="' . $id . '">Quick View</a></td>';
 					echo '</tr>';
 					
-					echo '<tr class="hidden quick-view-info">';
+					echo '<div class="quick-view-info">';
+					echo '<tr class="hidden quick-view-info" data-activityid="' . $id . '">';
 					echo '<td>stuff</td>';
 					echo '</tr>';
+					echo '</div>';
 				
 				} ?>
 			</tbody>
@@ -1202,23 +1204,95 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 					$url = $value["url"];
 					$form_url = $value["form_url"];
 					//$activity_owner = $value["activity_owner"];				
-					$author = $value["author"];				
+					$author = $value["author"];		
+					$postmeta = $value["postmeta"];
 					
-					echo '<tr><td colspan="3">' . $title . '</td>';
-					//echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
-					echo '<td class="edit-activity-button"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $author . ')">Delete</a></td>';
-					echo '<td class="edit-activity-button"><a href="' . $form_url . '" class="button">Edit</a></td>';
-					echo '<td class="edit-activity-button"><a class="button quick-view-activity">Quick View</a></td>';
-					echo '</tr>';
+					//Information to show in quick view
+					//TODO: account for NULL vals to get rid of warnings..
+					if( $postmeta["subject_textbox"] != NULL ) {
+						$subject = current( $postmeta["subject_textbox"] );
+					}
+					if( $postmeta["start_date"] != NULL ) {
+						$start_timestamp = strtotime (current( $postmeta["start_date"] ) );
+					}
+					$end_timestamp = strtotime (current( $postmeta["end_date"] ) );
 					
-					echo '<tr class="hidden quick-view-info">';
-					echo '<td>stuff</td>';
-					echo '</tr>';
-				
+					//var_dump( $start_timestamp );
+					//is this the pi's writeup?
+					$is_pi = false;
+					if( $postmeta["pi_radio"] != NULL ) {
+						if( current( $postmeta["pi_radio"]) == "Yes" ){ 
+							$is_pi = true;
+						}
+					}
+					//var_dump( $postmeta);
+					
+					?>
+					
+					<tr>
+						<td colspan="3" class="<?php if( $is_pi ){ echo 'strong'; }?>"><?php echo $title; ?></td>
+						
+						<td><?php echo cc_cafnr_get_readable( "activity-type", current( $postmeta["activity_radio"] ) ); ?></td>
+						
+						<td class="edit-activity-button"><a href="#" class="button" onclick="delActivity( <?php echo $id . ', ' . $author; ?>)">Delete</a></td>
+						
+						<td class="edit-activity-button"><a href="<?php echo $form_url; ?>" class="button">Edit</a></td>
+						<td class="edit-activity-button"><a class="button quick-view-activity" data-activityid="<?php echo $id; ?>" >Quick View</a></td>
+					</tr>
+					
+					<tr class="hidden quick-view-tr" colspan="6" data-activityid="<?php echo $id; ?>">
+						<td>Academic Field, Research Focus, or Subject of Activity: <?php echo $subject; ?></td>
+					</tr>
+					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
+						<td>Start Date: <?php echo date('m/d/Y', $start_timestamp); ?> </td>
+					</tr>
+					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
+						<td>End Date: <?php echo date('m/d/Y', $end_timestamp); ?></td>
+					</tr>
+					<?php
 				} ?>
 			</tbody>
 		</table>
 	</div>
+<?php
+}
+
+//Search activities
+function cc_cafnr_render_activity_search(){
+
+?>
+	<table id="activity-search" class="mu-table">
+		<thead>
+			<tr>
+				<th scope="col" colspan="6"><span id="nameactivity">Search Activities</span></th>	
+				
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="search-row">
+				<td colspan="2"><input id="search-text" name="search-text" type="text" placeholder="search by name, title"></input></td>
+				<td>
+					<select id="search-country">
+						<option value="1">One</option>
+						<option value="2">Two</option>
+					</select>
+				</td>
+				
+				<td></td>
+				<td></td>
+				
+				<td>
+					<a id="submit-activity-search" class="button alignright">Search</a>
+				</td>
+				
+			</tr>
+			<tr class="search-results hidden">
+			
+			</tr>
+			
+		</tbody>
+
+	</table>
 <?php
 }
 
@@ -1228,6 +1302,8 @@ function cc_cafnr_all_activities_render(){
 	//render the subnav..
 	cc_cafnr_render_tab_subnav();
 
+	//print search function..
+	cc_cafnr_render_activity_search();
 	
 	$activities = cc_cafnr_get_activity_list();
 	
@@ -1339,13 +1415,18 @@ function cc_cafnr_get_activity_list( ){
 		//View post
 		$url = the_permalink();
 		
-		
+		//get basic info about the activity
 		$activity_list[$count]['id'] = $post->ID;
 		$activity_list[$count]['title'] = $post->post_title;
 		$activity_list[$count]['form_url'] = $url;
 		$activity_list[$count]['url'] = get_site_url() . '/' . $post->post_name;
 		//$activity_list[$count]['activity_owner'] = $post->activity_owner;
 		$activity_list[$count]['author'] = $post->post_author;
+		
+		$activity_list[$count]['postmeta'] = get_post_meta( $post->ID );
+		
+		
+		
 		$count++;
 	}
 

@@ -157,6 +157,20 @@ function clickListen(){
 		
 	});
 
+	jQuery("a.quick-view-activity").click( function() {
+	
+		var activityID = jQuery(this).data("activityid");
+		//if corresponding row is hidden, make visible
+		jQuery('tr.quick-view-tr[data-activityid="' + activityID + '"]' ).each( function() {
+			if( jQuery(this).is(":hidden") ){
+				jQuery(this).show();
+			} else {
+				jQuery(this).hide();
+			}
+		
+		});
+	
+	});
 }
 
 //regex function for email validation
@@ -511,6 +525,62 @@ function delActivity( activityid, author ) {
 		return false;
 	}
 }		
+
+
+//search activity form via ajax
+function activitySearch() {
+	jQuery('table#activity-search a#submit-activity-search').on('click', function(e){
+		
+		e.preventDefault();
+		
+		// get search terms, countries
+		var searchText = jQuery('table#activity-search #search-text').val();
+		var searchCountry = jQuery('table#activity-search #search-country').val();
+		
+		
+		//TODO: add nonce on both sides
+		//querystring += "&cafnr_ajax_data_nonce=" + nm_ajax.cafnr_ajax_data_nonce;
+		//querystring += "&action=" + 'cafnr_intl_edit_activity';
+		
+		//first, post to wordpress
+		jQuery.ajax({
+			type: 'post',
+			url: cafnr_ajax.adminAjax,
+			data: {
+				action: 'cafnr_search_activity',
+				country: searchCountry,
+				text: searchText
+				},
+			success: function(data, textStatus, jqXHR){
+				
+				jQuery('#PageLoader').fadeOut();
+				
+				console.log('well, you searched');
+				
+				return false;
+			},
+			beforeSend: function(jqXHR, settings){
+				jQuery('#PageLoader').fadeIn();
+			},
+			complete: function(jqXHR, textStatus){
+			
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+				e.preventDefault();
+			}
+		});
+
+		
+		e.preventDefault();
+		return false;
+
+	});
+	
+}
+
+
 
 //functions in support of plupload for activity form
 var activityFormUnload = function() {
@@ -1524,6 +1594,9 @@ jQuery(document).ready(function($){
 	
 	//load user form change/click listens
 	userFormLoad();
+	
+	//instantiate the activity search
+	activitySearch();
 	
 	//instantiate datepicker
 	jQuery( ".datepicker" ).datepicker({

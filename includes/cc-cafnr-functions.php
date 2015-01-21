@@ -380,6 +380,31 @@ function cc_cafnr_activity_upload_delete() {
 
 add_action( 'wp_ajax_activity_upload_delete', 'cc_cafnr_activity_upload_delete' );
 
+
+/**
+ * Ajax functionality for searching activities
+ *
+ *
+ * @return json
+ */
+function cc_cafnr_search_activity() {
+	
+	//get reading to search!
+	
+	
+	
+	
+	$data['success'] = 'what up?';
+	
+	echo json_encode( $data );
+	die();
+	
+}
+
+add_action( 'wp_ajax_cafnr_search_activity', 'cc_cafnr_search_activity' );
+
+
+
 /*
  * Add page templates for form, dashboards
  *
@@ -686,11 +711,24 @@ function cafnr_intl_edit_activity(){
 	
 	/** END POST SUBMIT / SAVING ***/
 	
+}
+
+/* 
+ * Parses post meta to readable text
+ *
+ */
+function cc_cafnr_get_readable( $postmeta_label, $postmeta_value ){
 
 
+	//Until otherwise needed (if/else on label), we're just going to take dashes away and capitalize
+	$parsed_string = str_replace( '-', ' ', $postmeta_value);
+	$parsed_string = ucfirst( $parsed_string );
+	
+	return $parsed_string;
 
 
 }
+
 
 /*
  * Parses message codes from url

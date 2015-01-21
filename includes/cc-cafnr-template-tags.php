@@ -531,7 +531,7 @@ function cc_cafnr_get_member_array( ){
 	
 	//set up group member array for drop downs
 	$group_members = array();
-	if ( bp_group_has_members( array( 'group_id' => $group_id ) ) ) {
+	if ( bp_group_has_members( array( 'group_id' => $group_id, 'per_page' => 9999 ) ) ) {
 	
 		//iterate through group members, creating array for form list (drop down)
 		while ( bp_group_members() ) : bp_group_the_member(); 

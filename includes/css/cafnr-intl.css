@@ -23,6 +23,9 @@ a.reload-page {
 	font-weight:bold;
 	color:red;
 }
+.greyed{
+	color:#666666;
+}
 
 #cafnr_activity_upload {
 	background-color: #eaeaea;

@@ -1302,6 +1302,7 @@ function cc_cafnr_render_activity_search(){
 	$countries = get_countries_for_all_activities();
 	
 ?>
+
 	<table id="activity-search" class="mu-table">
 		<thead>
 			<tr>
@@ -1316,8 +1317,10 @@ function cc_cafnr_render_activity_search(){
 				</td>
 				<td>
 					<select id="search-country">
-						<option value="1">One</option>
-						<option value="2">Two</option>
+						<option value="-1" class="greyed">-- Search by Country --</option>
+						<?php foreach( $countries as $country ){ ?>
+							<option value="<?php echo $country; ?>"><?php echo $country; ?></option>
+						<?php } ?>
 					</select>
 				</td>
 				
@@ -1330,7 +1333,8 @@ function cc_cafnr_render_activity_search(){
 				
 			</tr>
 			<tr class="search-results hidden">
-			
+				<td class="user-msg">
+				</td>
 			</tr>
 			
 		</tbody>
@@ -1473,17 +1477,19 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
  *
  */
 //TODO: filters through this function
-function cc_cafnr_get_activity_list( ){
+function cc_cafnr_get_activity_list( $user_activity_posts = null ){
 
 	//this is where the faculty prior forms and bio stuff will render
+	if ( $user_activity_posts == null ){
+		$intl_args = array(
+			'post_type' => 'cafnr-activity',
+			'post_status' => 'publish',	
+			'posts_per_page' => -1
+		);
+		
+		$user_activity_posts = get_posts( $intl_args );
+	}
 	
-	$intl_args = array(
-		'post_type' => 'cafnr-activity',
-		'post_status' => 'publish',	
-		'posts_per_page' => -1
-	);
-	
-	$user_activity_posts = get_posts( $intl_args );
 	//var_dump($user_activity_posts);
 	$activity_list = array();
 	$count = 1;
@@ -1512,6 +1518,36 @@ function cc_cafnr_get_activity_list( ){
 	return $activity_list;
 }
 
+/* 
+ * Returns array of post objects, filtered by a country 
+ *
+ * @param array, string Array of post objects, country code
+ * @return array Array of post objects
+ */
+function filter_posts_by_country( $post_objects, $search_country_code ){
+	
+	$filtered_posts = array();
+	$country_meta;
+	$country_codes;
+	
+	//get postmeta for countries on post objects
+	foreach( $post_objects as $post ){
+		setup_postdata( $post ); 
+		
+		$country_meta = get_post_meta( $post->ID, 'country' );
+		$country_codes = maybe_unserialize( $country_meta ); //array of arrays of strings
+		foreach( $country_codes as $country ){ //correct
+			if( $country[0] == $search_country_code ){
+				array_push( $filtered_posts, $post );
+				
+			}
+			//var_dump( $country[0] );
+		}
+		//var_dump( $country_codes );
+	
+	}
+	return $filtered_posts;
+}
 
 /* 
  * Returns array of country codes of only countries with activities

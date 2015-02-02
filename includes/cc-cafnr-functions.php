@@ -406,12 +406,38 @@ add_action( 'wp_ajax_activity_upload_delete', 'cc_cafnr_activity_upload_delete' 
  */
 function cc_cafnr_search_activity() {
 	
-	//get reading to search!
+	//get search params
+	$country = $_POST['country'];
+	$search_text = $_POST['search_text'];
 	
+	//if they didn't really search for anything, return error message
+	if ( ( $country == '-1' ) && ( $search_text == '' ) ) {
+		$data['msg'] = "* Error: Please enter text or select a country";
+		$data['success'] = 0;
+		
+		echo json_encode( $data );
+		die();
+		
+	} else if ( $search_text == "" ) {
+		//search by country only, will entail unpackaging the posts and looking at each meta
+		$query_args = array(
+			'post_type' => 'cafnr-activity',
+			'post_status' => 'publish',	
+			'posts_per_page' => -1
+		);
+		
+		$user_activity_posts = get_posts( $query_args );
+		
+		$country_posts = filter_posts_by_country( $user_activity_posts, $country );
+		//var_dump($ country
+		$activity_list = cc_cafnr_get_activity_list( $country_posts );
+		
+		//$data['posts'] = $country_posts;
+		$data['posts'] = $activity_list;
+		
+	}
 	
-	
-	
-	$data['success'] = 'what up?';
+	$data['msg'] = 'what up?';
 	
 	echo json_encode( $data );
 	die();

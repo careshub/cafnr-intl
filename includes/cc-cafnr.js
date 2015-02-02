@@ -563,8 +563,18 @@ function delActivity( activityid, author ) {
 function activitySearchLoad(){
 
 	//populate country drop down from hidden array of countries
+	var countryOptions = jQuery("#activity-search select#search-country option");
+	var countryVal;
+	var countryName;
 	
-
+	//iterate through options and insert nameo f country
+	jQuery.each( countryOptions, function() {
+		//get the country value
+		countryVal = jQuery(this).val();
+		countryName = getCountryName( countryVal );
+		jQuery(this).html( countryName );
+	
+	});
 
 	//enable search button listener/ajax function
 	activitySearch();
@@ -592,16 +602,24 @@ function activitySearch() {
 		jQuery.ajax({
 			type: 'post',
 			url: cafnr_ajax.adminAjax,
+			dataType: 'json',
 			data: {
 				action: 'cafnr_search_activity',
 				country: searchCountry,
-				text: searchText
+				search_text: searchText
 				},
 			success: function(data, textStatus, jqXHR){
 				
 				jQuery('#PageLoader').fadeOut();
 				
-				console.log('well, you searched');
+				if( data.success == "0" ){
+					console.log('no search terms');
+					jQuery("table#activity-search tr.search-results .user-msg").html( data.msg );
+					jQuery("table#activity-search tr.search-results").show();
+				} else {
+					console.log('well, you searched');
+				}
+				
 				
 				return false;
 			},
@@ -1546,6 +1564,19 @@ function getCountries(){
 	return countryCodes;
 }
 
+function getCountryName( countryVal ){
+
+	var allCountries = getCountries();
+	var countryName;
+	jQuery.each( allCountries, function(){
+		if( this.code == countryVal ) {
+			countryName = this.name;
+			return false;
+		}
+	});
+	return countryName;
+
+}
 function populateCountryDropdown(){
 
 	var countryCodes = getCountries();

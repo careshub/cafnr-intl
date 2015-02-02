@@ -432,12 +432,16 @@ function cc_cafnr_search_activity() {
 		//var_dump($ country
 		$activity_list = cc_cafnr_get_activity_list( $country_posts );
 		
-		//$data['posts'] = $country_posts;
-		$data['posts'] = $activity_list;
+		if( !( empty( $activity_list ) ) ){
+			//$data['posts'] = $country_posts;
+			$data['posts'] = $activity_list;
+		} else { //should never happen if we're only looking at countries in the db..
+			$data['success'] = "no posts";
+			$data['msg'] = "No posts found for that country";
+		}
 		
 	}
 	
-	$data['msg'] = 'what up?';
 	
 	echo json_encode( $data );
 	die();

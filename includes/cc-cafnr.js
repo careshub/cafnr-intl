@@ -594,6 +594,9 @@ function activitySearch() {
 		var searchCountry = jQuery('table#activity-search #search-country').val();
 		
 		
+		//clear old search results
+		jQuery("table#activity-search tr.search-results").html("");
+		
 		//TODO: add nonce on both sides
 		//querystring += "&cafnr_ajax_data_nonce=" + nm_ajax.cafnr_ajax_data_nonce;
 		//querystring += "&action=" + 'cafnr_intl_edit_activity';
@@ -611,15 +614,36 @@ function activitySearch() {
 			success: function(data, textStatus, jqXHR){
 				
 				jQuery('#PageLoader').fadeOut();
+				var post_html = "";
+				var title = "";
 				
 				if( data.success == "0" ){
 					console.log('no search terms');
 					jQuery("table#activity-search tr.search-results .user-msg").html( data.msg );
 					jQuery("table#activity-search tr.search-results").show();
+				} else if ( data.posts.length != 0 ) {
+				
+					//loop through posts and scrape information
+					jQuery.each( data.posts, function(){
+					
+						console.log( this.title ); //works!
+						post_html += '<td colspan="3" class="">' + this.title + '</td>';
+						
+						//post_html += '</tr>';
+						
+					});
+					
+					//create trs in our table for posts..
+					//post_html += "<tr>"
+					//post_html +
+					
+					jQuery("table#activity-search tr.search-results").append( post_html );
+					jQuery("table#activity-search tr.search-results .user-msg").html( data.msg );
+					jQuery("table#activity-search tr.search-results").show();
+					
 				} else {
 					console.log('well, you searched');
 				}
-				
 				
 				return false;
 			},

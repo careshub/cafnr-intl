@@ -136,19 +136,31 @@ function clickListen(){
 	jQuery("#submitnewfaculty").click(function() {
 	
 		var email = jQuery("#newfacultyemail").val();
+		var displayName = jQuery("#displayname").val();
+		var no_reroute = false;
+		
+		if( jQuery(this).hasClass("no_reroute") ){
+			no_reroute = true;
+		}
+		
 		if(validateEmail(email)){
 			var data = {
 				'action': 'add_cafnr_faculty',
 				'useremail': jQuery("#newfacultyemail").val(),
 				'groupid': cafnr_ajax.groupID,
-				'displayname': jQuery("#displayname").val(),
+				'displayname': displayName,
 				'firstname': jQuery("#firstname").val(),
 				'lastname': jQuery("#lastname").val()
 			};						
 			jQuery.post(ajaxurl, data, function(response) {
-				//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + response;
-				window.location = cafnr_ajax.surveyDashboard + '?user=' + response;
+				if( no_reroute == false ) {
+					//window.location = '/wordpress/cafnr-intl-dashboard/?user=' + response;
+					window.location = cafnr_ajax.surveyDashboard + '?user=' + response;
+				} else {
+					jQuery("form#cafnr_faculty_form").hide();
+					jQuery(".user-msg").html("Faculty Member <em>" + displayName + "</em> added");
 				
+				}
 			});								 
 		} else {
 			 alert("Email is not in the correct format. Please enter a valid email address.");
@@ -347,6 +359,16 @@ function activityFormLoad(){
 		removeActivityFile();
 	});
 	
+	//if we're admin, initialize the user_id to 0 on form load
+	if( jQuery("#faculty_select_activity_form").is(":visible") ){
+		jQuery("[name=user_id]").val( '0' );
+	}
+	//if we're admin, set the hidden user value to the faculty drop-down value
+	jQuery("#faculty_select_activity_form").on("change", function(){
+		var user_id = jQuery(this).val();
+		jQuery("[name=user_id]").val(user_id);
+	});
+	
 	//make sure we're saving the form
 	activityFormSave();
 	
@@ -380,6 +402,17 @@ function activityFormSave() {
 		
 		e.preventDefault();
 		var querystring = jQuery(this).serialize();
+		
+		//if we are admin and have an unfilled 'faculty select' dropdown, stop right here
+		if( jQuery("#faculty_select_activity_form").is(":visible") ){
+			if( jQuery("#faculty_select_activity_form").val() == -1 ){
+				//show user message to fix issue
+				jQuery(".user-msg").html("*Error: You need to select a faculty member to submit this activity");
+				window.scrollTo(0,0);
+				return false;
+			}
+		
+		}
 		
 		// get an object from the form
 		var activity_array = jQuery("#cafnr_activity_form").serializeArray();

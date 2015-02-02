@@ -19,6 +19,11 @@ a.reload-page {
 	cursor:pointer;
 }
 
+.user-msg{
+	font-weight:bold;
+	color:red;
+}
+
 #cafnr_activity_upload {
 	background-color: #eaeaea;
 	margin: 1em;

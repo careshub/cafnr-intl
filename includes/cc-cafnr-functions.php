@@ -42,6 +42,9 @@ function cc_cafnr_get_activity_slug(){
 function cc_cafnr_get_one_activity_slug(){
 	return 'view-activity';
 }
+function cc_cafnr_get_add_faculty_slug(){
+	return 'add-faculty';
+}
 
 /**
  * Is this the CAFNR group?
@@ -113,6 +116,10 @@ function cc_cafnr_get_activity_view_permalink( $activity_id ){
     return apply_filters( "cc_cafnr_get_activity_view_permalink", $permalink, $group_id);
 }
 
+function cc_cafnr_add_faculty_permalink( $group_id = false  ){
+    $permalink = cc_cafnr_get_home_permalink( $group_id ) . cc_cafnr_get_add_faculty_slug() . '/';
+    return apply_filters( "cc_cafnr_add_faculty_permalink", $permalink, $group_id);
+}
 	
 /**
  * Where are we?
@@ -143,6 +150,16 @@ function cc_cafnr_on_all_activities_screen(){
         return false;
     }
 }
+function cc_cafnr_add_faculty_screen(){
+    if ( cc_cafnr_is_component() && bp_is_action_variable( cc_cafnr_get_add_faculty_slug(), 0 ) ){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+
 
 
 function cafnr_intl_scripts() {

@@ -34,7 +34,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 
 	//render the subnav..
 	cc_cafnr_render_tab_subnav();
-	
+		
 	
 	//get prior activity data if exists
 	if ( !( is_null( $post_id ) ) ){ //if the function has the post_id set
@@ -125,10 +125,41 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	}
 	
 	$group_members = cc_cafnr_get_member_array();
+	
+	//if we're admin and have no user info, render user selection drop down and make it required
+	$user_selection_required = false;
+	if ( is_null( $_GET['user'] ) && ( bp_group_is_admin() || bp_group_is_mod() ) ){
+	
+		$user_selection_required = true; 
+	
+	}
 	?>
 	
+	<h4 class="user-msg"></h4>
 	
 	<h3 class="gform_title">CAFNR International Programs Activity Survey</h3>
+	
+	<?php 
+	if( $user_selection_required ){
+	?>
+		<strong class="required">Select a Faculty Member&nbsp;</strong><span class="gfield_required">*</span><br /><br />
+		<select id="faculty_select_activity_form" name="faculty_select" style="font-size:12pt;width:450px;">
+			<option value="-1" selected="selected">---Select---</option>
+			<!--<option value="add_new_faculty">ADD NEW FACULTY</option>-->
+			<?php foreach ( $group_members as $key => $value ) {
+				$option_output = '<option value="';
+				$option_output .= $key;
+				$option_output .= '">';
+				$option_output .= $value;
+				$option_output .= '</option>';
+				print $option_output;
+				
+			} ?>
+		</select>
+
+	<?php	
+	} 
+	?>
 	
 	<div class="gform_wrapper cafnr_activity">
 		<form id="cafnr_activity_form" class="standard-form" method="post" action="">
@@ -143,7 +174,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_master_type" class="gfield gfield_contains_required required">
 			
 				<label class="gfield_label">
-					In the last 5 years, have you been in involved in ONE of the following activities outside of the United States? (please complete one form per activity)
+					In the last 5 years, have you been in involved in ONE of the following activities outside of the United States?<br />&nbsp;(please complete one form per activity)
 					<span class="gfield_required">*</span>
 				</label>
 				<div class="ginput_container">
@@ -517,6 +548,10 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 
 function cc_cafnr_render_mod_admin_page(){
 	
+	
+	//render the subnav..
+	cc_cafnr_render_tab_subnav();
+	
 	$group_members = cc_cafnr_get_member_array();
 	//get array of ALL activity objects
 	$activity_args = array(
@@ -703,7 +738,7 @@ function cc_cafnr_render_mod_admin_page(){
 
 	<form id="cafnr_faculty_form" class="standard-form" method="post" action="">
 		<strong>Select a Faculty Member to view/edit their Activities:</strong><br /><br />
-		<select id="faculty_select" name="faculty_select" style="font-size:12pt;width:450px;">
+		<select id="faculty_select" class="activity_page" name="faculty_select" style="font-size:12pt;width:450px;">
 			<option value="-1" selected="selected">---Select---</option>
 			<option value="add_new_faculty">ADD NEW FACULTY</option>
 			<?php foreach ( $group_members as $key => $value ) {
@@ -1310,6 +1345,41 @@ function cc_cafnr_all_activities_render(){
 	cc_cafnr_render_all_activity_table( $activities );
 }
 
+/*
+ * Renders Add Faculty Form
+ *
+ *
+ */
+function cc_cafnr_add_faculty_render(){
+
+	cc_cafnr_render_tab_subnav();
+?>
+	<div class="user-msg"></div>
+	<form id="cafnr_faculty_form" class="standard-form" method="post" action="">
+		
+		<div id="newfacultydiv_page" style="">
+
+			<strong>Add new Faculty Member E-Mail Address (REQUIRED):</strong><br /><br />
+			<input type="text" id="newfacultyemail" size="50" />
+			<br /><br />
+			<strong>Add Display Name (optional):</strong><br /><br />
+			<input type="text" id="displayname" size="50" />
+			<br /><br />
+			<strong>Add First Name (optional):</strong><br /><br />
+			<input type="text" id="firstname" size="50" />
+			<br /><br />
+			<strong>Add Last Name (optional):</strong><br /><br />
+			<input type="text" id="lastname" size="50" />
+			<br /><br /><br />
+			<input type="button" id="submitnewfaculty" class="no_reroute" value="Add New Faculty" />
+			<br /><br />			
+		</div>
+	</form>
+
+
+<?php
+}
+
 
 
 /*** UTILITY FUNCTIONS ****/
@@ -1441,6 +1511,31 @@ function cc_cafnr_get_activity_list( ){
  * @return  HTML
  */
 function cc_cafnr_render_tab_subnav(){
+
+	if ( bp_group_is_admin() || bp_group_is_mod() ) { 
+	?>
+		<div id="subnav" class="item-list-tabs no-ajax">
+			<ul class="nav-tabs">
+				<li <?php if ( cc_cafnr_on_survey_dashboard_screen() ) { echo 'class="current"'; } ?>>
+					<a href="<?php echo cc_cafnr_get_home_permalink(); ?>">Get activities by Faculty</a>
+				</li>
+				<li <?php if ( cc_cafnr_on_activity_screen() ) { echo 'class="current"'; } ?>>
+					<a href="<?php echo cc_cafnr_get_activity_permalink(); ?>">Add Activity</a>
+				</li>
+				<li <?php if ( cc_cafnr_on_all_activities_screen() ) { echo 'class="current"'; } ?>>
+					<a href="<?php echo cc_cafnr_get_all_activities_permalink(); ?>">All Activities/Search</a>
+				</li>
+				<li <?php if ( cc_cafnr_add_faculty_screen() ) { echo 'class="current"'; } ?>>
+					<a href="<?php echo cc_cafnr_add_faculty_permalink(); ?>">Add Faculty</a>
+				</li>
+					
+				
+			</ul>
+		</div>
+	
+	
+	<?php
+	} else { 
 	?>
 	<div id="subnav" class="item-list-tabs no-ajax">
 		<ul class="nav-tabs">
@@ -1457,10 +1552,8 @@ function cc_cafnr_render_tab_subnav(){
 			
 		</ul>
 	</div>
-	<?php
+	<?php 
+	}
 }
-
-
-
 
 ?>

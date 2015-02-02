@@ -559,6 +559,19 @@ function delActivity( activityid, author ) {
 	}
 }		
 
+//search form load
+function activitySearchLoad(){
+
+	//populate country drop down from hidden array of countries
+	
+
+
+	//enable search button listener/ajax function
+	activitySearch();
+
+
+}
+
 
 //search activity form via ajax
 function activitySearch() {
@@ -940,8 +953,7 @@ function getCountries(){
 		{	code: "DK",	name: "Denmark"},
 		{	code: "DJ",	name: "Djibouti"},
 		{	code: "DM",	name: "Dominica"},
-		{	code: "DO",	name: "Dominican Republic"
-		},
+		{	code: "DO",	name: "Dominican Republic"		},
 		{	code: "EC",	name: "Ecuador"},
 		{	code: "EG",	name: "Egypt"},
 		{	code: "SV",	name: "El Salvador"},
@@ -967,84 +979,26 @@ function getCountries(){
 		{	code: "GL",	name: "Greenland"},
 		{	code: "GD",	name: "Grenada"},
 		{	code: "GP",	name: "Guadeloupe"},
-		{	code: "GU",	name: "Guam"
-		},
-		{
-			code: "GT",
-			name: "Guatemala"
-		},
-		{
-			code: "GG",
-			name: "Guernsey"
-		},
-		{
-			code: "GN",
-			name: "Guinea"
-		},
-		{
-			code: "GW",
-			name: "Guinea-Bissau"
-		},
-		{
-			code: "GY",
-			name: "Guyana"
-		},
-		{
-			code: "HT",
-			name: "Haiti"
-		},
-		{
-			code: "HM",
-			name: "Heard Island and McDonald Islands"
-		},
-		{
-			code: "VA",
-			name: "Holy See (Vatican City State)"
-		},
-		{
-			code: "HN",
-			name: "Honduras"
-		},
-		{
-			code: "HK",
-			name: "Hong Kong"
-		},
-		{
-			code: "HU",
-			name: "Hungary"
-		},
-		{
-			code: "IS",
-			name: "Iceland"
-		},
-		{
-			code: "IN",
-			name: "India"
-		},
-		{
-			code: "ID",
-			name: "Indonesia"
-		},
-		{
-			code: "IR",
-			name: "Iran, Islamic Republic Of"
-		},
-		{
-			code: "IQ",
-			name: "Iraq"
-		},
-		{
-			code: "IE",
-			name: "Ireland"
-		},
-		{
-			code: "IM",
-			name: "Isle of Man"
-		},
-		{
-			code: "IL",
-			name: "Israel"
-		},
+		{	code: "GU",	name: "Guam"},
+		{	code: "GT",	name: "Guatemala"},
+		{	code: "GG",	name: "Guernsey"},
+		{	code: "GN",	name: "Guinea"},
+		{	code: "GW",	name: "Guinea-Bissau"},
+		{	code: "GY",	name: "Guyana"},
+		{	code: "HT",	name: "Haiti"},
+		{	code: "HM",	name: "Heard Island and McDonald Islands"},
+		{	code: "VA",	name: "Holy See (Vatican City State)"},
+		{	code: "HN",	name: "Honduras"},
+		{	code: "HK",	name: "Hong Kong"},
+		{	code: "HU",	name: "Hungary"},
+		{	code: "IS",	name: "Iceland"},
+		{	code: "IN",	name: "India"},
+		{	code: "ID",	name: "Indonesia"},
+		{	code: "IR",	name: "Iran, Islamic Republic Of"},
+		{	code: "IQ",	name: "Iraq"},
+		{	code: "IE",	name: "Ireland"},
+		{	code: "IM",	name: "Isle of Man"},
+		{	code: "IL",	name: "Israel"},
 		{
 			code: "IT",
 			name: "Italy"
@@ -1629,7 +1583,7 @@ jQuery(document).ready(function($){
 	userFormLoad();
 	
 	//instantiate the activity search
-	activitySearch();
+	activitySearchLoad();
 	
 	//instantiate datepicker
 	jQuery( ".datepicker" ).datepicker({

@@ -1269,9 +1269,13 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 						
 						<td><?php echo cc_cafnr_get_readable( "activity-type", current( $postmeta["activity_radio"] ) ); ?></td>
 						
-						<td class="edit-activity-button"><a href="#" class="button" onclick="delActivity( <?php echo $id . ', ' . $author; ?>)">Delete</a></td>
+						<?php 
+						if( bp_group_is_admin() || bp_group_is_mod() ) { ?>
+							<td class="edit-activity-button"><a href="#" class="button" onclick="delActivity( <?php echo $id . ', ' . $author; ?>)">Delete</a></td>
 						
-						<td class="edit-activity-button"><a href="<?php echo $form_url; ?>" class="button">Edit</a></td>
+							<td class="edit-activity-button"><a href="<?php echo $form_url; ?>" class="button">Edit</a></td>
+						<?php 
+						} ?>
 						<td class="edit-activity-button"><a class="button quick-view-activity" data-activityid="<?php echo $id; ?>" >Quick View</a></td>
 					</tr>
 					
@@ -1295,6 +1299,8 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 //Search activities
 function cc_cafnr_render_activity_search(){
 
+	$countries = get_countries_for_all_activities();
+	
 ?>
 	<table id="activity-search" class="mu-table">
 		<thead>
@@ -1305,7 +1311,9 @@ function cc_cafnr_render_activity_search(){
 		</thead>
 		<tbody>
 			<tr class="search-row">
-				<td colspan="2"><input id="search-text" name="search-text" type="text" placeholder="search by name, title"></input></td>
+				<td colspan="2">
+					<input id="search-text" name="search-text" type="text" placeholder="search by name, title"></input>
+				</td>
 				<td>
 					<select id="search-country">
 						<option value="1">One</option>
@@ -1503,6 +1511,41 @@ function cc_cafnr_get_activity_list( ){
 	//var_dump ($activity_list);
 	return $activity_list;
 }
+
+
+/* 
+ * Returns array of country codes of only countries with activities
+ *
+ * @return array Array of Country codes
+ */
+function get_countries_for_all_activities() {
+	
+	$activities = cc_cafnr_get_activity_list();
+	$countries = array(); //array of project arrays of countries
+	
+	//so much nesting..seriously!
+	foreach( $activities as $key => $value ){
+		foreach( $value as $k => $v ){
+			if( $k == 'postmeta' ) {
+				foreach( $v as $postmeta_key => $postmeta_value ){
+					if( $postmeta_key == "country" ){
+						foreach( $postmeta_value as $meta){
+							array_push( $countries, current( maybe_unserialize( $meta ) ) );
+							//var_dump( current( maybe_unserialize( $meta ) ) );
+						}
+					}
+				}
+				//var_dump( $v );
+			}
+			//var_dump( $k );
+		}
+		//var_dump( $key );
+	}
+	//var_dump( $countries );
+	return( $countries );
+
+}
+
 
 /**
  * Builds the subnav of the CAFNR survey group tab

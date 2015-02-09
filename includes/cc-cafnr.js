@@ -595,7 +595,7 @@ function activitySearch() {
 		
 		
 		//clear old search results
-		jQuery("table#activity-search tr.search-results").html("");
+		jQuery("table#activity-search tr.search-results-header").html("");
 		
 		//TODO: add nonce on both sides
 		//querystring += "&cafnr_ajax_data_nonce=" + nm_ajax.cafnr_ajax_data_nonce;
@@ -627,7 +627,11 @@ function activitySearch() {
 					jQuery.each( data.posts, function(){
 					
 						console.log( this.title ); //works!
+						post_html += '<tr class="search-results">';
 						post_html += '<td colspan="3" class="">' + this.title + '</td>';
+						
+						//now add in activity type and edit/view/delete buttons
+						post_html += '</tr>';
 						
 						//post_html += '</tr>';
 						
@@ -637,9 +641,9 @@ function activitySearch() {
 					//post_html += "<tr>"
 					//post_html +
 					
-					jQuery("table#activity-search tr.search-results").append( post_html );
-					jQuery("table#activity-search tr.search-results .user-msg").html( data.msg );
-					jQuery("table#activity-search tr.search-results").show();
+					jQuery("table#activity-search tr.search-results-header").after( post_html );
+					jQuery("table#activity-search tr.search-results-header .user-msg").html( data.msg );
+					jQuery("table#activity-search tr.search-results-header").show();
 					
 				} else {
 					console.log('well, you searched');

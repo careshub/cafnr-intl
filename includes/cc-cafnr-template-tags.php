@@ -1332,7 +1332,7 @@ function cc_cafnr_render_activity_search(){
 				</td>
 				
 			</tr>
-			<tr class="search-results hidden">
+			<tr class="search-results-header hidden">
 				<td class="user-msg">
 				</td>
 			</tr>

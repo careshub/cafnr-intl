@@ -1189,7 +1189,26 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 					$form_url = $value["form_url"];
 					//$activity_owner = $value["activity_owner"];				
 					$author = $value["author"];		
-					$postmeta = $value["postmeta"];					
+					$postmeta = $value["postmeta"];
+
+					//Information to show in quick view
+					//TODO: account for NULL vals to get rid of warnings..
+					if( $postmeta["subject_textbox"] != NULL ) {
+						$subject = current( $postmeta["subject_textbox"] );
+					} else {
+						$subject = "";
+					}
+					if( $postmeta["start_date"] != NULL ) {
+						$start_timestamp = strtotime (current( $postmeta["start_date"] ) );
+					} else {
+						$start_timestamp = 0;
+					}
+					if( $postmeta["start_date"] != NULL ) {
+						$end_timestamp = strtotime (current( $postmeta["end_date"] ) );
+					} else {
+						$end_timestamp = 0;
+					}
+						
 					
 					echo '<tr><td colspan="3">' . $title . '</td>';
 					//echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
@@ -1199,13 +1218,13 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 					echo '</tr>';
 					?>
 					<tr class="hidden quick-view-tr" colspan="6" data-activityid="<?php echo $id; ?>">
-						<td>Academic Field, Research Focus, or Subject of Activity: <?php echo $subject; ?></td>
+						<td>Academic Field, Research Focus, or Subject of Activity: <?php if( $subject == "" ) { echo '<em>None provided</em>'; } else { echo '<strong>' . $subject . '</strong>'; } ?></td>
 					</tr>
 					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
-						<td>Start Date: <?php echo date('m/d/Y', $start_timestamp); ?> </td>
+						<td>Start Date: <?php if( $start_timestamp == 0) { echo '<em>No start date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $start_timestamp) . '</strong>'; } ?> </td>
 					</tr>
 					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
-						<td>End Date: <?php echo date('m/d/Y', $end_timestamp); ?></td>
+						<td>End Date: <?php if( $end_timestamp == 0) { echo '<em>No end date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $end_timestamp) . '</strong>'; } ?></td>
 					</tr>
 					<?php 
 					echo '<div class="quick-view-info">';
@@ -1299,15 +1318,14 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 						<td class="edit-activity-button"><a class="button quick-view-activity" data-activityid="<?php echo $id; ?>" >Quick View</a></td>
 					</tr>
 					
-					
 					<tr class="hidden quick-view-tr" colspan="6" data-activityid="<?php echo $id; ?>">
-						<td>Academic Field, Research Focus, or Subject of Activity: <?php if( $subject == "" ) { echo '<em>None provided</em>'; } else { echo $subject; } ?></td>
+						<td>Academic Field, Research Focus, or Subject of Activity: <?php if( $subject == "" ) { echo '<em>None provided</em>'; } else { echo '<strong>' . $subject . '</strong>'; } ?></td>
 					</tr>
 					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
-						<td>Start Date: <?php if( $start_timestamp == 0) { echo '<em>No start date provided</em>'; } else { echo date('m/d/Y', $start_timestamp);} ?> </td>
+						<td>Start Date: <?php if( $start_timestamp == 0) { echo '<em>No start date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $start_timestamp) . '</strong>'; } ?> </td>
 					</tr>
 					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
-						<td>End Date: <?php if( $end_timestamp == 0) { echo '<em>No end date provided</em>'; } else { echo date('m/d/Y', $end_timestamp); } ?></td>
+						<td>End Date: <?php if( $end_timestamp == 0) { echo '<em>No end date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $end_timestamp) . '</strong>'; } ?></td>
 					</tr>
 					<?php
 				} ?>

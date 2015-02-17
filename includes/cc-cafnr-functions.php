@@ -37,10 +37,10 @@ function cc_cafnr_get_all_activities_slug(){
     return 'all';
 }
 function cc_cafnr_get_activity_slug(){
-    return 'cafnr-add-activity';
+    return 'add-engagement';
 }
 function cc_cafnr_get_one_activity_slug(){
-	return 'view-activity';
+	return 'view-engagement';
 }
 function cc_cafnr_get_add_faculty_slug(){
 	return 'add-faculty';
@@ -440,6 +440,9 @@ function cc_cafnr_search_activity() {
 			$data['msg'] = "No posts found for that country";
 		}
 		
+	} else {
+		$data['success'] = 0;
+		
 	}
 	
 	
@@ -469,7 +472,7 @@ function cafnr_intl_dashboard_page_template( $page_template )
 add_filter( 'page_template', 'cafnr_activity_page_template' );
 function cafnr_activity_page_template( $page_template )
 {
-    if ( is_page( 'cafnr-add-activity' ) ) {
+    if ( is_page( 'add-engagement' ) ) {
         $page_template = dirname( __FILE__ ) . '/page-templates/cafnr_intl_activity_form.php';
     }
     return $page_template;

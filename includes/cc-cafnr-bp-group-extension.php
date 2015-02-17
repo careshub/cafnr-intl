@@ -6,7 +6,7 @@ class CC_CAFNR_Intl_Extension extends BP_Group_Extension {
     function __construct() {
         $args = array(
             'slug' => cc_cafnr_get_slug(),
-            'name' => 'Survey Dashboard',
+            'name' => 'Engagement Dashboard',
             'visibility' => 'public',
             'enable_nav_item'   => $this->cafnr_tab_is_enabled(),
             // 'access' => 'members',

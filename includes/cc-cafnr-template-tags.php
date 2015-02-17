@@ -1596,13 +1596,13 @@ function cc_cafnr_render_tab_subnav(){
 		<div id="subnav" class="item-list-tabs no-ajax">
 			<ul class="nav-tabs">
 				<li <?php if ( cc_cafnr_on_survey_dashboard_screen() ) { echo 'class="current"'; } ?>>
-					<a href="<?php echo cc_cafnr_get_home_permalink(); ?>">Get activities by Faculty</a>
+					<a href="<?php echo cc_cafnr_get_home_permalink(); ?>">Get Engagements by Faculty</a>
 				</li>
 				<li <?php if ( cc_cafnr_on_activity_screen() ) { echo 'class="current"'; } ?>>
-					<a href="<?php echo cc_cafnr_get_activity_permalink(); ?>">Add Activity</a>
+					<a href="<?php echo cc_cafnr_get_activity_permalink(); ?>">Add Engagement</a>
 				</li>
 				<li <?php if ( cc_cafnr_on_all_activities_screen() ) { echo 'class="current"'; } ?>>
-					<a href="<?php echo cc_cafnr_get_all_activities_permalink(); ?>">All Activities/Search</a>
+					<a href="<?php echo cc_cafnr_get_all_activities_permalink(); ?>">All Engagements</a>
 				</li>
 				<li <?php if ( cc_cafnr_add_faculty_screen() ) { echo 'class="current"'; } ?>>
 					<a href="<?php echo cc_cafnr_add_faculty_permalink(); ?>">Add Faculty</a>
@@ -1619,13 +1619,13 @@ function cc_cafnr_render_tab_subnav(){
 	<div id="subnav" class="item-list-tabs no-ajax">
 		<ul class="nav-tabs">
 			<li <?php if ( cc_cafnr_on_survey_dashboard_screen() ) { echo 'class="current"'; } ?>>
-				<a href="<?php echo cc_cafnr_get_home_permalink(); ?>">My Activities/Info</a>
+				<a href="<?php echo cc_cafnr_get_home_permalink(); ?>">My Engagement</a>
 			</li>
 			<li <?php if ( cc_cafnr_on_activity_screen() ) { echo 'class="current"'; } ?>>
-				<a href="<?php echo cc_cafnr_get_activity_permalink(); ?>">Add Activity</a>
+				<a href="<?php echo cc_cafnr_get_activity_permalink(); ?>">Add Engagement</a>
 			</li>
 			<li <?php if ( cc_cafnr_on_all_activities_screen() ) { echo 'class="current"'; } ?>>
-				<a href="<?php echo cc_cafnr_get_all_activities_permalink(); ?>">All Activities/Search</a>
+				<a href="<?php echo cc_cafnr_get_all_activities_permalink(); ?>">All Engagements</a>
 			</li>
 				
 			

@@ -124,6 +124,11 @@ a.reload-page {
 .mu-table tr.quick-view-tr td{
 	border:none;
 	padding-left:2em;
+	max-width:500px;
+}
+
+a#submit-activity-search{
+	cursor:pointer;
 }
 
 

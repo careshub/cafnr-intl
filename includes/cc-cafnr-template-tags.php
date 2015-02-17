@@ -606,7 +606,7 @@ function cc_cafnr_render_mod_admin_page(){
 						$("#userinfo").show();
 						$("#newfacultydiv").hide();
 						$("#cafnr_faculty_form").hide();
-						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a class='reload-page'>select different faculty</a>)");
+						$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Engagements&nbsp;&nbsp;(<a class='reload-page'>select different faculty</a>)");
 						
 					});
 				</script>
@@ -632,7 +632,7 @@ function cc_cafnr_render_mod_admin_page(){
 				$("#userinfo").show();
 				$("#newfacultydiv").hide();
 				$("#cafnr_faculty_form").hide();
-				$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Activities&nbsp;&nbsp;(<a href='" + cafnr_ajax.surveyDashboard + "'>select different faculty</a>)");
+				$("#nameactivity").html("<?php echo $user_info->display_name; ?>'s Engagements&nbsp;&nbsp;(<a href='" + cafnr_ajax.surveyDashboard + "'>select different faculty</a>)");
 				
 			});
 		</script>
@@ -1188,7 +1188,8 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 					$url = $value["url"];
 					$form_url = $value["form_url"];
 					//$activity_owner = $value["activity_owner"];				
-					$author = $value["author"];				
+					$author = $value["author"];		
+					$postmeta = $value["postmeta"];					
 					
 					echo '<tr><td colspan="3">' . $title . '</td>';
 					//echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
@@ -1257,11 +1258,19 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 					//TODO: account for NULL vals to get rid of warnings..
 					if( $postmeta["subject_textbox"] != NULL ) {
 						$subject = current( $postmeta["subject_textbox"] );
+					} else {
+						$subject = "";
 					}
 					if( $postmeta["start_date"] != NULL ) {
 						$start_timestamp = strtotime (current( $postmeta["start_date"] ) );
+					} else {
+						$start_timestamp = 0;
 					}
-					$end_timestamp = strtotime (current( $postmeta["end_date"] ) );
+					if( $postmeta["start_date"] != NULL ) {
+						$end_timestamp = strtotime (current( $postmeta["end_date"] ) );
+					} else {
+						$end_timestamp = 0;
+					}
 					
 					//var_dump( $start_timestamp );
 					//is this the pi's writeup?
@@ -1276,7 +1285,7 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 					?>
 					
 					<tr>
-						<td colspan="3" class="<?php if( $is_pi ){ echo 'strong'; }?>"><?php echo $title; ?></td>
+						<td colspan="3" class="<?php if( $is_pi ){ }?>"><?php echo $title; ?></td>
 						
 						<td><?php echo cc_cafnr_get_readable( "activity-type", current( $postmeta["activity_radio"] ) ); ?></td>
 						
@@ -1290,14 +1299,15 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 						<td class="edit-activity-button"><a class="button quick-view-activity" data-activityid="<?php echo $id; ?>" >Quick View</a></td>
 					</tr>
 					
+					
 					<tr class="hidden quick-view-tr" colspan="6" data-activityid="<?php echo $id; ?>">
-						<td>Academic Field, Research Focus, or Subject of Activity: <?php echo $subject; ?></td>
+						<td>Academic Field, Research Focus, or Subject of Activity: <?php if( $subject == "" ) { echo '<em>None provided</em>'; } else { echo $subject; } ?></td>
 					</tr>
 					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
-						<td>Start Date: <?php echo date('m/d/Y', $start_timestamp); ?> </td>
+						<td>Start Date: <?php if( $start_timestamp == 0) { echo '<em>No start date provided</em>'; } else { echo date('m/d/Y', $start_timestamp);} ?> </td>
 					</tr>
 					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
-						<td>End Date: <?php echo date('m/d/Y', $end_timestamp); ?></td>
+						<td>End Date: <?php if( $end_timestamp == 0) { echo '<em>No end date provided</em>'; } else { echo date('m/d/Y', $end_timestamp); } ?></td>
 					</tr>
 					<?php
 				} ?>
@@ -1476,6 +1486,8 @@ function cc_cafnr_get_faculty_activity_url_list( $user_id ){
 		$activity_list[$count]['url'] = get_site_url() . '/' . $post->post_name;
 		//$activity_list[$count]['activity_owner'] = $post->activity_owner;
 		$activity_list[$count]['author'] = $post->post_author;
+		$activity_list[$count]['postmeta'] = get_post_meta( $post->ID );
+		
 		$count++;
 	}
 

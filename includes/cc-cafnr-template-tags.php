@@ -267,6 +267,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				<div class="ginput_container">
 					<select id="cafnr_activity_name" class="medium gfield_select" tabindex="6" onchange="" name="cafnr_activity_name">
 						<option <?php if ( !isset( $post_id ) ) echo 'selected="selected"'; ?> value="-1">---Select---</option>
+						<option value="add_new_activity">ADD NEW ENGAGEMENT</option>
 						<?php $count = 1;
 						//echo $activities->found_posts;
 						foreach ( $activities_array as $key => $value ){ 
@@ -282,13 +283,12 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							print $option_output;
 							
 						} ?>
-						<option value="add_new_activity">ADD NEW ACTIVITY</option>
 					</select>
 				</div>
 			</li>
 			
 			<li id="cafnr_add_activity_title" class="gfield no-title">
-				<label class="gfield_label" for="input_22_10">Add Title of New Activity Here:</label>
+				<label class="gfield_label" for="input_22_10">Add Title of New Engagement Here:</label>
 				<div class="ginput_container">
 					<input id="add_activity_title" class="medium" type="text" tabindex="7" value="" name="add_activity_title">
 				</div>
@@ -296,7 +296,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			
 			<li id="cafnr_pi_radio" class="gfield gfield_contains_required required research-only">
 				<label class="gfield_label">
-					Are you the PI/leader of this activity?
+					Are you the PI/leader of this engagement?
 					<span class="gfield_required">*</span>
 				</label>
 				<div class="ginput_container">
@@ -314,7 +314,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</li>
 			
 			<li id="cafnr_who_is_pi" class="gfield non-pi-only research-only hidden-on-init" style="">
-				<label class="gfield_label" for="cafnr_activity_pi">Who is the PI/leader of this activity?</label>
+				<label class="gfield_label" for="cafnr_activity_pi">Who is the PI/leader of this engagement?</label>
 				<div class="ginput_container">
 					<select id="who_is_pi" class="medium gfield_select" tabindex="10" name="who_is_pi">
 						<option value="-1">---Select---</option>
@@ -1311,7 +1311,8 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 function cc_cafnr_render_activity_search(){
 
 	$countries = get_countries_for_all_activities();
-	
+	$countries = array_unique( $countries );
+	sort($countries);
 ?>
 
 	<table id="activity-search" class="mu-table">

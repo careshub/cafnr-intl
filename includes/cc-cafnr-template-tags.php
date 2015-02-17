@@ -137,7 +137,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	
 	<h4 class="user-msg"></h4>
 	
-	<h3 class="gform_title">CAFNR International Programs Activity Survey</h3>
+	<h3 class="gform_title">CAFNR International Programs Engagement Survey</h3>
 	
 	<?php 
 	if( $user_selection_required ){
@@ -537,7 +537,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</li>
 			
 		
-		<input type="submit" id="activity-submit" name="SubmitButton" value="SUBMIT ACTIVITY" />
+		<input type="submit" id="activity-submit" name="SubmitButton" value="SUBMIT ENGAGEMENT" />
 		
 		</form>
 	</div>
@@ -1182,6 +1182,7 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 				<?php 
 				foreach ( $activities as $key => $value ){ //TODO: add VIEW
 					
+					//var_dump( $activities );
 					$id = $value["id"];
 					$title = $value["title"];
 					$url = $value["url"];
@@ -1195,7 +1196,17 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 					echo '<td class="edit-activity-button"><a href="' . $form_url . '" class="button">Edit</a></td>';
 					echo '<td class="edit-activity-button"><a class="button quick-view-activity" data-activityid="' . $id . '">Quick View</a></td>';
 					echo '</tr>';
-					
+					?>
+					<tr class="hidden quick-view-tr" colspan="6" data-activityid="<?php echo $id; ?>">
+						<td>Academic Field, Research Focus, or Subject of Activity: <?php echo $subject; ?></td>
+					</tr>
+					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
+						<td>Start Date: <?php echo date('m/d/Y', $start_timestamp); ?> </td>
+					</tr>
+					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
+						<td>End Date: <?php echo date('m/d/Y', $end_timestamp); ?></td>
+					</tr>
+					<?php 
 					echo '<div class="quick-view-info">';
 					echo '<tr class="hidden quick-view-info" data-activityid="' . $id . '">';
 					echo '<td>stuff</td>';
@@ -1226,7 +1237,7 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 		<table class="mu-table">
 			<thead>
 				<tr>
-					<th scope="col" colspan="6"><span id="nameactivity">All Activities</span></th>	
+					<th scope="col" colspan="6"><span id="nameactivity">All Engagements</span></th>	
 					
 				</tr>
 			</thead>
@@ -1306,7 +1317,7 @@ function cc_cafnr_render_activity_search(){
 	<table id="activity-search" class="mu-table">
 		<thead>
 			<tr>
-				<th scope="col" colspan="6"><span id="nameactivity">Search Activities</span></th>	
+				<th scope="col" colspan="6"><span id="nameactivity">Search Engagements</span></th>	
 				
 			</tr>
 		</thead>

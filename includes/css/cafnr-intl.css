@@ -130,6 +130,13 @@ a.reload-page {
 a#submit-activity-search{
 	cursor:pointer;
 }
+input#add_activity_title,
+input#subject_textbox,
+input#country_lead,
+input#cafnr_write_in_pi {
+	min-width:250px;
+}
+
 
 
 

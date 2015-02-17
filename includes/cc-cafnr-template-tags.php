@@ -1172,9 +1172,9 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 				<tr>
 					<th scope="col" colspan="3"><span id="nameactivity"></span></th>	
 					<?php if ( bp_group_is_admin() || bp_group_is_mod() ) { ?>
-						<th class="add-activity-button" scope="col" colspan="3"><a href="<?php echo cc_cafnr_get_activity_permalink() . "?user=" . $which_user; ?>" class="button">+ Add New Activity</a></th>
+						<th class="add-activity-button" scope="col" colspan="3"><a href="<?php echo cc_cafnr_get_activity_permalink() . "?user=" . $which_user; ?>" class="button">+ Add New Engagement</a></th>
 					<?php } else { ?>
-						<th class="add-activity-button" scope="col" colspan="3"><a href="<?php echo cc_cafnr_get_activity_permalink(); ?>" class="button">+ Add New Activity</a></th>
+						<th class="add-activity-button" scope="col" colspan="3"><a href="<?php echo cc_cafnr_get_activity_permalink(); ?>" class="button">+ Add New Engagement</a></th>
 					<?php } ?>
 				</tr>
 			</thead>

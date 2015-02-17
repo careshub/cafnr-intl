@@ -58,7 +58,7 @@ function clickListen(){
 		jQuery('#cafnr_activity_name option').each( function() {
 			if( jQuery(this).is(':selected') && ( jQuery(this).val() == "add_new_activity") ){
 				jQuery('.no-title').fadeIn();
-			} else {
+			} else if ( jQuery(this).is(':selected') && jQuery(this).val() != "add_new_activity") {
 				jQuery('.no-title').fadeOut();
 			}
 		});

@@ -737,7 +737,7 @@ function cc_cafnr_render_mod_admin_page(){
 ?>
 
 	<form id="cafnr_faculty_form" class="standard-form" method="post" action="">
-		<strong>Select a Faculty Member to view/edit their Activities:</strong><br /><br />
+		<strong>Select a Faculty Member to view/edit their Engagements:</strong><br /><br />
 		<select id="faculty_select" class="activity_page" name="faculty_select" style="font-size:12pt;width:450px;">
 			<option value="-1" selected="selected">---Select---</option>
 			<option value="add_new_faculty">ADD NEW FACULTY</option>
@@ -936,7 +936,7 @@ function cc_cafnr_render_member_page(){
 				$("#userinfo").show();
 				$("#newfacultydiv").hide();
 				$("#cafnr_faculty_form").hide();
-				$("#nameactivity").html("<?php echo $current_user->display_name; ?>'s Activities");
+				$("#nameactivity").html("<?php echo $current_user->display_name; ?>'s Engagements");
 				
 			});
 		</script>

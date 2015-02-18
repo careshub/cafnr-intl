@@ -536,7 +536,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 					?>
 			</li>
 			
-		
+		<?php
+		//TODO: reroute after or have confirmation message (w/activity id in url)
+		?>
 		<input type="submit" id="activity-submit" name="SubmitButton" value="SUBMIT ENGAGEMENT" />
 		
 		</form>
@@ -1638,7 +1640,7 @@ function cc_cafnr_render_tab_subnav(){
 		<div id="subnav" class="item-list-tabs no-ajax">
 			<ul class="nav-tabs">
 				<li <?php if ( cc_cafnr_on_survey_dashboard_screen() ) { echo 'class="current"'; } ?>>
-					<a href="<?php echo cc_cafnr_get_home_permalink(); ?>">Get Engagements by Faculty</a>
+					<a href="<?php echo cc_cafnr_get_home_permalink(); ?>">Engagements by Faculty</a>
 				</li>
 				<li <?php if ( cc_cafnr_on_activity_screen() ) { echo 'class="current"'; } ?>>
 					<a href="<?php echo cc_cafnr_get_activity_permalink(); ?>">Add Engagement</a>
@@ -1661,7 +1663,7 @@ function cc_cafnr_render_tab_subnav(){
 	<div id="subnav" class="item-list-tabs no-ajax">
 		<ul class="nav-tabs">
 			<li <?php if ( cc_cafnr_on_survey_dashboard_screen() ) { echo 'class="current"'; } ?>>
-				<a href="<?php echo cc_cafnr_get_home_permalink(); ?>">My Engagement</a>
+				<a href="<?php echo cc_cafnr_get_home_permalink(); ?>">My Engagements</a>
 			</li>
 			<li <?php if ( cc_cafnr_on_activity_screen() ) { echo 'class="current"'; } ?>>
 				<a href="<?php echo cc_cafnr_get_activity_permalink(); ?>">Add Engagement</a>

@@ -467,8 +467,8 @@ function activityFormSave() {
 			url: cafnr_ajax.adminAjax,
 			data: querystring,
 			success: function(data, textStatus, jqXHR){
-				jQuery('#infobar').show().html("<p>Your changes have been saved.</p>");
-				jQuery('#infobar').show().html("<p>Your changes have been saved.</p>");
+				jQuery('#infobar').css("padding", "0px 6px");
+				jQuery('#infobar').show().html("<p>Submission successful, <a href='" + cafnr_ajax.addEngagement + "'>add another engagement?</a></p>");
 				window.setTimeout(
 					//function(){ jQuery("#infobar").fadeOut(); },
 					5000
@@ -485,7 +485,7 @@ function activityFormSave() {
 				jQuery('#PageLoader').fadeIn();
 			},
 			complete: function(jqXHR, textStatus){
-				jQuery(".save-msg").html("Your activity has been submitted.");
+				jQuery(".save-msg").html("<p>Submission successful, <a href='" + cafnr_ajax.addEngagement + "'>add another engagement?</a></p>");
 			
 				jQuery.ajax({
 					type: "POST",
@@ -506,7 +506,7 @@ function activityFormSave() {
 				//redirect to the dashboard
 				//TODO: check for user param, activity param for message
 				//window.location = cafnr_ajax.surveyDashboard
-				window.location = cafnr_ajax.allEngagements;
+				//window.location = cafnr_ajax.allEngagements;
 				
 			},
 			error: function (xhr, ajaxOptions, thrownError) {

@@ -1344,7 +1344,7 @@ function cc_cafnr_render_activity_search(){
 	$countries = array_unique( $countries );
 	sort($countries);
 ?>
-
+	<div id="infobar"></div>
 	<table id="activity-search" class="mu-table">
 		<thead>
 			<tr>

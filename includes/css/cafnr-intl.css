@@ -19,6 +19,10 @@ a.reload-page {
 	cursor:pointer;
 }
 
+#infobar{
+	background-color:#00ff99;
+	width:100%;
+}
 .user-msg{
 	font-weight:bold;
 	color:red;
@@ -29,8 +33,13 @@ a.reload-page {
 .save-msg{
 	font-weight:bold;
 	font-style:italic;
-	padding-left: 8px;
-	display:inline;
+	padding:0 8px;
+	display:inline-block;
+	background-color:#00ff99;
+	margin-left:8px;
+}
+.save-msg p {
+	margin-bottom:0 !important;
 }
 
 #cafnr_activity_upload {

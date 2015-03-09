@@ -182,7 +182,8 @@ function cafnr_intl_scripts() {
 			'homeURL' => get_site_url(),
 			'groupID' => cc_cafnr_get_group_id(),
 			'surveyDashboard' => cc_cafnr_get_home_permalink(),
-			'allEngagements' => cc_cafnr_get_all_activities_permalink()
+			'allEngagements' => cc_cafnr_get_all_activities_permalink(),
+			'addEngagement' => cc_cafnr_get_activity_permalink()
 			)
 	);
 }

@@ -539,7 +539,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		<?php
 		//TODO: reroute after or have confirmation message (w/activity id in url)
 		?>
-		<input type="submit" id="activity-submit" name="SubmitButton" value="SUBMIT ENGAGEMENT" />
+		<span><input type="submit" id="activity-submit" name="SubmitButton" value="SUBMIT ENGAGEMENT" /><div class="save-msg"></div></span>
 		
 		</form>
 	</div>

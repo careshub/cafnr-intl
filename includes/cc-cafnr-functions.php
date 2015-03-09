@@ -181,7 +181,8 @@ function cafnr_intl_scripts() {
 			'adminAjax' => admin_url( 'admin-ajax.php' ),
 			'homeURL' => get_site_url(),
 			'groupID' => cc_cafnr_get_group_id(),
-			'surveyDashboard' => cc_cafnr_get_home_permalink()
+			'surveyDashboard' => cc_cafnr_get_home_permalink(),
+			'allEngagements' => cc_cafnr_get_all_activities_permalink()
 			)
 	);
 }

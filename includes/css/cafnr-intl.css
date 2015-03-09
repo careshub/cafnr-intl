@@ -26,6 +26,12 @@ a.reload-page {
 .greyed{
 	color:#666666;
 }
+.save-msg{
+	font-weight:bold;
+	font-style:italic;
+	padding-left: 8px;
+	display:inline;
+}
 
 #cafnr_activity_upload {
 	background-color: #eaeaea;

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * CC CAFNR International Functions
  *
@@ -8,8 +8,8 @@
  * @copyright 2014 CommmunityCommons.org
  */
 
- 
- 
+
+
 /**
  * Are we on the CAFNR survey tab?
  *
@@ -65,7 +65,7 @@ function cc_cafnr_is_cafnr_group(){
 function cc_cafnr_get_group_id(){
     switch ( get_home_url() ) {
         case 'http://commonsdev.local':
-            $group_id = 596;
+            $group_id = 540;
             break;
 		case 'http://localhost/cc_local':
             $group_id = 622;  //596
@@ -80,14 +80,14 @@ function cc_cafnr_get_group_id(){
             $group_id = 622;
             break;
     }
-	
+
     return $group_id;
 }
 
 
 /**
  * Get URIs for the various pieces of this tab
- * 
+ *
  * @return string URL
  */
 function cc_cafnr_get_home_permalink( $group_id = false ) {
@@ -120,7 +120,7 @@ function cc_cafnr_add_faculty_permalink( $group_id = false  ){
     $permalink = cc_cafnr_get_home_permalink( $group_id ) . cc_cafnr_get_add_faculty_slug() . '/';
     return apply_filters( "cc_cafnr_add_faculty_permalink", $permalink, $group_id);
 }
-	
+
 /**
  * Where are we?
  * Checks for the various screens
@@ -165,13 +165,13 @@ function cc_cafnr_add_faculty_screen(){
 function cafnr_intl_scripts() {
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'plupload' );
-	
+
 	//dirname( __FILE__ )
-	
+
 	wp_enqueue_script( 'cc-cafnr', plugins_url( '/cc-cafnr.js', __FILE__), array(), '1.0.0', true );
 	wp_enqueue_style( 'datepicker-style', plugins_url( '/css/datepicker.css', __FILE__) );
 	wp_enqueue_style( 'gf-style',  plugins_url( '/css/g_forms_styles.css', __FILE__) );
-	wp_enqueue_style( 'cafnr-style', plugins_url( '/css/cafnr-intl.css', __FILE__) );	
+	wp_enqueue_style( 'cafnr-style', plugins_url( '/css/cafnr-intl.css', __FILE__) );
 
 	//so we can use vars in js functions
 	wp_localize_script(
@@ -192,9 +192,9 @@ add_action( 'wp_enqueue_scripts', 'enqueue_go', 7 );
 function enqueue_go(){
 	if( cc_cafnr_is_component() ){
 		add_action( 'wp_enqueue_scripts', 'cafnr_intl_scripts' );
-	} 
+	}
 }
- 
+
 /*
  * Register CAFNR Activity
  *
@@ -244,7 +244,7 @@ function cc_cafnr_activity_taxonomy_register() {
 	    'all_items'	=> __( 'All CAFNR Activity Types' ),
 	    'parent_item' => null,
 	    'parent_item_colon'	=> null,
-	    'edit_item' => __( 'Edit CAFNR Activity Type' ), 
+	    'edit_item' => __( 'Edit CAFNR Activity Type' ),
 	    'update_item' => __( 'Update CAFNR Activity Type' ),
 	    'add_new_item' => __( 'Add New CAFNR Activity Type' ),
 	    'new_item_name' => __( 'New CAFNR Activity Type' ),
@@ -254,7 +254,7 @@ function cc_cafnr_activity_taxonomy_register() {
 	    'not_found' => __( 'No CAFNR Activity types found.' ),
 	    'menu_name' => __( '-- Edit CAFNR Activity Types' )
 	);
-	
+
 	$args = array(
 		'hierarchical' => true,
 	    'labels' => $labels,
@@ -263,7 +263,7 @@ function cc_cafnr_activity_taxonomy_register() {
 	    'query_var' => true,
 	    'rewrite' => array( 'slug' => 'cafnr-activity-type' )
 	);
-	
+
 	register_taxonomy( 'cafnr-activity-type', 'cafnr-activity', $args );
 }
 add_action( 'init', 'cc_cafnr_activity_taxonomy_register' );
@@ -286,32 +286,32 @@ function cc_cafnr_populate_group_members(){
 	global $bp;
 	$group_id = cc_cafnr_get_group_id();
 	$group = groups_get_group( array( ‘group_id’ => $group_id ) );
-	
-	
+
+
 	//return array($group_id);
-	
+
 	//if not a drop down of the class name cc-cafnr-populate-members, get out of here
 //	if($field['type'] != 'select' || strpos($field['cssClass'], 'cc-cafnr-populate-members') === false)
 	    //continue;
 
 	$choices = array(array('text' => 'Select a Post', 'value' => ' '));
-	
+
 	if ( bp_group_has_members( '$group' ) ) {
-	
+
 	?>
-	
-			<?php while ( bp_group_members() ) : bp_group_the_member(); 
- 
-			$choices[] = array('text' => '1', 'value' => bp_group_member_link() );		
+
+			<?php while ( bp_group_members() ) : bp_group_the_member();
+
+			$choices[] = array('text' => '1', 'value' => bp_group_member_link() );
 			?>
-			
+
 			<?php endwhile; ?>
-			
-			<?php $field['choices'] = $choices; 
+
+			<?php $field['choices'] = $choices;
 			return $choices; ?>
-	
+
 	<?php } else {
-		
+
 		$field['choices'] = array('text' => '1', 'value' => 'holder');
 		$choices = array('text' => '1', 'value' => 'holder');
 		return $choices;
@@ -329,9 +329,9 @@ function cc_cafnr_populate_group_members(){
  * @return json
  */
 function cc_cafnr_activity_upload() {
-	
+
 	$new_file = wp_handle_upload( $_FILES['activity_uploads'], array( 'test_form' => false ) );
-	
+
 	if ( $new_file ) {
 		$new_file['fileBaseName'] = basename( $new_file['file'] );
 		echo json_encode( $new_file );
@@ -349,9 +349,9 @@ add_action( 'wp_ajax_activity_upload', 'cc_cafnr_activity_upload' );
  * @return json
  */
 function cc_cafnr_user_upload() {
-	
+
 	$new_file = wp_handle_upload( $_FILES['user_uploads'], array( 'test_form' => false ) );
-	
+
 	if ( $new_file ) {
 		$new_file['fileBaseName'] = basename( $new_file['file'] );
 		echo json_encode( $new_file );
@@ -369,16 +369,16 @@ add_action( 'wp_ajax_user_upload', 'cc_cafnr_user_upload' );
  * @return json
  */
 function cc_cafnr_activity_upload_delete() {
-	
-	$current_user = wp_get_current_user(); 
-	
+
+	$current_user = wp_get_current_user();
+
 	//make sure user is author or admin
 	$user_id = $_POST['user_id'];
 	$attach_id = $_POST['attachment_id'];
 	$parent_id = get_post_field( 'post_parent', $attach_id );
-	
+
 	$post_author = get_post_field( 'post_author', $parent_id );
-	
+
 	//if !author or ( bp_group_is_admin() || bp_group_is_mod() ), don't allow deletion!
 	if ( ( $current_user->ID != $post_author ) && !( bp_group_is_admin() || bp_group_is_mod() ) ) {
 		$data['error'] = $post_author . 'you do not have permission to delete this file';
@@ -389,12 +389,12 @@ function cc_cafnr_activity_upload_delete() {
 		echo json_encode( $data );
 		die();
 	}
-	
+
 	$data['success'] = wp_delete_attachment( $attach_id );
-	
+
 	echo json_encode( $data );
 	die();
-	
+
 }
 
 add_action( 'wp_ajax_activity_upload_delete', 'cc_cafnr_activity_upload_delete' );
@@ -407,33 +407,33 @@ add_action( 'wp_ajax_activity_upload_delete', 'cc_cafnr_activity_upload_delete' 
  * @return json
  */
 function cc_cafnr_search_activity() {
-	
+
 	//get search params
 	$country = $_POST['country'];
 	$search_text = $_POST['search_text'];
-	
+
 	//if they didn't really search for anything, return error message
 	if ( ( $country == '-1' ) && ( $search_text == '' ) ) {
 		$data['msg'] = "* Error: Please enter text or select a country";
 		$data['success'] = 0;
-		
+
 		echo json_encode( $data );
 		die();
-		
+
 	} else if ( $search_text == "" ) {
 		//search by country only, will entail unpackaging the posts and looking at each meta
 		$query_args = array(
 			'post_type' => 'cafnr-activity',
-			'post_status' => 'publish',	
+			'post_status' => 'publish',
 			'posts_per_page' => -1
 		);
-		
+
 		$user_activity_posts = get_posts( $query_args );
-		
+
 		$country_posts = filter_posts_by_country( $user_activity_posts, $country );
 		//var_dump($ country
 		$activity_list = cc_cafnr_get_activity_list( $country_posts );
-		
+
 		if( !( empty( $activity_list ) ) ){
 			//$data['posts'] = $country_posts;
 			$data['posts'] = $activity_list;
@@ -441,16 +441,16 @@ function cc_cafnr_search_activity() {
 			$data['success'] = "no posts";
 			$data['msg'] = "No posts found for that country";
 		}
-		
+
 	} else {
 		$data['success'] = 0;
-		
+
 	}
-	
-	
+
+
 	echo json_encode( $data );
 	die();
-	
+
 }
 
 add_action( 'wp_ajax_cafnr_search_activity', 'cc_cafnr_search_activity' );
@@ -527,11 +527,11 @@ function add_cafnr_faculty() {
 			// Email the user: TODO: are we doing this?
 			//wp_mail( $email_address, 'Welcome!', 'Your Password: ' . $password );
 			//cc_cafnr_automatic_group_membership( $user_id );
-			
+
 			//add user to this group
 			$group_id = cc_cafnr_get_group_id();
 			groups_accept_invite( $user_id, $group_id );
-			
+
 			echo $user_id;
 		} // end if
 
@@ -545,7 +545,7 @@ function cafnr_intl_edit_activity(){
 
 	//Functionality to deal with $_POSTed form data
 	//echo "<div class='usr-msg'>Success in saving!</div>";
-	
+
 	//TODO: add is author. mod or admin permissions to this submit
 	if ( $_POST['new_activity'] == 'edit_activity' || $_POST['new_activity'] == 'new_activity' ) {
 		//only logged-in users can submit this form
@@ -553,30 +553,30 @@ function cafnr_intl_edit_activity(){
 			wp_redirect( home_url() ); //TODO: where to go?
 			exit;
 		}
-		
+
 		//update existing post
 		if ( isset( $_POST['activity_id'] ) && ( $_POST['activity_id'] > 0 ) ){
 			$activity_id = $_POST['activity_id'];
-			
+
 			//update the post fields, if need be - just summary?
 			$updating_post = array(
 				'ID' => $activity_id,
 				'post_content' => $_POST['activity_summary']
 				);
 			wp_update_post( $updating_post );
-			
+
 			$activity_name = get_the_title( $activity_id );
-			
+
 		} else if ( ( $_POST['cafnr_activity_name'] != '-1' ) && ( $_POST['cafnr_activity_name'] != 'add_new_activity' ) ){
-			
+
 			//new activity with parent name
-			
+
 			//we already have an id, so let's create a child post of same name, yes?
 			$parent_activity_id = $_POST['cafnr_activity_name'];
-			
+
 			//get the activity title
 			$activity_name = get_the_title( $parent_activity_id );
-			
+
 			//from here, we'll create a child post of the parent w/same name, current user author
 			$activity = array(
 				'post_title' => $activity_name,
@@ -585,24 +585,24 @@ function cafnr_intl_edit_activity(){
 				'post_content' => $_POST['activity_summary'],
 				'post_parent' => $parent_activity_id
 			);
-			
+
 			$activity_id = wp_insert_post( $activity );
-			
+
 		} else { //completely new activity with no parent
-			
+
 			$activity_name = $_POST['add_activity_title'];
-			
+
 			$activity = array(
 				'post_title' => $activity_name,
 				'post_type' => 'cafnr-activity',
 				'post_status' => 'publish',
 				'post_content' => $_POST['activity_summary']
 			);
-			
+
 			$activity_id = wp_insert_post( $activity );
-			
+
 		}
-		
+
 		//set post author based on user id (TODO: change this methodology to be secure, once !admins/mods can access this form.)
 		if ( $_POST['user_id'] > 0 ){  //if we have an activity_owner as a param
 			$updating_post = array(
@@ -610,12 +610,12 @@ function cafnr_intl_edit_activity(){
 				'post_author'	=> $_POST['user_id']
 				);
 			wp_update_post( $updating_post );
-			
+
 			//TODO: remove this meta field, once post_author is set up correctly
 			//Post author may not be activity owner (in the case of Ben filling out form for another faculty member) so we need post_meta field to capture true owner
 			update_post_meta( $activity_id, 'activity_owner', $_GET['user'] );
 		}
-		
+
 		//project-specific meta fields (the easy ones)
 		$activity_fields = array(
 				'activity_radio', //save to custom taxonomy instead?
@@ -624,7 +624,7 @@ function cafnr_intl_edit_activity(){
 				'subject_textbox',
 				'non_pi_role',
 				'funding_source'
-				
+
 			);
 		foreach ( $activity_fields as $f ) {
 			if (isset($_POST[$f])) {
@@ -635,18 +635,18 @@ function cafnr_intl_edit_activity(){
 				}
 			}
 		}
-		
+
 		//What countries and regions are we in?
 		$i = 1;
-		
+
 		//first, remove all prior countries in database
 		delete_post_meta($activity_id, 'country');
-		
+
 		while ( isset($_POST['countrylist-'.$i] ) ) {
-			
+
 			//create array to hold country meta
 			$country_meta_array = array();
-			
+
 			if ( $_POST['countrylist-'.$i] != "" ) {
 				$country_meta_array[] = $_POST['countrylist-'.$i];
 				if ( isset( $_POST['region-'.$i] ) ) {
@@ -659,12 +659,12 @@ function cafnr_intl_edit_activity(){
 			unset( $country_meta_array );
 			$i++;
 		}
-		
-		//Is this user the pi? 
+
+		//Is this user the pi?
 		if( isset ( $_POST['pi_radio'] ) ){
 			update_post_meta( $activity_id, 'is_pi', $_POST['pi_radio'] );
 		}
-		
+
 		//dates!
 		if ( !empty ( $_POST['start_date'] ) ){
 			//because we're converting to date, we need to account for 0 (else it's 1970 and it's time to move on..)
@@ -675,7 +675,7 @@ function cafnr_intl_edit_activity(){
 				update_post_meta( $activity_id, 'start_date', $startDate );
 			}
 		}
-		
+
 		if ( isset ( $_POST['end_date'] ) ){
 			if ( ( $_POST['end_date'] == "") || $_POST['end_date'] == 0 ) {
 				update_post_meta( $activity_id, 'end_date', "" );
@@ -684,14 +684,14 @@ function cafnr_intl_edit_activity(){
 				update_post_meta( $activity_id, 'end_date', $endDate );
 			}
 		}
-		
+
 		//TODO: account for write-in PI in drop down! (get all meta of 'who_is_pi' for all cafnr-activity post types
 		if ( isset ( $_POST['who_is_pi'] ) ){
 			update_post_meta( $activity_id, 'who_is_pi', "" );
 		}
 		//Activity type (the radio one)
 		wp_set_object_terms( $activity_id, $_POST['activity_radio'], 'cafnr-activity-type' );
-		
+
 		//supplemental links - many inputs of same name
 		if ( isset( $_POST['supplemental_links'] ) ) {
 			//clean sweep on every save
@@ -701,7 +701,7 @@ function cafnr_intl_edit_activity(){
 					add_post_meta( $activity_id, 'supplemental_links', $link, false );  //false since not unique
 			}
 		}
-		
+
 		//collaborating people/institutions - many inputs of same name
 		if ( isset( $_POST['collaborating'] ) ) {
 			//clean sweep on every save
@@ -721,11 +721,11 @@ function cafnr_intl_edit_activity(){
 				add_post_meta( $activity_id, 'activity_checkbox', $activity_checkbox, true );
 			}
 		}
-		
+
 		//get all files uploaded
 		$i = 1;
 		while ( isset($_POST['activity_file_count-' . $i] ) ) {
-			
+
 			//if we have new data
 			if ( isset( $_POST['activity_file-' . $i] ) && isset( $_POST['activity_file_type-' . $i] ) && isset( $_POST['activity_file_url-' . $i] ) ) {
 				if ( $_POST['activity_attachment_name-' . $i] != "" ) {  //if user sets name here
@@ -733,7 +733,7 @@ function cafnr_intl_edit_activity(){
 				} else {
 					$attachment_title = $activity_name . ' - ' . $activity_id . ' (Attachment ' . $i . ' )';
 				}
-				
+
 				$attachment = array(
 					'post_title' => $attachment_title,
 					'post_content' => '',
@@ -741,31 +741,31 @@ function cafnr_intl_edit_activity(){
 					'post_status' => 'publish',
 					'post_mime_type' => $_POST['activity_file_type-' . $i]
 				);
-				
-				$attachment_id = wp_insert_attachment( $attachment, $_POST['activity_file'], $activity_id );	
+
+				$attachment_id = wp_insert_attachment( $attachment, $_POST['activity_file'], $activity_id );
 			}
-			
+
 			$i++;
 		}
-		
-	//	
+
+	//
 		//if successful, redirect to dashboard
 		//TODO: make this redirect to tab, universally
 		//$dashboard = cc_cafnr_get_home_permalink();
-		
-	
+
+
 	}
 	//this will NOT redirect if we've already POSTed data to this page ('headers already sent')
 	echo $activity_id;
 	//wp_redirect( $dashboard . '?user=' . $_POST['user_id'] . '&msg=1' );
 	wp_redirect( $dashboard );
 	exit;
-	
+
 	/** END POST SUBMIT / SAVING ***/
-	
+
 }
 
-/* 
+/*
  * Parses post meta to readable text
  *
  */
@@ -775,7 +775,7 @@ function cc_cafnr_get_readable( $postmeta_label, $postmeta_value ){
 	//Until otherwise needed (if/else on label), we're just going to take dashes away and capitalize
 	$parsed_string = str_replace( '-', ' ', $postmeta_value);
 	$parsed_string = ucfirst( $parsed_string );
-	
+
 	return $parsed_string;
 
 
@@ -787,9 +787,9 @@ function cc_cafnr_get_readable( $postmeta_label, $postmeta_value ){
  *
  */
 function cafnr_message_parser( $number = 0 ){
-	
+
 	$return_message;
-	
+
 	switch( $number ){
 		case 1:
 			$return_message = "Your activity has been added";
@@ -802,8 +802,76 @@ function cafnr_message_parser( $number = 0 ){
 			$return_message = "";
 			break;
 	}
-	
+
 	return $return_message;
-	
+
 }
 
+/*
+* Add interest parameter to register page for easy group registration upon site registration.
+*/
+// @TODO: DC will generalize this process into a separate plugin for all groups at some point.
+// Add "cafnr" as an interest if the registration originates from an SA page
+// Filters array provided by registration_form_interest_query_string
+// @returns array with new element (or not)
+add_filter( 'registration_form_interest_query_string', 'cafnr_add_registration_interest_parameter', 12, 1 );
+function cafnr_add_registration_interest_parameter( $interests ) {
+    if ( cc_cafnr_is_cafnr_group() ) {
+    	$interests[] = 'cafnr';
+	}
+
+    return $interests;
+}
+
+add_action( 'bp_before_registration_submit_buttons', 'cafnr_registration_section_output', 62 );
+function cafnr_registration_section_output() {
+	if ( isset( $_GET['cafnr'] ) && $_GET['cafnr'] ) :
+	?>
+	    <div id="cafnr-interest-opt-in" class="register-section checkbox alignright">
+		    <?php  $avatar = bp_core_fetch_avatar( array(
+				'item_id' => cc_cafnr_get_group_id(),
+				'object'  => 'group',
+				'type'    => 'thumb',
+				'class'   => 'registration-logo',
+
+			) );
+			echo $avatar;
+			$group = groups_get_group( array( 'group_id' => cc_cafnr_get_group_id() ) );
+			?>
+			<h4 class="registration-headline">Join the Group: <em><?php bp_group_name( $group ) ?></em></h4>
+
+			<?php bp_group_description( $group ); ?>
+
+			<label><input type="checkbox" name="cafnr_interest_group" id="cafnr_interest_group" value="agreed" <?php cafnr_determine_checked_status_default_is_checked( 'cafnr_interest_group' ); ?> /> Yes, I&rsquo;d like to request membership in the group.</label>
+
+			<label for="group-request-membership-comments">Comments for the group admin (optional)</label>
+			<textarea name="group-request-membership-comments" id="group-request-membership-comments"><?php
+				if ( isset($_POST['group-request-membership-comments']) ) {
+					echo $_POST['group-request-membership-comments'];
+				}
+			?></textarea>
+
+	    </div>
+    <?php
+    endif;
+}
+
+function cafnr_determine_checked_status_default_is_checked( $field_name ){
+	// In its default state, no $_POST should exist. If this is a resubmit effort, $_POST['signup_submit'] will be set, then we can trust the value of the checkboxes.
+	if ( isset( $_POST['signup_submit'] ) && ! isset( $_POST[ $field_name ] ) ) {
+	// If the user specifically unchecked the box, don't make them do it again.
+	} else {
+	// Default state, $_POST['signup_submit'] isn't set. Or, it is set and the checkbox is also set.
+		echo 'checked="checked"';
+	}
+}
+
+add_action( 'bp_core_signup_user', 'cafnr_registration_extras_processing', 1, 71 );
+function cafnr_registration_extras_processing( $user_id ) {
+	if ( isset( $_POST['cafnr_interest_group'] ) ) {
+		// Create the group request
+		$request = groups_send_membership_request( $user_id, cc_cafnr_get_group_id() );
+	}
+
+	return $user_id;
+}

@@ -174,8 +174,9 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_master_type" class="gfield gfield_contains_required required">
 			
 				<label class="gfield_label">
-					In the last 5 years, have you been in involved in ONE of the following activities outside of the United States?
-					<span class="gfield_required">(required)</span><br />
+					Type of Engagement <span class="gfield_required">(required):</span><br>
+					&nbsp;&nbsp;In the last 5 years, have you been in involved in ONE of the following activities outside of the United States?
+					<br />
 				</label>
 				<div class="ginput_container">
 					<ul id="cafnr_activity_type_radio" class="gfield_radio">
@@ -199,7 +200,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_country" class="gfield gfield_contains_required required">
 				<label class="gfield_label" for="input_22_8">
 					Location
-					<span class="gfield_required">(required)</span>
+					<span class="gfield_required">(required):</span>
 				</label>
 				<div class="ginput_container ginput_list">
 					<table class="gfield_list">
@@ -261,7 +262,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			
 			<li id="cafnr_activity_title" class="gfield gfield_contains_required required">
 				<label class="gfield_label" for="cafnr_activity_name">
-					Title of Engagement
+					Title of Engagement:
 					<span class="gfield_required">(required)</span>
 				</label>
 				<div class="ginput_container">
@@ -345,7 +346,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			-->
 		
 			<li id="cafnr_write_in_pi" class="gfield write-in-pi hidden-on-init research-only">
-				<label class="gfield_label" for="input_22_34">Write in the name of the PI</label>
+				<label class="gfield_label" for="input_22_34">Write in the name of the PI:</label>
 				<div class="ginput_container">
 					<input id="write_in_pi" class="medium" type="text" tabindex="12" value="" name="write_in_pi">
 				</div>
@@ -359,7 +360,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</li>
 		
 			<li id="cafnr_activity_type_checkbox" class="gfield" style="">
-				<label class="gfield_label">Type of Engagement</label>
+				<label class="gfield_label">Engagement includes (check all that apply):</label>
 				<div class="ginput_container">
 					<ul id="activity_type_checkbox" class="gfield_checkbox">
 						<li class="gchoice_11_1">
@@ -387,7 +388,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</li>
 			
 			<li id="cafnr_subject_textbox" class="gfield">
-				<label class="gfield_label" for="input_22_35">Academic Field, Research Focus, or Subject of Engagement</label>
+				<label class="gfield_label" for="input_22_35">Academic Field, Research Focus, or Subject of Engagement:</label>
 				<div class="ginput_container">
 					<input id="subject_textbox" class="medium" type="text" tabindex="19" value="<?php if( !empty( $this_activity_fields['subject_textbox'] )) echo current( $this_activity_fields['subject_textbox'] ); ?>" name="subject_textbox">
 				</div>
@@ -395,14 +396,14 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</li>
 			
 			<li id="cafnr_start_date" class="gfield" >
-				<label class="gfield_label" for="start_date">Engagement Start Date (approx.)</label>
+				<label class="gfield_label" for="start_date">Engagement Start Date (approx.):</label>
 				<div class="ginput_container">
 					<input type="text" id="start_date" name="start_date" tabindex="20" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['start_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['start_date'][0] ) ) ); } ?>">
 				</div>
 			</li>
 			
 			<li id="cafnr_end_date" class="gfield">
-				<label class="gfield_label" for="end_date">Engagement End Date (approx.)</label>
+				<label class="gfield_label" for="end_date">Engagement End Date (approx.):</label>
 				<div class="ginput_container">
 					<input type="text" id="end_date" name="end_date" tabindex="21" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['end_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['end_date'][0] ) ) ); } ?>">
 				</div>
@@ -450,7 +451,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</li>
 		
 			<li id="cafnr_activity_summary" class="gfield pi-only hidden-on-init">
-				<label class="gfield_label" for="input_22_17">Please provide a brief summary of this engagement.</label>
+				<label class="gfield_label" for="input_22_17">Please provide a brief summary of this engagement:</label>
 				<div class="ginput_container">
 					<textarea id="activity_summary" class="textarea medium" cols="50" rows="10" tabindex="23" name="activity_summary" value=""><?php echo $this_activity->post_content; ?></textarea>
 				</div>

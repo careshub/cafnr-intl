@@ -185,3 +185,8 @@ body.loading .modal {
 .hidden{
 	display: none;
 }
+
+#cafnr_activity_form .required, 
+#cafnr_activity_form .gfield_required {
+	color:#211f1f !important;
+}

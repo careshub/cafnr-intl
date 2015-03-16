@@ -137,7 +137,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	
 	<h4 class="user-msg"></h4>
 	
-	<h3 class="gform_title">CAFNR International Programs Engagement Survey</h3>
+	<h3 class="gform_title">CAFNR International Programs Engagement Survey (please complete one form per engagement)</h3>
 	
 	<?php 
 	if( $user_selection_required ){
@@ -174,8 +174,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_master_type" class="gfield gfield_contains_required required">
 			
 				<label class="gfield_label">
-					In the last 5 years, have you been in involved in ONE of the following activities outside of the United States?<br />&nbsp;(please complete one form per activity)
-					<span class="gfield_required">*</span>
+					In the last 5 years, have you been in involved in ONE of the following activities outside of the United States?
+					<span class="gfield_required">(required)</span><br />
 				</label>
 				<div class="ginput_container">
 					<ul id="cafnr_activity_type_radio" class="gfield_radio">
@@ -199,7 +199,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_country" class="gfield gfield_contains_required required">
 				<label class="gfield_label" for="input_22_8">
 					Location
-					<span class="gfield_required">*</span>
+					<span class="gfield_required">(required)</span>
 				</label>
 				<div class="ginput_container ginput_list">
 					<table class="gfield_list">
@@ -261,8 +261,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			
 			<li id="cafnr_activity_title" class="gfield gfield_contains_required required">
 				<label class="gfield_label" for="cafnr_activity_name">
-					Title of Activity
-					<span class="gfield_required">*</span>
+					Title of Engagement
+					<span class="gfield_required">(required)</span>
 				</label>
 				<div class="ginput_container">
 					<select id="cafnr_activity_name" class="medium gfield_select" tabindex="6" onchange="" name="cafnr_activity_name">
@@ -287,6 +287,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 			
+			<hr>
+			<strong>Optional Questions:</strong>
 			<li id="cafnr_add_activity_title" class="gfield no-title">
 				<label class="gfield_label" for="input_22_10">Add Title of New Engagement Here:</label>
 				<div class="ginput_container">
@@ -297,7 +299,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_pi_radio" class="gfield gfield_contains_required required research-only">
 				<label class="gfield_label">
 					Are you the PI/leader of this engagement?
-					<span class="gfield_required">*</span>
+					<span class="gfield_required">(required)</span>
 				</label>
 				<div class="ginput_container">
 					<ul id="input_22_24" class="gfield_radio">
@@ -350,14 +352,14 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</li>
 			
 			<li id="cafnr_country_lead" class="gfield">
-				<label class="gfield_label" for="input_22_34">Who is the in-country activity lead?</label>
+				<label class="gfield_label" for="input_22_34">Who is the in-country engagement lead?</label>
 				<div class="ginput_container">
 					<input id="country_lead" class="medium" type="text" tabindex="13" value="<?php if( !empty( $this_activity_fields['country_lead'] )) echo current( $this_activity_fields['country_lead'] ); ?>" name="country_lead">
 				</div>
 			</li>
 		
 			<li id="cafnr_activity_type_checkbox" class="gfield" style="">
-				<label class="gfield_label">Type of Activity</label>
+				<label class="gfield_label">Type of Engagement</label>
 				<div class="ginput_container">
 					<ul id="activity_type_checkbox" class="gfield_checkbox">
 						<li class="gchoice_11_1">
@@ -385,22 +387,22 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</li>
 			
 			<li id="cafnr_subject_textbox" class="gfield">
-				<label class="gfield_label" for="input_22_35">Academic Field, Research Focus, or Subject of Activity</label>
+				<label class="gfield_label" for="input_22_35">Academic Field, Research Focus, or Subject of Engagement</label>
 				<div class="ginput_container">
 					<input id="subject_textbox" class="medium" type="text" tabindex="19" value="<?php if( !empty( $this_activity_fields['subject_textbox'] )) echo current( $this_activity_fields['subject_textbox'] ); ?>" name="subject_textbox">
 				</div>
 				<div class="gfield_description">Example: Ag Econ, Climate Change, Biofuels, Ag Policy, etc.</div>
 			</li>
 			
-			<li id="cafnr_start_date" class="gfield pi-only hidden-on-init" >
-				<label class="gfield_label" for="start_date">Activity Start Date (approx.)</label>
+			<li id="cafnr_start_date" class="gfield" >
+				<label class="gfield_label" for="start_date">Engagement Start Date (approx.)</label>
 				<div class="ginput_container">
 					<input type="text" id="start_date" name="start_date" tabindex="20" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['start_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['start_date'][0] ) ) ); } ?>">
 				</div>
 			</li>
 			
-			<li id="cafnr_end_date" class="gfield pi-only hidden-on-init">
-				<label class="gfield_label" for="end_date">Activity End Date (approx.)</label>
+			<li id="cafnr_end_date" class="gfield">
+				<label class="gfield_label" for="end_date">Engagement End Date (approx.)</label>
 				<div class="ginput_container">
 					<input type="text" id="end_date" name="end_date" tabindex="21" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['end_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['end_date'][0] ) ) ); } ?>">
 				</div>
@@ -448,21 +450,21 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</li>
 		
 			<li id="cafnr_activity_summary" class="gfield pi-only hidden-on-init">
-				<label class="gfield_label" for="input_22_17">Please provide a brief summary of this activity.</label>
+				<label class="gfield_label" for="input_22_17">Please provide a brief summary of this engagement.</label>
 				<div class="ginput_container">
 					<textarea id="activity_summary" class="textarea medium" cols="50" rows="10" tabindex="23" name="activity_summary" value=""><?php echo $this_activity->post_content; ?></textarea>
 				</div>
 			</li>
 			
 			<li id="cafnr_non_pi_role" class="gfield non-pi-only">
-				<label class="gfield_label" for="input_22_26">What was your role in this activity?</label>
+				<label class="gfield_label" for="input_22_26">What was your role in this engagement?</label>
 				<div class="ginput_container">
 					<textarea id="non_pi_role" class="textarea medium" cols="50" rows="10" tabindex="24" name="non_pi_role" value=""><?php if( !empty( $this_activity_fields['non_pi_role'] )) echo current( $this_activity_fields['non_pi_role'] ); ?></textarea>
 				</div>
 			</li>
 		
 			<li id="cafnr_funding_source" class="gfield pi-only hidden-on-init">
-				<label class="gfield_label" for="input_22_38">What is the source of funding for this activity?</label>
+				<label class="gfield_label" for="input_22_38">What is the source of funding for this engagement?</label>
 				<div class="ginput_container">
 					<input id="funding_source" class="medium" type="text" tabindex="25" name="funding_source" value="<?php if( !empty( $this_activity_fields['funding_source'] )) echo current( $this_activity_fields['funding_source'] ); ?>">
 				</div>

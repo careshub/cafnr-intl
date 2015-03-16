@@ -171,9 +171,10 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<input type="hidden" name="first_name" value="<?php echo $first_name; ?>">
 			<input type="hidden" name="last_name" value="<?php echo $last_name; ?>">
 			
+			<div class="required_greyed">
 			<li id="cafnr_master_type" class="gfield gfield_contains_required required">
 			
-				<label class="gfield_label">
+				<label class="gfield_label margintop0">
 					Type of Engagement <span class="gfield_required">(required):</span><br>
 					&nbsp;&nbsp;In the last 5 years, have you been in involved in ONE of the following activities outside of the United States?
 					<br />
@@ -290,19 +291,19 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			
 			
 			<li id="cafnr_start_date" class="gfield" >
-				<label class="gfield_label" for="start_date">Engagement Start Date (approx.):</label>
+				<label class="gfield_label" for="start_date">Engagement Start Date (approx.) &nbsp;(required):</label>
 				<div class="ginput_container">
 					<input type="text" id="start_date" name="start_date" tabindex="20" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['start_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['start_date'][0] ) ) ); } ?>">
 				</div>
 			</li>
 			
 			<li id="cafnr_end_date" class="gfield">
-				<label class="gfield_label" for="end_date">Engagement End Date (approx.):</label>
+				<label class="gfield_label" for="end_date">Engagement End Date (approx.) &nbsp;(required):</label>
 				<div class="ginput_container">
 					<input type="text" id="end_date" name="end_date" tabindex="21" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['end_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['end_date'][0] ) ) ); } ?>">
 				</div>
 			</li>
-			
+			</div> <!-- required_greyed -->
 			<hr>
 			<strong>Optional Questions:</strong>
 			<li id="cafnr_add_activity_title" class="gfield no-title">

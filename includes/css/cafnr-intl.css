@@ -30,6 +30,10 @@ a.reload-page {
 .greyed{
 	color:#666666;
 }
+.required_greyed {
+	background-color:#e6e6e6;
+	padding:2em 0.75em;
+}
 .save-msg{
 	font-weight:bold;
 	font-style:italic;
@@ -189,4 +193,7 @@ body.loading .modal {
 #cafnr_activity_form .required, 
 #cafnr_activity_form .gfield_required {
 	color:#211f1f !important;
+}
+.margintop0{
+	margin-top: 0px !important;
 }

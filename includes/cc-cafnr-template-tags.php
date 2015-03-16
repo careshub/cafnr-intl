@@ -262,8 +262,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			
 			<li id="cafnr_activity_title" class="gfield gfield_contains_required required">
 				<label class="gfield_label" for="cafnr_activity_name">
-					Title of Engagement:
-					<span class="gfield_required">(required)</span>
+					Title of Engagement
+					<span class="gfield_required">(required):</span>
 				</label>
 				<div class="ginput_container">
 					<select id="cafnr_activity_name" class="medium gfield_select" tabindex="6" onchange="" name="cafnr_activity_name">

@@ -493,7 +493,7 @@ function activityFormSave() {
 			
 				jQuery.ajax({
 					type: "POST",
-					url: 'http://maps1.communitycommons.org/apiservice/getdata.svc/cafnr',
+					url: 'http://maps.communitycommons.org/apiservice/getdata.svc/cafnr',
 					dataType: 'json',
 					contentType: "application/json",
 					crossDomain: true,
@@ -544,7 +544,7 @@ function delActivity( activityid, author ) {
 		
 			jQuery.ajax({
 				type: "POST",
-				url: 'http://maps1.communitycommons.org/apiservice/getdata.svc/cafnr',
+				url: 'http://maps.communitycommons.org/apiservice/getdata.svc/cafnr',
 				dataType: 'json',
 				contentType: "application/json",
 				crossDomain: true,

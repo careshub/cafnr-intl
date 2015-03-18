@@ -440,11 +440,15 @@ function activityFormSave() {
 		activity_json_obj['collaborating'] = collaborating_array;
 		activity_json_obj['supplemental_links'] = supplemental_links_array;
 		
+		//since we are now pulling edit_activity title from text field only
+		var activity_title = activity_json_obj["add_activity_title"];
+		
 		
 		// fix name if !new activity (shows up as post #)
 		if ( activity_json_obj["cafnr_activity_name"] != "add_new_activity" ){
 			activity_json_obj["parent_activity_id"] = activity_json_obj["cafnr_activity_name"];
-			activity_json_obj["cafnr_activity_name"] = jQuery("#cafnr_activity_name :selected").text();
+			//activity_json_obj["cafnr_activity_name"] = jQuery("#cafnr_activity_name :selected").text();
+			activity_json_obj["cafnr_activity_name"] = activity_json_obj["add_activity_title"];
 			delete activity_json_obj["add_activity_title"];
 			delete activity_json_obj["activity-name"];
 			delete activity_json_obj["SubmitButton"];
@@ -459,7 +463,7 @@ function activityFormSave() {
 		
 		//TODO: add nonce on both sides
 		//querystring += "&cafnr_ajax_data_nonce=" + nm_ajax.cafnr_ajax_data_nonce;
-		querystring += "&action=" + 'cafnr_intl_edit_activity';
+		querystring += "&action=" + 'cafnr_intl_edit_activity' + "&cafnr_activity_name=" + activity_title;
 		
 		//first, post to wordpress
 		jQuery.ajax({
@@ -489,7 +493,7 @@ function activityFormSave() {
 			
 				jQuery.ajax({
 					type: "POST",
-					url: 'http://maps.communitycommons.org/apiservice/getdata.svc/cafnr',
+					url: 'http://maps1.communitycommons.org/apiservice/getdata.svc/cafnr',
 					dataType: 'json',
 					contentType: "application/json",
 					crossDomain: true,
@@ -540,7 +544,7 @@ function delActivity( activityid, author ) {
 		
 			jQuery.ajax({
 				type: "POST",
-				url: 'http://maps.communitycommons.org/apiservice/getdata.svc/cafnr',
+				url: 'http://maps1.communitycommons.org/apiservice/getdata.svc/cafnr',
 				dataType: 'json',
 				contentType: "application/json",
 				crossDomain: true,

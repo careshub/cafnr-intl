@@ -190,8 +190,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				<div class="ginput_container">
 					<ul id="cafnr_activity_type_radio" class="gfield_radio">
 						<li class="activity_radio">
-							<input id="activity_radio_research" type="radio" onclick="" tabindex="1" value="funded-research-project" name="activity_radio" <?php if( !empty( $this_activity_types) ) if ( in_array( 'funded-research-project', $this_activity_types ) ) echo 'checked="checked"'; ?>>
-							<label for="activity_radio_research">Funded Research Project</label>
+							<input id="activity_radio_research" type="radio" onclick="" tabindex="1" value="research-project" name="activity_radio" <?php if( !empty( $this_activity_types) ) if ( in_array( 'funded-research-project', $this_activity_types ) ) echo 'checked="checked"'; ?>>
+							<label for="activity_radio_research">Research Project</label>
 						</li>
 						<li class="activity_radio">
 							<input id="activity_radio_training" type="radio" onclick="" tabindex="2" value="training-program" name="activity_radio" <?php if( !empty( $this_activity_types) ) if ( in_array( 'training-program', $this_activity_types ) ) echo 'checked="checked"'; ?>>
@@ -1345,7 +1345,10 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 						<td colspan="1"><?php echo $author_name; ?></td>
 						<td colspan="3" class="<?php if( $is_pi ){ }?>"><?php echo $title; ?></td>
 						
-						<td><?php echo cc_cafnr_get_readable( "activity-type", current( $postmeta["activity_radio"] ) ); ?></td>
+						<td><?php if ( !(empty ($postmeta["activity_radio"][0] ) ) ){
+							echo cc_cafnr_get_readable( "activity-type", current( $postmeta["activity_radio"] ) ); 
+						} ?>
+						</td>
 						
 						<?php 
 						if( bp_group_is_admin() || bp_group_is_mod() ) { ?>

@@ -574,7 +574,7 @@ function cafnr_intl_edit_activity(){
 			wp_update_post( $updating_post );
 
 
-		} else if ( ( $_POST['cafnr_activity_name'] != '-1' ) && ( $_POST['cafnr_activity_name'] != 'add_new_activity' ) ){
+		} /*else if ( ( $_POST['cafnr_activity_name'] != '-1' ) && ( $_POST['cafnr_activity_name'] != 'add_new_activity' ) ){
 
 			//new activity with parent name
 
@@ -595,7 +595,7 @@ function cafnr_intl_edit_activity(){
 
 			$activity_id = wp_insert_post( $activity );
 
-		} else { //completely new activity with no parent
+		} */else { //completely new activity with no parent
 
 			$activity_name = $_POST['add_activity_title'];
 

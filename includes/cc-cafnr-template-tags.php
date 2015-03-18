@@ -1358,7 +1358,7 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 					</tr>
 					
 					<tr class="hidden quick-view-tr" colspan="6" data-activityid="<?php echo $id; ?>">
-						<td>Academic Field, Research Focus, or Subject of Activity: <?php if( $subject == "" ) { echo '<em>None provided</em>'; } else { echo '<strong>' . $subject . '</strong>'; } ?></td>
+						<td colspan="3">Academic Field, Research Focus, or Subject of Activity: <?php if( $subject == "" ) { echo '<em>None provided</em>'; } else { echo '<strong>' . $subject . '</strong>'; } ?></td>
 					</tr>
 					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
 						<td>Start Date: <?php if( $start_timestamp == 0) { echo '<em>No start date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $start_timestamp) . '</strong>'; } ?> </td>

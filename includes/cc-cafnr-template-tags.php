@@ -261,7 +261,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				</div>
 			</li>
 			
-			<li id="cafnr_activity_title" class="gfield gfield_contains_required required">
+			<!--<li id="cafnr_activity_title" class="gfield gfield_contains_required required">
 				<label class="gfield_label" for="cafnr_activity_name">
 					Title of Engagement
 					<span class="gfield_required">(required):</span>
@@ -287,6 +287,19 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 						} ?>
 					</select>
 				</div>
+			</li>-->
+			
+			<li id="cafnr_add_activity_title" class="gfield">
+				<label class="gfield_label" for="input_22_10"><!--Add Title of New Engagement Here:</label>-->
+				
+				Title of Engagement
+					<span class="gfield_required">(required):</span>
+				</label>
+				
+				
+				<div class="ginput_container">
+					<input id="add_activity_title" class="medium" type="text" tabindex="7" value="" name="add_activity_title">
+				</div>
 			</li>
 			
 			
@@ -306,12 +319,6 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			</div> <!-- required_greyed -->
 			<hr>
 			<strong>Optional Questions:</strong>
-			<li id="cafnr_add_activity_title" class="gfield no-title">
-				<label class="gfield_label" for="input_22_10">Add Title of New Engagement Here:</label>
-				<div class="ginput_container">
-					<input id="add_activity_title" class="medium" type="text" tabindex="7" value="" name="add_activity_title">
-				</div>
-			</li>
 			
 			<li id="cafnr_pi_radio" class="gfield gfield_contains_required required research-only">
 				<label class="gfield_label">

@@ -48,6 +48,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		$post_id = $_GET['activity_id'];
 		$this_activity = get_post($post_id);
 		
+		$this_activity_title = get_the_title( $this_activity->ID  );
+		
 		//get parent of post
 		$this_activity_parent_holder = get_post_ancestors( $post_id ); //returns all parents
 		$this_activity_parent = $this_activity_parent_holder[0]; //direct parent is [0] in returned array
@@ -101,6 +103,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
     $first_name = $user_info->first_name;
     $last_name = $user_info->last_name;
 		
+	//TODO: do we still need this if no more title drop-down?
 	//get all cafnr activities in db
 	$activities = array();
 	
@@ -138,6 +141,11 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	<h4 class="user-msg"></h4>
 	
 	<h3 class="gform_title">CAFNR International Programs Engagement Survey (please complete one form per engagement)</h3>
+	
+	<?php if( $action == 'edit_activity' ) { ?>
+		<h4 class="edit-activity"><em>Editing Activity: <?php echo $this_activity_title; ?></em>
+		</h4>
+	<?php } ?>
 	
 	<?php 
 	if( $user_selection_required ){
@@ -298,7 +306,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				
 				
 				<div class="ginput_container">
-					<input id="add_activity_title" class="medium" type="text" tabindex="7" value="" name="add_activity_title">
+					<input id="add_activity_title" class="medium" type="text" tabindex="7" value="<?php if (!empty( $this_activity_title ) ){ echo $this_activity_title; } ?>" name="add_activity_title"></input>
 				</div>
 			</li>
 			
@@ -1279,7 +1287,8 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 			<tbody>
 				<?php 
 				foreach ( $activities as $key => $value ){ //TODO: add VIEW
-					
+					//var_dump ($key);
+					//var_dump ($value);
 					$id = $value["id"];
 					$title = $value["title"];
 					$url = $value["url"];
@@ -1554,7 +1563,14 @@ function cc_cafnr_get_activity_list( $user_activity_posts = null ){
 		setup_postdata( $post ); 
 		
 		//View post
-		$url = the_permalink();
+		//$url = get_permalink();
+		
+		//CAFNR_ACTIVITY_FORM_URL
+		if ( bp_group_is_admin() || bp_group_is_mod() ) {
+			$url = cc_cafnr_get_activity_permalink() . '?activity_id=' . $post->ID . '&user=' . $post->post_author;
+		} else {
+			$url = cc_cafnr_get_activity_permalink() . '?activity_id=' . $post->ID;
+		}
 		
 		//get basic info about the activity
 		$activity_list[$count]['id'] = $post->ID;

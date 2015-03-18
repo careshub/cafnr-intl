@@ -558,14 +558,21 @@ function cafnr_intl_edit_activity(){
 		if ( isset( $_POST['activity_id'] ) && ( $_POST['activity_id'] > 0 ) ){
 			$activity_id = $_POST['activity_id'];
 
+			//if they write in a title, replace existing title
+			if ( $_POST['add_activity_title'] != "" ) {
+				$activity_name = $_POST['add_activity_title'];
+			} else {
+				$activity_name = get_the_title( $activity_id );
+			}
+			
 			//update the post fields, if need be - just summary?
 			$updating_post = array(
 				'ID' => $activity_id,
-				'post_content' => $_POST['activity_summary']
+				'post_content' => $_POST['activity_summary'],
+				'post_title' => $activity_name
 				);
 			wp_update_post( $updating_post );
 
-			$activity_name = get_the_title( $activity_id );
 
 		} else if ( ( $_POST['cafnr_activity_name'] != '-1' ) && ( $_POST['cafnr_activity_name'] != 'add_new_activity' ) ){
 

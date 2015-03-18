@@ -171,7 +171,7 @@ function cafnr_intl_scripts() {
 	wp_enqueue_script( 'cc-cafnr', plugins_url( '/cc-cafnr.js', __FILE__), array(), '1.0.0', true );
 	wp_enqueue_style( 'datepicker-style', plugins_url( '/css/datepicker.css', __FILE__) );
 	wp_enqueue_style( 'gf-style',  plugins_url( '/css/g_forms_styles.css', __FILE__) );
-	wp_enqueue_style( 'cafnr-style', plugins_url( '/css/cafnr-intl.css', __FILE__), array(), '1.0.1' );
+	wp_enqueue_style( 'cafnr-style', plugins_url( '/css/cafnr-intl.css', __FILE__), array(), '1.0.2' );
 
 	//so we can use vars in js functions
 	wp_localize_script(

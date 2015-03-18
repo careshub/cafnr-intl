@@ -1280,7 +1280,7 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 		<table class="mu-table">
 			<thead>
 				<tr>
-					<th scope="col" colspan="6"><span id="nameactivity">All Engagements</span></th>	
+					<th scope="col" colspan="7"><span id="nameactivity">All Engagements</span></th>	
 					
 				</tr>
 			</thead>
@@ -1293,8 +1293,22 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 					$title = $value["title"];
 					$url = $value["url"];
 					$form_url = $value["form_url"];
-					//$activity_owner = $value["activity_owner"];				
-					$author = $value["author"];		
+					//$activity_owner = $value["activity_owner"];		
+
+					//get author info					
+					$author = $value["author"];	//ID	
+					$user_info = get_userdata( $author );
+					$username = $user_info->user_login;
+					$first_name = $user_info->first_name;
+					$last_name = $user_info->last_name;
+					
+					
+					if ( !empty( $last_name ) ){
+						$author_name = $first_name . ' ' . $last_name;
+					} else {
+						$author_name = $username;
+					}
+					
 					$postmeta = $value["postmeta"];
 					
 					//Information to show in quick view
@@ -1328,6 +1342,7 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 					?>
 					
 					<tr>
+						<td colspan="1"><?php echo $author_name; ?></td>
 						<td colspan="3" class="<?php if( $is_pi ){ }?>"><?php echo $title; ?></td>
 						
 						<td><?php echo cc_cafnr_get_readable( "activity-type", current( $postmeta["activity_radio"] ) ); ?></td>

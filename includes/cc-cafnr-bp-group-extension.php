@@ -30,9 +30,9 @@ class CC_CAFNR_Intl_Extension extends BP_Group_Extension {
         );
         parent::init( $args );
     }
- 
-    public function display() {
-	
+
+    public function display( $group_id = null ) {
+
 		//cc_aha_render_tab_subnav();
 
         if ( cc_cafnr_on_survey_dashboard_screen() ) {

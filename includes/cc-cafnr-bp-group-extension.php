@@ -1,4 +1,4 @@
-<?php 
+<?php
 if ( class_exists( 'BP_Group_Extension' ) ) : // Recommended, to prevent problems during upgrade or when Groups are disabled
 
 class CC_CAFNR_Intl_Extension extends BP_Group_Extension {
@@ -36,23 +36,23 @@ class CC_CAFNR_Intl_Extension extends BP_Group_Extension {
 		//cc_aha_render_tab_subnav();
 
         if ( cc_cafnr_on_survey_dashboard_screen() ) {
-		
+
             cc_cafnr_intl_dashboard();
 
         } else if ( cc_cafnr_on_activity_screen() ) {
 
 			cc_cafnr_activity_form_render();
-		
+
         } else if ( cc_cafnr_on_all_activities_screen() ) {
-			
+
 			cc_cafnr_all_activities_render();
-			
+
 		} else  if ( cc_cafnr_add_faculty_screen() ){
-		
+
 			cc_cafnr_add_faculty_render();
-			
+
 		}
-		
+
     }
 
     public function cafnr_tab_is_enabled(){
@@ -66,5 +66,5 @@ class CC_CAFNR_Intl_Extension extends BP_Group_Extension {
 
 }
 bp_register_group_extension( 'CC_CAFNR_Intl_Extension' );
- 
+
 endif;

@@ -564,7 +564,7 @@ function cafnr_intl_edit_activity(){
 			} else {
 				$activity_name = get_the_title( $activity_id );
 			}
-			
+
 			//update the post fields, if need be - just summary?
 			$updating_post = array(
 				'ID' => $activity_id,

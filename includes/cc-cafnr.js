@@ -493,6 +493,7 @@ function activityFormSave() {
 			},
 			complete: function(jqXHR, textStatus){
 				spinny.fadeOut(600);
+				jQuery(".save-msg").css("padding", "3px 8px 5px");
 				jQuery(".save-msg").html("<p>Submission successful, <a href='" + cafnr_ajax.addEngagement + "'>add another engagement?</a></p>");
 			
 				jQuery.ajax({
@@ -519,6 +520,7 @@ function activityFormSave() {
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				spinny.fadeOut(600);
+				jQuery(".save-msg").css("padding", "3px 8px 5px");
 				jQuery(".save-msg").html("<p>There was a problem saving your Engagement.</p>");
 				alert(xhr.status);
 				alert(thrownError);

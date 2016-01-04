@@ -38,7 +38,7 @@ a.reload-page {
 .save-msg{
 	font-weight:bold;
 	font-style:italic;
-	padding:3px 8px 5px;
+	padding:0px 8px;
 	display:inline-block;
 	background-color:#00ff99;
 	margin-left:8px;

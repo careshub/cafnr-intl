@@ -143,7 +143,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	<h3 class="gform_title">College of Agriculture Food & Natural Resources International Programs Engagement Survey (please complete one form per engagement)</h3>
 
 	<?php if( $action == 'edit_activity' ) { ?>
-		<h4 class="edit-activity"><em>Editing Activity: <?php echo $this_activity_title; ?></em>
+		<h4 class="edit-activity"><em>Editing Engagement: <strong><?php echo $this_activity_title; ?></strong></em>
 		</h4>
 	<?php } ?>
 

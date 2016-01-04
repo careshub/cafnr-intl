@@ -140,7 +140,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 
 	<h4 class="user-msg"></h4>
 
-	<h3 class="gform_title">CAFNR International Programs Engagement Survey (please complete one form per engagement)</h3>
+	<h3 class="gform_title">College of Agriculture Food & Natural Resources International Programs Engagement Survey (please complete one form per engagement)</h3>
 
 	<?php if( $action == 'edit_activity' ) { ?>
 		<h4 class="edit-activity"><em>Editing Activity: <?php echo $this_activity_title; ?></em>
@@ -183,14 +183,13 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_master_type" class="gfield gfield_contains_required required">
 
 				<label class="gfield_label margintop0">
-					Type of Engagement <span class="gfield_required">(required):</span><br>
-					&nbsp;&nbsp;In the last 5 years, have you been in involved in ONE of the following activities outside of the United States?
+					Type of Engagement <span class="gfield_required">(required):</span>&nbsp;&nbsp;In the last 5 years, have you been in involved in ONE of the following activities outside of the United States?
 					<br />
 				</label>
 				<div class="ginput_container">
 					<ul id="cafnr_activity_type_radio" class="gfield_radio">
 						<li class="activity_radio">
-							<input id="activity_radio_research" type="radio" onclick="" tabindex="1" value="research-project" name="activity_radio" <?php if( !empty( $this_activity_types) ) if ( in_array( 'funded-research-project', $this_activity_types ) ) echo 'checked="checked"'; ?>>
+							<input id="activity_radio_research" type="radio" onclick="" tabindex="1" value="research-project" name="activity_radio" <?php if( !empty( $this_activity_types) ) if( in_array( 'funded-research-project', $this_activity_types ) || ( in_array( 'research-project', $this_activity_types ) ) ) echo 'checked="checked"'; ?>>
 							<label for="activity_radio_research">Research Project</label>
 						</li>
 						<li class="activity_radio">
@@ -324,7 +323,26 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 					<input type="text" id="end_date" name="end_date" tabindex="21" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['end_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['end_date'][0] ) ) ); } ?>">
 				</div>
 			</li>
-			</div> <!-- required_greyed -->
+			
+			<li id="cafnr_college_division" class="gfield">
+				<label class="gfield_label" for="college_division">College/Division &nbsp;(required):</label>
+				<div class="ginput_container">
+					<select name="college_division">
+						<option value="-1"> -- Select Division -- </option>
+						<optgroup label="CAFNR:">
+							<option value="cafnr_animal_sciences" <?php if( $this_activity_fields["college_division"][0] == "cafnr_animal_sciences" ) { echo "selected='selected'"; } ?>>Animal Sciences</option>
+							<option value="cafnr_biochemistry" <?php if( $this_activity_fields["college_division"][0] == "cafnr_biochemistry" ) { echo "selected='selected'"; } ?>>Biochemistry</option>
+							<option value="cafnr_daas" <?php if( $this_activity_fields["college_division"][0] == "cafnr_daas" ) { echo "selected='selected'"; } ?>>Division of Applied Social Sciences</option>
+							<option value="cafnr_food_systems" <?php if( $this_activity_fields["college_division"][0] == "cafnr_food_systems" ) { echo "selected='selected'"; } ?>>Food Systems and Bioengineering</option>
+							<option value="cafnr_plant_sciences" <?php if( $this_activity_fields["college_division"][0] == "cafnr_plant_sciences" ) { echo "selected='selected'"; } ?>>Plant Sciences</option>
+							<option value="cafnr_natural_resources" <?php if( $this_activity_fields["college_division"][0] == "cafnr_natural_resources" ) { echo "selected='selected'"; } ?>>School of Natural Resources</option>
+						</optgroup>
+					</select>
+					
+				</div>
+			</li>
+			
+			</div> <!-- end required_greyed -->
 			<hr>
 			<strong>Optional Questions:</strong>
 
@@ -560,7 +578,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		<?php
 		//TODO: reroute after or have confirmation message (w/activity id in url)
 		?>
-		<span><input type="submit" id="activity-submit" name="SubmitButton" value="SUBMIT ENGAGEMENT" /><div class="save-msg"></div></span>
+		<span><input type="submit" id="activity-submit" name="SubmitButton" value="SAVE ENGAGEMENT" /><span class="spinny"></span><span class="save-msg"></span></span>
 
 		</form>
 	</div>
@@ -950,6 +968,7 @@ function cc_cafnr_render_member_page(){
 	//render the activities box
 	cc_cafnr_render_faculty_activity_table( $activities, $current_user->ID );
 
+	echo "<hr />";
 	$all_meta_for_user = get_user_meta( $current_user->ID );
 ?>
 		<script type="text/javascript">
@@ -1203,60 +1222,66 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 			</thead>
 			<tbody>
 				<?php
-				foreach ( $activities as $key => $value ){ //TODO: add VIEW
+				if( empty( $activities ) ){
+					echo "<tr><td>No Engagements posted. Would you like to <a title='add engagement link' alt='add engagement link' href='" . cc_cafnr_get_activity_permalink() . "'> add one</a>?</td></tr>";
+				} else {
+					foreach ( $activities as $key => $value ){ //TODO: add VIEW
 
-					//var_dump( $activities );
-					$id = $value["id"];
-					$title = $value["title"];
-					$url = $value["url"];
-					$form_url = $value["form_url"];
-					//$activity_owner = $value["activity_owner"];
-					$author = $value["author"];
-					$postmeta = $value["postmeta"];
+						//var_dump( $activities );
+						$id = $value["id"];
+						$title = $value["title"];
+						$url = $value["url"];
+						$form_url = $value["form_url"];
+						//$activity_owner = $value["activity_owner"];
+						$author = $value["author"];
+						$postmeta = $value["postmeta"];
 
-					//Information to show in quick view
-					//TODO: account for NULL vals to get rid of warnings..
-					if( $postmeta["subject_textbox"] != NULL ) {
-						$subject = current( $postmeta["subject_textbox"] );
-					} else {
-						$subject = "";
-					}
-					if( $postmeta["start_date"] != NULL ) {
-						$start_timestamp = strtotime (current( $postmeta["start_date"] ) );
-					} else {
-						$start_timestamp = 0;
-					}
-					if( $postmeta["start_date"] != NULL ) {
-						$end_timestamp = strtotime (current( $postmeta["end_date"] ) );
-					} else {
-						$end_timestamp = 0;
-					}
+						//Information to show in quick view
+						//TODO: account for NULL vals to get rid of warnings..
+						if( $postmeta["subject_textbox"] != NULL ) {
+							$subject = current( $postmeta["subject_textbox"] );
+						} else {
+							$subject = "";
+						}
+						if( $postmeta["start_date"] != NULL ) {
+							$start_timestamp = strtotime (current( $postmeta["start_date"] ) );
+						} else {
+							$start_timestamp = 0;
+						}
+						if( $postmeta["start_date"] != NULL ) {
+							$end_timestamp = strtotime (current( $postmeta["end_date"] ) );
+						} else {
+							$end_timestamp = 0;
+						}
 
 
-					echo '<tr><td colspan="3">' . $title . '</td>';
-					//echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
-					echo '<td class="edit-activity-button"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $author . ')">Delete</a></td>';
-					echo '<td class="edit-activity-button"><a href="' . $form_url . '" class="button">Edit</a></td>';
-					echo '<td class="edit-activity-button"><a class="button quick-view-activity" data-activityid="' . $id . '">Quick View</a></td>';
-					echo '</tr>';
-					?>
-					<tr class="hidden quick-view-tr" colspan="6" data-activityid="<?php echo $id; ?>">
-						<td>Academic Field, Research Focus, or Subject of Activity: <?php if( $subject == "" ) { echo '<em>None provided</em>'; } else { echo '<strong>' . $subject . '</strong>'; } ?></td>
-					</tr>
-					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
-						<td>Start Date: <?php if( $start_timestamp == 0) { echo '<em>No start date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $start_timestamp) . '</strong>'; } ?> </td>
-					</tr>
-					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
-						<td>End Date: <?php if( $end_timestamp == 0) { echo '<em>No end date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $end_timestamp) . '</strong>'; } ?></td>
-					</tr>
-					<?php
-					echo '<div class="quick-view-info">';
-					echo '<tr class="hidden quick-view-info" data-activityid="' . $id . '">';
-					echo '<td>stuff</td>';
-					echo '</tr>';
-					echo '</div>';
+						echo '<tr><td colspan="3">' . $title . '</td>';
+						//echo '<td style="width:10%;"><a href="' . $url . '" class="button">View</a></td>';
+						echo '<td class="edit-activity-button"><a href="#" class="button" onclick="delActivity(' . $id . ', ' . $author . ')">Delete</a></td>';
+						echo '<td class="edit-activity-button"><a href="' . $form_url . '" class="button">Edit</a></td>';
+						echo '<td class="edit-activity-button"><a class="button quick-view-activity" data-activityid="' . $id . '">Quick View</a></td>';
+						echo '</tr>';
+						?>
+						<tr class="hidden quick-view-tr" colspan="6" data-activityid="<?php echo $id; ?>">
+							<td>Academic Field, Research Focus, or Subject of Activity: <?php if( $subject == "" ) { echo '<em>None provided</em>'; } else { echo '<strong>' . $subject . '</strong>'; } ?></td>
+						</tr>
+						<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
+							<td>Start Date: <?php if( $start_timestamp == 0) { echo '<em>No start date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $start_timestamp) . '</strong>'; } ?> </td>
+						</tr>
+						<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
+							<td>End Date: <?php if( $end_timestamp == 0) { echo '<em>No end date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $end_timestamp) . '</strong>'; } ?></td>
+						</tr>
+						<?php
+						echo '<div class="quick-view-info">';
+						echo '<tr class="hidden quick-view-info" data-activityid="' . $id . '">';
+						echo '<td>stuff</td>';
+						echo '</tr>';
+						echo '</div>';
 
-				} ?>
+					} 
+				}
+				
+				?>
 			</tbody>
 		</table>
 	</div>

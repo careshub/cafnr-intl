@@ -630,7 +630,8 @@ function cafnr_intl_edit_activity(){
 				'pi_radio',
 				'subject_textbox',
 				'non_pi_role',
-				'funding_source'
+				'funding_source',
+				'college_division'
 
 			);
 		foreach ( $activity_fields as $f ) {

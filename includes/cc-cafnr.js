@@ -399,6 +399,8 @@ function userFormLoad(){
 // also, send to SQL on complete (via ajax)
 function activityFormSave() {
 	jQuery('#cafnr_activity_form').on('submit', function(e){
+	
+		var spinny = jQuery("#cafnr_activity_form .spinny");
 		//var thisButton = jQuery(this);
 		e.preventDefault();
 		var querystring = jQuery(this).serialize();
@@ -487,8 +489,10 @@ function activityFormSave() {
 			},
 			beforeSend: function(jqXHR, settings){
 				jQuery('#PageLoader').fadeIn();
+				spinny.show();
 			},
 			complete: function(jqXHR, textStatus){
+				spinny.fadeOut(600);
 				jQuery(".save-msg").html("<p>Submission successful, <a href='" + cafnr_ajax.addEngagement + "'>add another engagement?</a></p>");
 			
 				jQuery.ajax({
@@ -514,6 +518,8 @@ function activityFormSave() {
 				
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
+				spinny.fadeOut(600);
+				jQuery(".save-msg").html("<p>There was a problem saving your Engagement.</p>");
 				alert(xhr.status);
 				alert(thrownError);
 				e.preventDefault();
@@ -544,7 +550,7 @@ function delActivity( activityid, author ) {
 		
 			jQuery.ajax({
 				type: "POST",
-				url: 'http://maps.communitycommons.org/services/mapdata/custom/cafnr',
+				url: 'http://maps.communitycommons.org/services/mapdata/custom/cafnr-TEST',
 				dataType: 'json',
 				contentType: "application/json",
 				crossDomain: true,

@@ -31,13 +31,14 @@ a.reload-page {
 	color:#666666;
 }
 .required_greyed {
-	background-color:#e6e6e6;
-	padding:2em 0.75em;
+	background-color:#eaeaea;
+	padding:1.5em 1em;
+	border: 1px solid #d6d6d6;
 }
 .save-msg{
 	font-weight:bold;
 	font-style:italic;
-	padding:0 8px;
+	padding:3px 8px 5px;
 	display:inline-block;
 	background-color:#00ff99;
 	margin-left:8px;
@@ -50,6 +51,7 @@ a.reload-page {
 	background-color: #eaeaea;
 	margin: 1em;
     padding: 1px 1.5em;
+	border: 1px solid #d6d6d6;
 }
 
 #cafnr_upload_list h2{
@@ -62,6 +64,16 @@ a.reload-page {
 }
 .gform_wrapper #cafnr_upload_list ul {
 	padding-left:2%;
+}
+.gform_wrapper select {
+	font-size: 12px;
+}
+.gform_wrapper select optgroup{
+	font-size: 12px;
+	color: #222222;
+}
+.gform_wrapper select optgroup option{
+	padding-left:1em;
 }
 #box-table-a{
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
@@ -153,9 +165,20 @@ input#add_activity_title,
 input#subject_textbox,
 input#country_lead,
 input#cafnr_write_in_pi {
-	min-width:250px;
+	min-width:350px;
 }
 
+form#cafnr_activity_form .spinny{
+    background-image: url('../im/ajax-loader.gif');
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: none;
+    height: 16px;
+    padding-left: 3em;
+    vertical-align: middle;
+    width: 16px;
+    padding-top: 8px;
+}
 
 
 

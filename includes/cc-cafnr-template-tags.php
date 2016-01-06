@@ -559,13 +559,13 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 					<?php
 					if ( $this_activity_attachments ) {
 						$count = 1;
-						echo '<div id="cafnr_upload_list"><h2>Files already uploaded: </h2><ul>';
+						echo '<div id="cafnr_upload_list"><label>Files uploaded:</label><ul>';
 						foreach ( $this_activity_attachments as $attachment ) {
 							echo '<li>';
 
 							$attachment_link = wp_get_attachment_url( $attachment->ID );
 							echo "<a href='" . $attachment_link . "' target='_blank'>" . apply_filters( 'the_title' , $attachment->post_title ) . "</a>";
-							echo "&nbsp;&nbsp;<input class='remove-activity-upload' name='remove-activity-upload' type='button' value='Remove this Upload' data-deleteupload='" . $attachment->ID . "' >";
+							echo "&nbsp;&nbsp;<input class='remove-activity-upload' name='remove-activity-upload' type='button' value='Remove' data-deleteupload='" . $attachment->ID . "' >";
 							echo "<input type='hidden' class='activity_file_count' data-filecount='" . $count . "' name='activity_file_count-" . $count . "' value='" . $count . "' />";
 							echo '</li>';
 							$count++;

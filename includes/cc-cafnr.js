@@ -474,7 +474,7 @@ function activityFormSave() {
 			data: querystring,
 			success: function(data, textStatus, jqXHR){
 				jQuery('#infobar').css("padding", "0px 6px");
-				jQuery('#infobar').show().html("<p>Submission successful, <a href='" + cafnr_ajax.addEngagement + "'>add another engagement?</a></p>");
+				jQuery('#infobar').show().html("<p>Submission successful, <a href='" + cafnr_ajax.addEngagement + "'>add another Engagement?</a></p>");
 				window.setTimeout(
 					//function(){ jQuery("#infobar").fadeOut(); },
 					5000
@@ -494,7 +494,7 @@ function activityFormSave() {
 			complete: function(jqXHR, textStatus){
 				spinny.fadeOut(600);
 				jQuery(".save-msg").css("padding", "3px 8px 5px");
-				jQuery(".save-msg").html("<p>Submission successful, <a href='" + cafnr_ajax.addEngagement + "'>add another engagement?</a></p>");
+				jQuery(".save-msg").html("<p>Submission successful, <a href='" + cafnr_ajax.addEngagement + "'>add another Engagement?</a></p>");
 			
 				jQuery.ajax({
 					type: "POST",
@@ -757,7 +757,7 @@ function activityUploader( browseButton, uiContainer ){
 			
 			
 			//To do: add display html here for the types..
-			var activityFileHtml = "<span><p>File uploaded: " + activityFile.fileBaseName + "&nbsp;&nbsp;<input class='remove-activity-file' type='button' value='Remove this sample' data-deletefile='" + activityFile.file + "' >" + 
+			var activityFileHtml = "<span><p>File uploaded: " + activityFile.fileBaseName + "&nbsp;&nbsp;<input class='remove-activity-file' type='button' value='Remove' data-deletefile='" + activityFile.file + "' >" + 
 				"&nbsp;&nbsp;&nbsp;&nbsp;Change file name: <input type='text' name='activity_attachment_name-" + count + "' value=''></input>  (default name: 'Attachment " + count + ")'</p>" +
 				"<input type='hidden' name='activity_file-" + count + "' value='" + activityFile.file + "' />" +
 				"<input type='hidden' name='activity_file_url-" + count + "' value='" + activityFile.url + "' />" +

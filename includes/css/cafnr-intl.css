@@ -32,7 +32,7 @@ a.reload-page {
 }
 .required_greyed {
 	background-color:#eaeaea;
-	padding:1.5em 1em;
+	padding:1.5em;
 	border: 1px solid #d6d6d6;
 }
 .save-msg{
@@ -40,22 +40,30 @@ a.reload-page {
 	font-style:italic;
 	padding:0px 8px;
 	display:inline-block;
-	background-color:#00ff99;
 	margin-left:8px;
 }
 .save-msg p {
 	margin-bottom:0 !important;
 }
 
+h4.edit-activity{
+	color: red;
+}
+
 #cafnr_activity_upload {
 	background-color: #eaeaea;
-	margin: 1em;
-    padding: 1px 1.5em;
+	margin: 2em 1em;
+    padding: 1.5em;
 	border: 1px solid #d6d6d6;
+}
+
+form#cafnr_activity_form #cafnr_activity_upload label{
+	margin-top:0em;
 }
 
 #cafnr_upload_list h2{
 	font-weight:700;
+	font-size: 1em;
 }
 .gform_wrapper #cafnr_upload_list ul li {
 	list-style: disc outside none;
@@ -75,6 +83,13 @@ a.reload-page {
 .gform_wrapper select optgroup option{
 	padding-left:1em;
 }
+.gform_wrapper .gfield_description {
+    color: #777777;
+}
+
+
+
+
 #box-table-a{
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 	font-size: 12px;
@@ -104,6 +119,43 @@ a.reload-page {
 	color: #339;
 }
 
+
+form#cafnr_activity_form .spinny{
+    background-image: url('../im/ajax-loader.gif');
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: none;
+    height: 16px;
+    padding-left: 3em;
+    vertical-align: middle;
+    width: 16px;
+    padding-top: 8px;
+}
+
+form#cafnr_activity_form label{
+	font-weight: normal;
+	margin: 3em 0 5px;
+}
+form#cafnr_activity_form li {
+	margin-bottom: 2em;
+}
+form#cafnr_activity_form li ul li{
+	margin-bottom: 0.75em;
+}
+
+form#cafnr_activity_form  .gform_wrapper ul.gfield_radio li input[type="radio"]:checked + label, 
+form#cafnr_activity_form  .gform_wrapper ul.gfield_checkbox li input[type="checkbox"]:checked + label{
+	font-weight:bold;
+}
+
+form#cafnr_activity_form li ul li label{
+	margin: 0px;
+}
+
+input#activity-submit{
+	font-size: 1.5em; 
+	margin-top: 0.5em;
+}
 .entry-content table#activity-search.mu-table{
 	margin-bottom: 4em;
 }
@@ -166,18 +218,6 @@ input#subject_textbox,
 input#country_lead,
 input#cafnr_write_in_pi {
 	min-width:350px;
-}
-
-form#cafnr_activity_form .spinny{
-    background-image: url('../im/ajax-loader.gif');
-    background-repeat: no-repeat;
-    background-position: center center;
-    display: none;
-    height: 16px;
-    padding-left: 3em;
-    vertical-align: middle;
-    width: 16px;
-    padding-top: 8px;
 }
 
 

@@ -778,7 +778,7 @@ function cc_cafnr_render_mod_admin_page(){
 ?>
 
 	<form id="cafnr_faculty_form" class="standard-form" method="post" action="">
-		<strong>Select a Faculty Member to view/edit their Engagements:</strong><br /><br />
+		<strong><h3>Select a Faculty Member to view/edit their Engagements:</h3></strong>
 		<select id="faculty_select" class="activity_page" name="faculty_select" style="font-size:12pt;width:450px;">
 			<option value="-1" selected="selected">---Select---</option>
 			<option value="add_new_faculty">ADD NEW FACULTY</option>
@@ -796,6 +796,7 @@ function cc_cafnr_render_mod_admin_page(){
 
 		<input type="submit" id="SubmitFaculty" name="SubmitFaculty" value="Go" style="font-size:12pt;" />
 
+		<br />
 		<div id="newfacultydiv" style="margin-top:35px;border-top:1px #888888 solid;">
 			<br /><br />
 			<strong>Add new Faculty Member E-Mail Address (REQUIRED):</strong><br /><br />
@@ -1298,18 +1299,62 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 //TODO: add search filters to here?
 //TODO: maybe show adminks edit link, too
 function cc_cafnr_render_all_activity_table( $activities ) {
+	
+	$countries = get_countries_for_all_activities();
+	$countries = array_unique( $countries );
+	sort($countries);
 ?>
+	
+	<h3>Engagements</h3>
+	
+	<div id="search-param-box">
+	
+		<span class="search-functions">
+			<input id="search-text" name="search-text" type="text" placeholder="search by title"></input>
+			<select id="search-country">
+				<option value="-1" class="greyed">-- Filter by Country --</option>
+				<?php foreach( $countries as $country ){ ?>
+					<option value="<?php echo $country; ?>"><?php echo $country; ?></option>
+				<?php } ?>
+			</select>
+			
+			<a id="submit-activity-clear-search" class="button alignright">Clear Search</a>
+			<a id="submit-activity-search" class="button alignright">Search</a>
+			<div class="spinny alignright"></div>
+		</span>
+		<br />
+		<span class="current-search-filters">
+			<div class="search-filter country">
+				<span><span class="country-name"></span>
+				<span class="clear-filter "></span></span>
+			</div>
+			
+			<div class="search-filter searchtext">
+				<span><span class="term"></span>
+				<span class="clear-filter"></span></span>
+			</div>
+		</span>
+	</div>
 
 	<div id="activities">
+	
+		<div class="section-header">
+			<span id="nameactivity">All Engagements</span>
+		</div>
 
-		<table class="mu-table">
+		<table id="all-engagements" class="mu-table tablesorter">
 			<thead>
 				<tr>
-					<th scope="col" colspan="7"><span id="nameactivity">All Engagements</span></th>
+					<th class="header" scope="col" colspan="1">Name</th>
+					<th class="header" scope="col" colspan="3">Project Title</th>
+					<th class="header" scope="col" colspan="1">Project Type</th>
+					<th class="" scope="col" colspan="3">Quick view</th>
 
 				</tr>
 			</thead>
 			<tbody>
+				
+			
 				<?php
 				foreach ( $activities as $key => $value ){ //TODO: add VIEW
 					//var_dump ($key);
@@ -1364,9 +1409,10 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 					}
 					//var_dump( $postmeta);
 
+					$id_string = "id_" . $id; //set unique id for each row (showing/hiding on search later)
 					?>
 
-					<tr>
+					<tr id="<?php echo $id_string;?>" class="basic_info">
 						<td colspan="1"><?php echo $author_name; ?></td>
 						<td colspan="3" class="<?php if( $is_pi ){ }?>"><?php echo $title; ?></td>
 
@@ -1410,10 +1456,13 @@ function cc_cafnr_render_activity_search(){
 	sort($countries);
 ?>
 	<div id="infobar"></div>
+	<br />
 	<table id="activity-search" class="mu-table">
 		<thead>
 			<tr>
-				<th scope="col" colspan="6"><span id="nameactivity">Search Engagements</span></th>
+				<th scope="col" colspan="6">
+					<span id="nameactivity">Search Engagements</span>
+				</th>
 
 			</tr>
 		</thead>
@@ -1424,7 +1473,7 @@ function cc_cafnr_render_activity_search(){
 				</td>
 				<td>
 					<select id="search-country">
-						<option value="-1" class="greyed">-- Search by Country --</option>
+						<option value="-1" class="greyed">-- Filter by Country --</option>
 						<?php foreach( $countries as $country ){ ?>
 							<option value="<?php echo $country; ?>"><?php echo $country; ?></option>
 						<?php } ?>
@@ -1432,10 +1481,13 @@ function cc_cafnr_render_activity_search(){
 				</td>
 
 				<td></td>
-				<td></td>
 
 				<td>
 					<a id="submit-activity-search" class="button alignright">Search</a>
+				</td>
+				
+				<td>
+					<a id="submit-activity-clear-search" class="button alignright">Clear Search</a>
 				</td>
 
 			</tr>
@@ -1457,7 +1509,7 @@ function cc_cafnr_all_activities_render(){
 	cc_cafnr_render_tab_subnav();
 
 	//print search function..
-	cc_cafnr_render_activity_search();
+	//cc_cafnr_render_activity_search();
 
 	$activities = cc_cafnr_get_activity_list();
 
@@ -1475,7 +1527,7 @@ function cc_cafnr_add_faculty_render(){
 ?>
 	<div class="user-msg"></div>
 	<form id="cafnr_faculty_form" class="standard-form" method="post" action="">
-
+		<br />
 		<div id="newfacultydiv_page" style="">
 
 			<strong>Add new Faculty Member E-Mail Address (REQUIRED):</strong><br /><br />

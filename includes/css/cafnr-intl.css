@@ -1,3 +1,4 @@
+
 /*
  *
  * CAFNR INTL plugin styles
@@ -90,6 +91,9 @@ form#cafnr_activity_form #cafnr_activity_upload label{
 
 
 
+
+
+
 #box-table-a{
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 	font-size: 12px;
@@ -120,7 +124,7 @@ form#cafnr_activity_form #cafnr_activity_upload label{
 }
 
 
-form#cafnr_activity_form .spinny{
+form#cafnr_activity_form .spinny, #search-param-box .search-functions .spinny{
     background-image: url('../im/ajax-loader.gif');
     background-repeat: no-repeat;
     background-position: center center;
@@ -131,6 +135,10 @@ form#cafnr_activity_form .spinny{
     width: 16px;
     padding-top: 8px;
 }
+#search-param-box .search-functions .spinny{
+	background-position: right center;
+}
+
 
 form#cafnr_activity_form label{
 	font-weight: normal;
@@ -160,12 +168,36 @@ input#activity-submit{
 	margin-bottom: 4em;
 }
 .mu-table thead, .mu-table th {
+	background-color: #f8d889;
+}
+.mu-table thead tr .header{
+	background-image: url("../im/bg.gif");
+    background-position: right center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+	text-decoration:none;
+}
+.mu-table thead tr .headerSortUp{
+	background-image: url("../im/asc.gif");
+	text-decoration:underline;
+}
+.mu-table thead tr .headerSortDown{
+	background-image: url("../im/desc.gif");
+	text-decoration:underline;
+}
+
+#activities .section-header{
+	
 	background-color: #F1B82D;
 }
-.mu-table #nameactivity {
+#activities .section-header #nameactivity {
 	font-size:1.5em;
-	color:#000000;
 	padding-left:8px;
+	color: #222222;
+    font-size: 1.25em;
+    font-weight: 700;
+    line-height: 2.18182;
+    text-transform: none;
 }
 .mu-table .add-activity-button{
 	text-align:right;
@@ -210,15 +242,39 @@ input#activity-submit{
 	max-width:200px;
 }
 
-a#submit-activity-search{
-	cursor:pointer;
+#search-param-box{
+	border: 3px solid #cccccc;
+    margin-bottom: 2em;
+    padding: 2em;
+    width: auto;
 }
+#search-param-box select{
+	margin-left:1em;
+}
+
+a#submit-activity-search, a#submit-activity-clear-search{
+	width:100px;
+	cursor:pointer;
+	margin-left:1em;
+}
+.current-search-filters, .current-search-filters .country, .current-search-filters .searchtext{
+	display:none;
+}
+.search-filter{
+	background-color: #f8d889;
+	display:inline-block;
+	margin-top: 1em;
+    padding: 0.5em;
+}
+
 input#add_activity_title,
 input#subject_textbox,
 input#country_lead,
 input#cafnr_write_in_pi {
 	min-width:350px;
 }
+
+
 
 
 
@@ -242,6 +298,7 @@ input#cafnr_write_in_pi {
 body.loading {
 	overflow: hidden;   
 }
+
 
 /* Anytime the body has the loading class, our
    modal element will be visible */

@@ -168,7 +168,8 @@ function cafnr_intl_scripts() {
 
 	//dirname( __FILE__ )
 
-	wp_enqueue_script( 'cc-cafnr', plugins_url( '/cc-cafnr.js', __FILE__), array(), '1.0.0', true );
+	wp_enqueue_script( 'cc-cafnr', plugins_url( '/cc-cafnr.js', __FILE__), array(), '1.1.0', true );
+	wp_enqueue_script( 'tablesorter', plugins_url( '/jquery.tablesorter.min.js', __FILE__), array( 'jquery' ), '1.0', true );
 	wp_enqueue_style( 'datepicker-style', plugins_url( '/css/datepicker.css', __FILE__) );
 	wp_enqueue_style( 'gf-style',  plugins_url( '/css/g_forms_styles.css', __FILE__) );
 	wp_enqueue_style( 'cafnr-style', plugins_url( '/css/cafnr-intl.css', __FILE__), array(), '1.0.2' );
@@ -408,6 +409,8 @@ add_action( 'wp_ajax_activity_upload_delete', 'cc_cafnr_activity_upload_delete' 
  */
 function cc_cafnr_search_activity() {
 
+	global $wpdb;
+	
 	//get search params
 	$country = $_POST['country'];
 	$search_text = $_POST['search_text'];
@@ -433,15 +436,66 @@ function cc_cafnr_search_activity() {
 		$country_posts = filter_posts_by_country( $user_activity_posts, $country );
 		//var_dump($ country
 		$activity_list = cc_cafnr_get_activity_list( $country_posts );
+		
+		$formatted_list = array();
+		foreach( $activity_list as $activity ){
+			$formatted_list[] = $activity;
+		}
 
 		if( !( empty( $activity_list ) ) ){
 			//$data['posts'] = $country_posts;
-			$data['posts'] = $activity_list;
+			//$data['posts'] = $activity_list;
+			$data['posts'] = $formatted_list;
 		} else { //should never happen if we're only looking at countries in the db..
 			$data['success'] = "no posts";
 			$data['msg'] = "No posts found for that country";
 		}
 
+	} else if( ( $search_text != "" ) && ( $country == '-1' )){
+		//search by text only
+		
+		// First, escape the link for use in a LIKE statement.
+		$search_text = $wpdb->esc_like( $search_text );
+
+		// Add wildcards, since we are searching within comment text.
+		$search_text = '%' . $search_text . '%';
+		
+		//1. Search title
+		$search_sql = $wpdb->prepare( 
+			"
+			SELECT      ID AS id, post_title AS title
+			FROM        $wpdb->posts
+			WHERE		post_type = %s 
+			AND 		LOWER(post_title) LIKE LOWER(%s)
+			",
+			"cafnr-activity",
+			$search_text
+		); 
+		$form_rows = $wpdb->get_results( $search_sql, ARRAY_A );
+		
+		//2. TODO: search names
+		$search_sql = $wpdb->prepare( 
+			"
+			SELECT      ID AS id, post_title AS title
+			FROM        $wpdb->posts
+			WHERE		post_type = %s 
+			AND 		LOWER(post_title) LIKE LOWER(%s)
+			",
+			"cafnr-activity",
+			$search_text
+		); 
+		
+		$formatted_posts = array();
+		//put into same format as country search
+		foreach( $form_rows as $form_row ){
+			$formatted_posts[] = $form_row;
+			//var_dump( $form_row );
+			
+		}
+		
+		
+		$data['posts'] = $formatted_posts;
+		
 	} else {
 		$data['success'] = 0;
 

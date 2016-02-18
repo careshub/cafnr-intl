@@ -169,6 +169,9 @@ function clickListen(){
 		
 	});
 
+	
+	jQuery('a#submit-activity-clear-search').on('click', activitySearchClear );
+	
 	jQuery("a.quick-view-activity").click( function() {
 	
 		var activityID = jQuery(this).data("activityid");
@@ -577,8 +580,8 @@ function delActivity( activityid, author ) {
 //search form load
 function activitySearchLoad(){
 
-	//populate country drop down from hidden array of countries
-	var countryOptions = jQuery("#activity-search select#search-country option");
+	//populate country drop down from hidden array of countries (only those with projects)
+	var countryOptions = jQuery("select#search-country option");
 	var countryVal;
 	var countryName;
 	
@@ -593,25 +596,50 @@ function activitySearchLoad(){
 
 	//enable search button listener/ajax function
 	activitySearch();
+	
+	activitySearchClear();
 
 
 }
 
+//clear ctivity search
+function activitySearchClear() {
+		//show all rows of activity table
+		jQuery("#activities .mu-table tbody tr.basic_info").show();
+		//remove all current-search-filters
+		jQuery(".current-search-filters .country").hide();
+		jQuery(".current-search-filters .searchtext").hide();
+		//hide current-search-filters
+		jQuery(".current-search-filters").hide();
+		//rename table header
+		jQuery("#activities #nameactivity").html( "All Engagements");
+		//clear out inputs
+		jQuery("#search-text").val();
+		jQuery("#search-country").val('-1');
+
+
+
+}
 
 //search activity form via ajax
 function activitySearch() {
-	jQuery('table#activity-search a#submit-activity-search').on('click', function(e){
+	jQuery('a#submit-activity-search').on('click', function(e){
 		
 		e.preventDefault();
 		
 		// get search terms, countries
-		var searchText = jQuery('table#activity-search #search-text').val();
-		var searchCountry = jQuery('table#activity-search #search-country').val();
+		var searchText = jQuery('#search-text').val();
+		var searchCountry = jQuery('#search-country').val();
 		
+		var spinny = jQuery("#search-param-box .search-functions .spinny");
 		
 		//clear old search results
-		jQuery("table#activity-search tr.search-results-header").html("");
-		
+		if( ( searchText == "" ) && ( searchCountry == "-1" ) ) {
+			
+			activitySearchClear();
+			
+			return; //no need to ajax
+		}
 		//TODO: add nonce on both sides
 		//querystring += "&cafnr_ajax_data_nonce=" + nm_ajax.cafnr_ajax_data_nonce;
 		//querystring += "&action=" + 'cafnr_intl_edit_activity';
@@ -634,43 +662,63 @@ function activitySearch() {
 				
 				if( data.success == "0" ){
 					console.log('no search terms');
-					jQuery("table#activity-search tr.search-results .user-msg").html( data.msg );
-					jQuery("table#activity-search tr.search-results").show();
+					//jQuery("table#activity-search tr.search-results .user-msg").html( data.msg );
+					//jQuery("table#activity-search tr.search-results").show();
 				} else if ( data.posts.length != 0 ) {
 				
+					//console.log( data.posts );
+					//hide all posts
+					jQuery("#activities .mu-table tbody tr").hide();
 					//loop through posts and scrape information
-					jQuery.each( data.posts, function(){
+					for( var i=0; i < data.posts.length; i++ ){
 					
-						console.log( this.title ); //works!
-						post_html += '<tr class="search-results">';
-						post_html += '<td colspan="3" class="">' + this.title + '</td>';
+						//show only relevant posts
+						var row_id = "#activities .mu-table tr#id_" + data.posts[i].id;
+						console.log( row_id ); //
+						jQuery( row_id ).show();
 						
-						//now add in activity type and edit/view/delete buttons
-						post_html += '</tr>';
 						
-						//post_html += '</tr>';
-						
-					});
-					
-					//create trs in our table for posts..
-					//post_html += "<tr>"
-					//post_html +
+					}
 					
 					jQuery("table#activity-search tr.search-results-header").after( post_html );
 					jQuery("table#activity-search tr.search-results-header .user-msg").html( data.msg );
 					jQuery("table#activity-search tr.search-results-header").show();
 					
 				} else {
-					console.log('well, you searched');
+					console.log('no posts for term');
 				}
 				
 				return false;
 			},
 			beforeSend: function(jqXHR, settings){
-				jQuery('#PageLoader').fadeIn();
+				spinny.css("display", "inline");
 			},
 			complete: function(jqXHR, textStatus){
-			
+				spinny.css("display", "none");
+				
+				//update header from "All engagements" to "Sorted engagements"
+				jQuery("#activities #nameactivity").html( "Sorted Engagements");
+				
+				//add search term and/or country term boxes to display
+				
+				jQuery(".current-search-filters .country").html();
+				if( searchText != "" ) {
+					jQuery(".current-search-filters .searchtext .term").html("<strong>Search term:</strong> " + searchText);
+					jQuery(".current-search-filters .searchtext").show();
+					//show current-search-filters
+					jQuery(".current-search-filters").show();
+				}
+				if( searchCountry != "-1" ){
+					
+					//jQuery(".current-search-filters .country").html("Country: " + searchCountry);
+					//get country long name
+					var country_name = document.getElementById('search-country').options[document.getElementById('search-country').selectedIndex].text;
+					jQuery(".current-search-filters .country").html("<strong>Country: </strong>" + country_name );
+					jQuery(".current-search-filters .country").show();
+					//show current-search-filters
+					jQuery(".current-search-filters").show();
+				}
+				
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				alert(xhr.status);
@@ -1671,6 +1719,16 @@ jQuery(document).ready(function($){
 		ajaxStart: function() { $body.addClass("loading");    },
 		ajaxStop: function() { $body.removeClass("loading"); }    
 	});		
+	
+	$("#all-engagements").tablesorter({
+		headers: { 
+            // assign the third column (we start counting zero) 
+            3: { 
+                // disable it by setting the property sorter to false 
+                sorter: false 
+            }
+        } 
+	});
 	
 	
 	

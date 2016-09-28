@@ -63,7 +63,7 @@ function cc_cafnr_is_cafnr_group(){
  * @return  integer
  */
 function cc_cafnr_get_group_id(){
-    switch ( get_home_url() ) {
+    switch ( get_home_url( null, '', 'http' ) ) {
         case 'http://commonsdev.local':
             $group_id = 540;
             break;

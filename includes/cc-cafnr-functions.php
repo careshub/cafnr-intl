@@ -410,7 +410,7 @@ add_action( 'wp_ajax_activity_upload_delete', 'cc_cafnr_activity_upload_delete' 
 function cc_cafnr_search_activity() {
 
 	global $wpdb;
-	
+
 	//get search params
 	$country = $_POST['country'];
 	$search_text = $_POST['search_text'];
@@ -436,7 +436,7 @@ function cc_cafnr_search_activity() {
 		$country_posts = filter_posts_by_country( $user_activity_posts, $country );
 		//var_dump($ country
 		$activity_list = cc_cafnr_get_activity_list( $country_posts );
-		
+
 		$formatted_list = array();
 		foreach( $activity_list as $activity ){
 			$formatted_list[] = $activity;
@@ -453,49 +453,49 @@ function cc_cafnr_search_activity() {
 
 	} else if( ( $search_text != "" ) && ( $country == '-1' )){
 		//search by text only
-		
+
 		// First, escape the link for use in a LIKE statement.
 		$search_text = $wpdb->esc_like( $search_text );
 
 		// Add wildcards, since we are searching within comment text.
 		$search_text = '%' . $search_text . '%';
-		
+
 		//1. Search title
-		$search_sql = $wpdb->prepare( 
+		$search_sql = $wpdb->prepare(
 			"
 			SELECT      ID AS id, post_title AS title
 			FROM        $wpdb->posts
-			WHERE		post_type = %s 
+			WHERE		post_type = %s
 			AND 		LOWER(post_title) LIKE LOWER(%s)
 			",
 			"cafnr-activity",
 			$search_text
-		); 
+		);
 		$form_rows = $wpdb->get_results( $search_sql, ARRAY_A );
-		
+
 		//2. TODO: search names
-		$search_sql = $wpdb->prepare( 
+		$search_sql = $wpdb->prepare(
 			"
 			SELECT      ID AS id, post_title AS title
 			FROM        $wpdb->posts
-			WHERE		post_type = %s 
+			WHERE		post_type = %s
 			AND 		LOWER(post_title) LIKE LOWER(%s)
 			",
 			"cafnr-activity",
 			$search_text
-		); 
-		
+		);
+
 		$formatted_posts = array();
 		//put into same format as country search
 		foreach( $form_rows as $form_row ){
 			$formatted_posts[] = $form_row;
 			//var_dump( $form_row );
-			
+
 		}
-		
-		
+
+
 		$data['posts'] = $formatted_posts;
-		
+
 	} else {
 		$data['success'] = 0;
 

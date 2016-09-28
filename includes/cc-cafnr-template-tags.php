@@ -323,7 +323,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 					<input type="text" id="end_date" name="end_date" tabindex="21" class="datepicker_with_icon datepicker" value="<?php if( !empty( $this_activity_fields['end_date'][0] ) ) { echo ( date( 'm/d/Y', strtotime( $this_activity_fields['end_date'][0] ) ) ); } ?>">
 				</div>
 			</li>
-			
+
 			<li id="cafnr_college_division" class="gfield">
 				<label class="gfield_label" for="college_division">College/Division &nbsp;(required):</label>
 				<div class="ginput_container">
@@ -338,10 +338,10 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							<option value="cafnr_natural_resources" <?php if( $this_activity_fields["college_division"][0] == "cafnr_natural_resources" ) { echo "selected='selected'"; } ?>>School of Natural Resources</option>
 						</optgroup>
 					</select>
-					
+
 				</div>
 			</li>
-			
+
 			</div> <!-- end required_greyed -->
 			<hr>
 			<strong>Optional Questions:</strong>
@@ -1279,9 +1279,9 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 						echo '</tr>';
 						echo '</div>';
 
-					} 
+					}
 				}
-				
+
 				?>
 			</tbody>
 		</table>
@@ -1299,16 +1299,16 @@ function cc_cafnr_render_faculty_activity_table( $activities, $which_user ) {
 //TODO: add search filters to here?
 //TODO: maybe show adminks edit link, too
 function cc_cafnr_render_all_activity_table( $activities ) {
-	
+
 	$countries = get_countries_for_all_activities();
 	$countries = array_unique( $countries );
 	sort($countries);
 ?>
-	
+
 	<h3>Engagements</h3>
-	
+
 	<div id="search-param-box">
-	
+
 		<span class="search-functions">
 			<input id="search-text" name="search-text" type="text" placeholder="search by title"></input>
 			<select id="search-country">
@@ -1317,7 +1317,7 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 					<option value="<?php echo $country; ?>"><?php echo $country; ?></option>
 				<?php } ?>
 			</select>
-			
+
 			<a id="submit-activity-clear-search" class="button alignright">Clear Search</a>
 			<a id="submit-activity-search" class="button alignright">Search</a>
 			<div class="spinny alignright"></div>
@@ -1328,7 +1328,7 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 				<span><span class="country-name"></span>
 				<span class="clear-filter "></span></span>
 			</div>
-			
+
 			<div class="search-filter searchtext">
 				<span><span class="term"></span>
 				<span class="clear-filter"></span></span>
@@ -1337,7 +1337,7 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 	</div>
 
 	<div id="activities">
-	
+
 		<div class="section-header">
 			<span id="nameactivity">All Engagements</span>
 		</div>
@@ -1353,8 +1353,8 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 				</tr>
 			</thead>
 			<tbody>
-				
-			
+
+
 				<?php
 				foreach ( $activities as $key => $value ){ //TODO: add VIEW
 					//var_dump ($key);
@@ -1485,7 +1485,7 @@ function cc_cafnr_render_activity_search(){
 				<td>
 					<a id="submit-activity-search" class="button alignright">Search</a>
 				</td>
-				
+
 				<td>
 					<a id="submit-activity-clear-search" class="button alignright">Clear Search</a>
 				</td>

@@ -1720,17 +1720,30 @@ jQuery(document).ready(function($){
 		ajaxStop: function() { $body.removeClass("loading"); }
 	});
 
-	$("#all-engagements").tablesorter({
-		headers: {
-            // assign the third column (we start counting zero)
-            3: {
-                // disable it by setting the property sorter to false
-                sorter: false
-            }
-        }
-	});
+	$("#all-engagements")
+		.tablesorter({
+			headers: { 
+				// assign the third column (we start counting zero) 
+
+				/*3: { 
+					// disable it by setting the property sorter to false 
+					//sorter: false 
 
 
 
+
+
+
+				}*/
+			}
+		})
+		
+		//re-sort the columns after tablesort, to group the hidden rows (quick view) under their appropriate rows
+		.bind("sortEnd",function(e, t){
+			//jQuery.each( jQuery(".basic_info")
+			//jQuery("#display").append('<li>Sort Ended after ' + ( (e.timeStamp - start)/1000 ).toFixed(2) + ' seconds</li>').find('li:first').remove();
+		})
+	;
+		
 },(jQuery))
 

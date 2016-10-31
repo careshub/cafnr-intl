@@ -2,8 +2,8 @@
 /*
  * Plugin Name: CAFNR International Programs
  * Version: Current Version
- * Author: Michael Barbaro
- * Description: This plugin creates a small dashboard form and support for a larger Gravity Form.
+ * Author: CARES
+ * Description: This plugin creates a searchable activities table and adds faculty and engagements to the db.
 */
 
 // If this file is called directly, abort.

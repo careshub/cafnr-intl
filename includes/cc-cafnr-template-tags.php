@@ -140,7 +140,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 
 	<h4 class="user-msg"></h4>
 
-	<h3 class="gform_title">College of Agriculture Food & Natural Resources International Programs Engagement Survey (please complete one form per engagement)</h3>
+	<h3 class="gform_title">College of Agriculture, Food & Natural Resources International Programs Engagement Survey (please complete one form per engagement)</h3>
 
 	<?php if( $action == 'edit_activity' ) { ?>
 		<h4 class="edit-activity"><em>Editing Engagement: <strong><?php echo $this_activity_title; ?></strong></em>
@@ -1374,7 +1374,8 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 
 
 					if ( !empty( $last_name ) ){
-						$author_name = $first_name . ' ' . $last_name;
+						//$author_name = $first_name . ' ' . $last_name;
+						$author_name = $last_name . ', ' . $first_name;
 					} else {
 						$author_name = $username;
 					}
@@ -1410,15 +1411,18 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 					//var_dump( $postmeta);
 
 					$id_string = "id_" . $id; //set unique id for each row (showing/hiding on search later)
+					$project_type = "";
 					?>
 
-					<tr id="<?php echo $id_string;?>" class="basic_info">
+					<tr id="<?php echo $id_string;?>" class="basic_info row-vm">
 						<td colspan="1"><?php echo $author_name; ?></td>
 						<td colspan="3" class="<?php if( $is_pi ){ }?>"><?php echo $title; ?></td>
 
-						<td><?php if ( !(empty ($postmeta["activity_radio"][0] ) ) ){
-							echo cc_cafnr_get_readable( "activity-type", current( $postmeta["activity_radio"] ) );
-						} ?>
+						<td colspan="1"><?php if ( !(empty ($postmeta["activity_radio"][0] ) ) ){
+							$project_type = trim( cc_cafnr_get_readable( "activity-type", current( $postmeta["activity_radio"] ) ) );
+						} 
+						echo $project_type;
+						?>
 						</td>
 
 						<?php
@@ -1431,13 +1435,13 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 						<td class="edit-activity-button"><a class="button quick-view-activity" data-activityid="<?php echo $id; ?>" >Quick View</a></td>
 					</tr>
 
-					<tr class="hidden quick-view-tr" colspan="6" data-activityid="<?php echo $id; ?>">
+					<tr class="hidden quick-view-tr row-details expand-child" colspan="6" data-activityid="<?php echo $id; ?>">
 						<td colspan="3">Academic Field, Research Focus, or Subject of Activity: <?php if( $subject == "" ) { echo '<em>None provided</em>'; } else { echo '<strong>' . $subject . '</strong>'; } ?></td>
 					</tr>
-					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
+					<tr class="hidden quick-view-tr row-details expand-child" data-activityid="<?php echo $id; ?>">
 						<td>Start Date: <?php if( $start_timestamp == 0) { echo '<em>No start date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $start_timestamp) . '</strong>'; } ?> </td>
 					</tr>
-					<tr class="hidden quick-view-tr" data-activityid="<?php echo $id; ?>">
+					<tr class="hidden quick-view-tr row-details expand-child" data-activityid="<?php echo $id; ?>">
 						<td>End Date: <?php if( $end_timestamp == 0) { echo '<em>No end date provided</em>'; } else { echo '<strong>' . date('m/d/Y', $end_timestamp) . '</strong>'; } ?></td>
 					</tr>
 					<?php

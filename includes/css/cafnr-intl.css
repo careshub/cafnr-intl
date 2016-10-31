@@ -169,6 +169,7 @@ input#activity-submit{
 }
 .mu-table thead, .mu-table th {
 	background-color: #f8d889;
+	border-bottom:2px solid #cccccc;
 }
 .mu-table thead tr .header{
 	background-image: url("../im/bg.gif");

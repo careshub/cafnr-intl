@@ -609,7 +609,7 @@ function cafnr_intl_edit_activity(){
 		}
 
 		//update existing post
-		if ( isset( $_POST['activity_id'] ) && ( $_POST['activity_id'] > 0 ) ){
+		if ( isset( $_POST['activity_id'] ) && ( (int)$_POST['activity_id'] > 0 ) ){
 			$activity_id = $_POST['activity_id'];
 
 			//if they write in a title, replace existing title
@@ -728,23 +728,23 @@ function cafnr_intl_edit_activity(){
 		}
 
 		//dates!
-		if ( !empty ( $_POST['start_date'] ) ){
+		if ( isset ( $_POST['start_date'] ) ){
 			//because we're converting to date, we need to account for 0 (else it's 1970 and it's time to move on..)
-			if ( ( $_POST['start_date'] == "") || $_POST['start_date'] == 0 ) {
-				update_post_meta( $activity_id, 'start_date', "" );
-			} else {
+			//if ( ( $_POST['start_date'] == "") || $_POST['start_date'] == 0 ) {
+			//	update_post_meta( $activity_id, 'start_date', "" );
+			//} else {
 				$startDate = date( 'Y-m-d H:i:s', strtotime( $_POST['start_date'] ) );
-				update_post_meta( $activity_id, 'start_date', $startDate );
-			}
+				update_post_meta( $activity_id, 'start_date', $startDate);
+			//}
 		}
 
 		if ( isset ( $_POST['end_date'] ) ){
-			if ( ( $_POST['end_date'] == "") || $_POST['end_date'] == 0 ) {
-				update_post_meta( $activity_id, 'end_date', "" );
-			} else {
+			//if ( ( $_POST['end_date'] == "") || $_POST['end_date'] == 0 ) {
+			//	update_post_meta( $activity_id, 'end_date', "" );
+			//} else {
 				$endDate = date( 'Y-m-d H:i:s', strtotime( $_POST['end_date'] ) );
 				update_post_meta( $activity_id, 'end_date', $endDate );
-			}
+			//}
 		}
 
 		//TODO: account for write-in PI in drop down! (get all meta of 'who_is_pi' for all cafnr-activity post types

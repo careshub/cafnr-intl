@@ -35,18 +35,20 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	//render the subnav..
 	cc_cafnr_render_tab_subnav();
 
-
+	//echo $_GET['activity_id'];
 	//get prior activity data if exists
 	if ( !( is_null( $post_id ) ) ){ //if the function has the post_id set
 		//if we have a post_id, fill out the form
 
 		$action = 'edit_activity';
-	} else if ( !( is_null( $_GET['activity_id'] ) ) ){ //if we're editing an existing activity
+	} else if ( isset( $_GET['activity_id'] ) ){ //if we're editing an existing activity
 		//echo $_GET['activity_id'];
 
 		//Get post data, if we have ID in url
 		$post_id = $_GET['activity_id'];
 		$this_activity = get_post($post_id);
+		
+		var_dump( $this_activity->ID );
 
 		$this_activity_title = get_the_title( $this_activity->ID  );
 
@@ -89,7 +91,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 	$current_user = wp_get_current_user();  //$current_user->ID
 
 	//get user from params IF current user has permissions
-	if ( !( is_null( $_GET['user'] ) ) && ( bp_group_is_admin() || bp_group_is_mod() ) ){
+	if ( isset( $_GET['user'] ) && ( bp_group_is_admin() || bp_group_is_mod() ) ){
 		//echo $_GET['user'];
 		//$post_id = $_GET['activity_id'];
 		$user = $_GET['user'];
@@ -100,8 +102,10 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 
 	$user_info = get_userdata( $user );
     $username = $user_info->user_login;
-    $first_name = $user_info->first_name;
-    $last_name = $user_info->last_name;
+    //$first_name = $user_info->first_name;
+    //$last_name = $user_info->last_name;
+    $first_name = (isset($user_info->first_name)) ? $user_info->first_name : "";
+    $last_name = (isset($user_info->last_name)) ? $user_info->last_name : "";
 
 	//TODO: do we still need this if no more title drop-down?
 	//get all cafnr activities in db
@@ -131,7 +135,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 
 	//if we're admin and have no user info, render user selection drop down and make it required
 	$user_selection_required = false;
-	if ( is_null( $_GET['user'] ) && ( bp_group_is_admin() || bp_group_is_mod() ) ){
+	if ( !(isset( $_GET['user'] ) ) && ( bp_group_is_admin() || bp_group_is_mod() ) ){
 
 		$user_selection_required = true;
 
@@ -173,7 +177,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		<form id="cafnr_activity_form" class="standard-form" method="post" action="">
 
 			<input type="hidden" name="new_activity" value="<?php echo $action; ?>">
-			<input type="hidden" name="activity_id" value="<?php echo $this_activity->ID; ?>">
+			<input type="hidden" name="activity_id" value="<?php if (isset( $this_activity->ID )) { echo $this_activity->ID; } else { echo ""; } ?>">
 			<input type="hidden" name="user_id" value="<?php echo $user; ?>">
 			<input type="hidden" name="user_name" value="<?php echo $username; ?>">
 			<input type="hidden" name="first_name" value="<?php echo $first_name; ?>">
@@ -225,7 +229,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 						</thead>
 						<tbody>
 							<?php $count = 1;
-							if ( $this_activity_fields['country'] ) {  //make sure the first one doesn't have a delete button
+							if ( isset( $this_activity_fields['country'] ) ) {  //make sure the first one doesn't have a delete button
 								foreach( $this_activity_fields['country'] as $country ) {
 									$country = maybe_unserialize( $country );
 									//echo $country[0] ; ?>
@@ -283,8 +287,14 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 							$option_output = '<option value="';
 							$option_output .= $key;
 							$option_output .= '"';
-							if ( ( $key == $post_id ) || ( $key == $this_activity_parent) ) {
-								$option_output .= 'selected="selected"';
+							if ( isset( $this_activity_parent ) ){
+								if ( ( $key == $post_id ) || ( $key == $this_activity_parent) ) {
+									$option_output .= 'selected="selected"';
+								}
+							} else {
+								if ( $key == $post_id ) {
+									$option_output .= 'selected="selected"';
+								}
 							}
 							$option_output .= '>';
 							$option_output .= $value;
@@ -330,12 +340,12 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 					<select name="college_division">
 						<option value="-1"> -- Select Division -- </option>
 						<optgroup label="CAFNR:">
-							<option value="cafnr_animal_sciences" <?php if( $this_activity_fields["college_division"][0] == "cafnr_animal_sciences" ) { echo "selected='selected'"; } ?>>Animal Sciences</option>
-							<option value="cafnr_biochemistry" <?php if( $this_activity_fields["college_division"][0] == "cafnr_biochemistry" ) { echo "selected='selected'"; } ?>>Biochemistry</option>
-							<option value="cafnr_daas" <?php if( $this_activity_fields["college_division"][0] == "cafnr_daas" ) { echo "selected='selected'"; } ?>>Division of Applied Social Sciences</option>
-							<option value="cafnr_food_systems" <?php if( $this_activity_fields["college_division"][0] == "cafnr_food_systems" ) { echo "selected='selected'"; } ?>>Food Systems and Bioengineering</option>
-							<option value="cafnr_plant_sciences" <?php if( $this_activity_fields["college_division"][0] == "cafnr_plant_sciences" ) { echo "selected='selected'"; } ?>>Plant Sciences</option>
-							<option value="cafnr_natural_resources" <?php if( $this_activity_fields["college_division"][0] == "cafnr_natural_resources" ) { echo "selected='selected'"; } ?>>School of Natural Resources</option>
+							<option value="cafnr_animal_sciences" <?php if( isset( $this_activity_fields["college_division"][0] ) && ( $this_activity_fields["college_division"][0] == "cafnr_animal_sciences" ) ) { echo "selected='selected'"; } ?>>Animal Sciences</option>
+							<option value="cafnr_biochemistry" <?php if( isset( $this_activity_fields["college_division"][0] ) && ( $this_activity_fields["college_division"][0] == "cafnr_biochemistry" ) ) { echo "selected='selected'"; } ?>>Biochemistry</option>
+							<option value="cafnr_daas" <?php if( isset( $this_activity_fields["college_division"][0] ) && ( $this_activity_fields["college_division"][0] == "cafnr_daas" ) ) { echo "selected='selected'"; } ?>>Division of Applied Social Sciences</option>
+							<option value="cafnr_food_systems" <?php if( isset( $this_activity_fields["college_division"][0] ) && ( $this_activity_fields["college_division"][0] == "cafnr_food_systems" ) ) { echo "selected='selected'"; } ?>>Food Systems and Bioengineering</option>
+							<option value="cafnr_plant_sciences" <?php if( isset( $this_activity_fields["college_division"][0] ) && ( $this_activity_fields["college_division"][0] == "cafnr_plant_sciences" ) ) { echo "selected='selected'"; } ?>>Plant Sciences</option>
+							<option value="cafnr_natural_resources" <?php if( isset( $this_activity_fields["college_division"][0] ) && ( $this_activity_fields["college_division"][0] == "cafnr_natural_resources" ) ) { echo "selected='selected'"; } ?>>School of Natural Resources</option>
 						</optgroup>
 					</select>
 
@@ -354,11 +364,11 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 				<div class="ginput_container">
 					<ul id="input_22_24" class="gfield_radio">
 						<li class="gchoice_24_0">
-							<input id="pi_yes" type="radio" onclick="" tabindex="8" value="Yes" name="pi_radio" <?php checked( $this_activity_fields['pi_radio'][0], 'Yes' ); ?>>
+							<input id="pi_yes" type="radio" onclick="" tabindex="8" value="Yes" name="pi_radio" <?php if( isset( $this_activity_fields['pi_radio'] ) ) { checked( $this_activity_fields['pi_radio'][0], 'Yes' ); } ?>>
 							<label for="pi_yes">Yes</label>
 						</li>
 						<li class="gchoice_24_1">
-							<input id="pi_no" type="radio" onclick="" tabindex="9" value="No" name="pi_radio" <?php checked( $this_activity_fields['pi_radio'][0], 'No' ); ?>>
+							<input id="pi_no" type="radio" onclick="" tabindex="9" value="No" name="pi_radio" <?php if( isset( $this_activity_fields['pi_radio'] ) ) { checked( $this_activity_fields['pi_radio'][0], 'No' ); } ?>>
 							<label for="pi_no">No</label>
 						</li>
 					</ul>
@@ -454,7 +464,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 						</colgroup>
 						<tbody>
 							<?php $count = 1;
-							if ( $this_activity_fields['collaborating'] ) {  //make sure the first one doesn't have a delete button
+							if ( isset( $this_activity_fields['collaborating'] ) ) {  //make sure the first one doesn't have a delete button
 								foreach(  $this_activity_fields['collaborating'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
@@ -489,7 +499,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 			<li id="cafnr_activity_summary" class="gfield pi-only hidden-on-init">
 				<label class="gfield_label" for="input_22_17">Please provide a brief summary of this engagement:</label>
 				<div class="ginput_container">
-					<textarea id="activity_summary" class="textarea medium" cols="50" rows="10" tabindex="23" name="activity_summary" value=""><?php echo $this_activity->post_content; ?></textarea>
+					<textarea id="activity_summary" class="textarea medium" cols="50" rows="10" tabindex="23" name="activity_summary" value=""><?php if( isset( $this_activity->post_content ) ){ echo $this_activity->post_content; } ?></textarea>
 				</div>
 			</li>
 
@@ -516,7 +526,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 						</colgroup>
 						<tbody>
 							<?php $count = 1;
-							if ( $this_activity_fields['supplemental_links'] ) {  //make sure the first one doesn't have a delete button
+							if ( isset( $this_activity_fields['supplemental_links'] ) ) {  //make sure the first one doesn't have a delete button
 								foreach(  $this_activity_fields['supplemental_links'] as $link ) { ?>
 									<tr class="gfield_list_row_odd">
 										<td class="gfield_list_cell list_cell">
@@ -557,7 +567,7 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 					</div>
 
 					<?php
-					if ( $this_activity_attachments ) {
+					if ( isset( $this_activity_attachments ) ) {
 						$count = 1;
 						echo '<div id="cafnr_upload_list"><label>Files uploaded:</label><ul>';
 						foreach ( $this_activity_attachments as $attachment ) {

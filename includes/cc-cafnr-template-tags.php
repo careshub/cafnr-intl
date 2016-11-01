@@ -47,8 +47,8 @@ function cc_cafnr_activity_form_render( $post_id = null ){
 		//Get post data, if we have ID in url
 		$post_id = $_GET['activity_id'];
 		$this_activity = get_post($post_id);
-		
-		var_dump( $this_activity->ID );
+
+		// var_dump( $this_activity->ID );
 
 		$this_activity_title = get_the_title( $this_activity->ID  );
 
@@ -1430,7 +1430,7 @@ function cc_cafnr_render_all_activity_table( $activities ) {
 
 						<td colspan="1"><?php if ( !(empty ($postmeta["activity_radio"][0] ) ) ){
 							$project_type = trim( cc_cafnr_get_readable( "activity-type", current( $postmeta["activity_radio"] ) ) );
-						} 
+						}
 						echo $project_type;
 						?>
 						</td>
